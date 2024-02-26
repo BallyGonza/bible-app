@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bible_app/blocs/blocs.dart';
 import 'package:bible_app/theme.dart';
 import 'package:bible_app/views/views.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -10,7 +10,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Template App',
+      title: 'Bible App',
       theme: theme,
       debugShowCheckedModeBanner: false,
       home: BlocBuilder<UserBloc, UserState>(

@@ -1,47 +1,41 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'verse_model.dart';
+part of 'bible_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class VerseModelAdapter extends TypeAdapter<VerseModel> {
+class BibleModelAdapter extends TypeAdapter<BibleModel> {
   @override
-  final int typeId = 4;
+  final int typeId = 1;
 
   @override
-  VerseModel read(BinaryReader reader) {
+  BibleModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return VerseModel(
+    return BibleModel(
       id: fields[0] as int,
-      book: fields[1] as String,
-      chapter: fields[2] as int,
-      content: fields[3] as String,
-      color: fields[4] as String?,
-      note: fields[5] as NoteModel?,
+      name: fields[1] as String,
+      version: fields[2] as String,
+      books: (fields[3] as List).cast<BookModel>(),
     );
   }
 
   @override
-  void write(BinaryWriter writer, VerseModel obj) {
+  void write(BinaryWriter writer, BibleModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.book)
+      ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.chapter)
+      ..write(obj.version)
       ..writeByte(3)
-      ..write(obj.content)
-      ..writeByte(4)
-      ..write(obj.color)
-      ..writeByte(5)
-      ..write(obj.note);
+      ..write(obj.books);
   }
 
   @override
@@ -50,7 +44,7 @@ class VerseModelAdapter extends TypeAdapter<VerseModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is VerseModelAdapter &&
+      other is BibleModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

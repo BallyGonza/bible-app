@@ -1,5 +1,5 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:bible_app/data/data.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_state.freezed.dart';
 

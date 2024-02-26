@@ -1,5 +1,5 @@
-import 'package:hive/hive.dart';
 import 'package:bible_app/data/data.dart';
+import 'package:hive/hive.dart';
 
 class UserRepository {
   UserRepository();

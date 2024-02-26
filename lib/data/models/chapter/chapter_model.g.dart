@@ -1,47 +1,38 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'verse_model.dart';
+part of 'chapter_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class VerseModelAdapter extends TypeAdapter<VerseModel> {
+class ChapterModelAdapter extends TypeAdapter<ChapterModel> {
   @override
-  final int typeId = 4;
+  final int typeId = 3;
 
   @override
-  VerseModel read(BinaryReader reader) {
+  ChapterModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return VerseModel(
+    return ChapterModel(
       id: fields[0] as int,
-      book: fields[1] as String,
-      chapter: fields[2] as int,
-      content: fields[3] as String,
-      color: fields[4] as String?,
-      note: fields[5] as NoteModel?,
+      title: fields[1] as String,
+      verses: (fields[2] as List).cast<VerseModel>(),
     );
   }
 
   @override
-  void write(BinaryWriter writer, VerseModel obj) {
+  void write(BinaryWriter writer, ChapterModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.book)
+      ..write(obj.title)
       ..writeByte(2)
-      ..write(obj.chapter)
-      ..writeByte(3)
-      ..write(obj.content)
-      ..writeByte(4)
-      ..write(obj.color)
-      ..writeByte(5)
-      ..write(obj.note);
+      ..write(obj.verses);
   }
 
   @override
@@ -50,7 +41,7 @@ class VerseModelAdapter extends TypeAdapter<VerseModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is VerseModelAdapter &&
+      other is ChapterModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

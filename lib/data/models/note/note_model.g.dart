@@ -1,47 +1,44 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'verse_model.dart';
+part of 'note_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class VerseModelAdapter extends TypeAdapter<VerseModel> {
+class NoteModelAdapter extends TypeAdapter<NoteModel> {
   @override
-  final int typeId = 4;
+  final int typeId = 5;
 
   @override
-  VerseModel read(BinaryReader reader) {
+  NoteModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return VerseModel(
+    return NoteModel(
       id: fields[0] as int,
-      book: fields[1] as String,
-      chapter: fields[2] as int,
-      content: fields[3] as String,
-      color: fields[4] as String?,
-      note: fields[5] as NoteModel?,
+      title: fields[1] as String,
+      content: fields[2] as String,
+      date: fields[3] as String,
+      color: fields[4] as int,
     );
   }
 
   @override
-  void write(BinaryWriter writer, VerseModel obj) {
+  void write(BinaryWriter writer, NoteModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.book)
+      ..write(obj.title)
       ..writeByte(2)
-      ..write(obj.chapter)
-      ..writeByte(3)
       ..write(obj.content)
+      ..writeByte(3)
+      ..write(obj.date)
       ..writeByte(4)
-      ..write(obj.color)
-      ..writeByte(5)
-      ..write(obj.note);
+      ..write(obj.color);
   }
 
   @override
@@ -50,7 +47,7 @@ class VerseModelAdapter extends TypeAdapter<VerseModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is VerseModelAdapter &&
+      other is NoteModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

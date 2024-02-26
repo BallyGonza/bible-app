@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:template_app/blocs/blocs.dart';
-import 'package:template_app/data/data.dart';
-import 'package:template_app/services/services.dart';
-import 'package:template_app/views/views.dart';
+import 'package:bible_app/blocs/blocs.dart';
+import 'package:bible_app/data/data.dart';
+import 'package:bible_app/services/services.dart';
+import 'package:bible_app/views/views.dart';
 
 Future<void> main() async {
   await HiveService.initializeHive();

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:template_app/blocs/blocs.dart';
-import 'package:template_app/data/data.dart';
+import 'package:bible_app/blocs/blocs.dart';
+import 'package:bible_app/data/data.dart';
 
 /// [UserBloc] is responsible for managing user related events and states.
 class UserBloc extends Bloc<UserEvent, UserState> {

@@ -10,6 +10,7 @@ class BibleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      physics: const BouncingScrollPhysics(),
       itemCount: user.bible.books.length,
       itemBuilder: (context, index) {
         final book = user.bible.books[index];

@@ -15,6 +15,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: appColor,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
@@ -56,7 +57,10 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
             orElse: () => const CircularProgressIndicator(),
             loaded: (notes) => notes.isEmpty
                 ? const Center(
-                    child: Text('No notes yet...'),
+                    child: Text(
+                      'No notes yet',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   )
                 : Padding(
                     padding: const EdgeInsets.only(
@@ -71,6 +75,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                             right: 20,
                           ),
                           child: ListView.separated(
+                            physics: const BouncingScrollPhysics(),
                             padding: EdgeInsets.zero,
                             itemCount: notes.length,
                             separatorBuilder: (context, index) =>

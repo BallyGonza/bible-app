@@ -22,17 +22,24 @@ class _ReadingScreenState extends State<ReadingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: appColor,
       appBar: AppBar(
-        title: Text(
-          '${widget.chapter.number} ${widget.verse.book}: ${widget.chapter.name}',
+        title: FittedBox(
+          fit: BoxFit.fitWidth,
+          child: Text(
+            '${widget.chapter.number} ${widget.verse.book}: ${widget.chapter.name}',
+          ),
         ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Center(
-          child: ListView.builder(
+          child: ListView.separated(
+            physics: const BouncingScrollPhysics(),
             itemCount: widget.chapter.verses.length,
+            separatorBuilder: (context, index) => const Divider(
+              height: 3,
+            ),
             itemBuilder: (context, index) {
               final verse = widget.chapter.verses[index];
               return ReadingVerseCard(verse: verse);

@@ -6,7 +6,16 @@ class BookRepository {
   BookRepository();
 }
 
-BookModel genesis = BookModel(id: 1, name: 'Genesis', chapters: [genesis1]);
+BookModel genesis = BookModel(
+  id: 1,
+  name: 'Genesis',
+  chapters: [
+    genesis1,
+    genesis2,
+    genesis3,
+    genesis4,
+  ],
+);
 
 BookModel exodo = BookModel(
   id: 2,

@@ -46,76 +46,69 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
       },
       child: Slidable(
         endActionPane: ActionPane(
-          extentRatio: 0.25,
+          extentRatio: 0.20,
           dragDismissible: false,
           motion: const ScrollMotion(),
           children: [
             SlidableAction(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(5),
               onPressed: (_) {
                 showModalBottomSheet<SizedBox>(
+                  backgroundColor: Colors.transparent,
                   context: context,
                   builder: (context) {
                     return SizedBox(
                       height: MediaQuery.of(context).size.height * 0.15,
-                      child: Expanded(
-                        child: BlockPicker(
-                          availableColors: [
-                            Colors.white,
-                            Colors.red,
-                            Colors.red[300]!,
-                            Colors.purple,
-                            Colors.purple[200]!,
-                            Colors.purple[100]!,
-                            Colors.deepPurple,
-                            Colors.deepPurple[300]!,
-                            Colors.deepPurple[200]!,
-                            Colors.indigo,
-                            Colors.indigo[200]!,
-                            Colors.blue,
-                            Colors.blue[200]!,
-                            Colors.cyan,
-                            Colors.cyan[200]!,
-                            Colors.teal,
-                            Colors.teal[200]!,
-                            Colors.green,
-                            Colors.green[200]!,
-                            Colors.green[300]!,
-                            Colors.orange[300]!,
-                            Colors.deepOrange,
-                            Colors.brown,
-                            Colors.brown[200]!,
-                            Colors.grey,
-                            Colors.blueGrey,
-                            Colors.black,
-                          ],
-                          layoutBuilder: (context, colors, child) {
-                            return GridView.count(
-                              crossAxisCount: 6,
-                              children: [
-                                ...colors.map(
-                                  (color) => GestureDetector(
-                                    onTap: () {
-                                      if (color == Colors.white) {
-                                        setState(() {
-                                          widget.verse.color = null;
-                                        });
-                                      } else {
-                                        _onColorChanged(color);
-                                      }
-                                      Navigator.pop(context);
-                                    },
-                                    child: Container(
-                                      color: color,
-                                    ),
+                      child: BlockPicker(
+                        availableColors: [
+                          Colors.white,
+                          Colors.red[300]!,
+                          Colors.purple[200]!,
+                          Colors.purple[100]!,
+                          Colors.deepPurple[300]!,
+                          Colors.deepPurple[200]!,
+                          Colors.indigo[200]!,
+                          Colors.blue,
+                          Colors.blue[200]!,
+                          Colors.cyan,
+                          Colors.cyan[200]!,
+                          Colors.teal,
+                          Colors.teal[200]!,
+                          Colors.green[200]!,
+                          Colors.green[300]!,
+                          Colors.orange[300]!,
+                          Colors.deepOrange,
+                          Colors.brown[200]!,
+                          Colors.grey,
+                          Colors.blueGrey,
+                          Colors.yellow[200]!,
+                        ],
+                        layoutBuilder: (context, colors, child) {
+                          return GridView.count(
+                            crossAxisCount: 6,
+                            children: [
+                              ...colors.map(
+                                (color) => GestureDetector(
+                                  onTap: () {
+                                    if (color == Colors.white) {
+                                      setState(() {
+                                        widget.verse.color = null;
+                                      });
+                                    } else {
+                                      _onColorChanged(color);
+                                    }
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    color: color,
                                   ),
                                 ),
-                              ],
-                            );
-                          },
-                          pickerColor: _currentColor,
-                          onColorChanged: _onColorChanged,
-                        ),
+                              ),
+                            ],
+                          );
+                        },
+                        pickerColor: _currentColor,
+                        onColorChanged: _onColorChanged,
                       ),
                     );
                   },
@@ -123,11 +116,15 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
               },
               icon: FontAwesomeIcons.palette,
               foregroundColor: Colors.white,
-              backgroundColor: Colors.blue,
+              backgroundColor: accentColor,
             ),
           ],
         ),
         child: ListTile(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          tileColor: Color(widget.verse.color ?? Colors.transparent.value),
           leading: Text(
             '${widget.verse.number}',
             style: TextStyle(
@@ -136,7 +133,7 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
               color: _isFocused
                   ? Colors.white
                   : widget.verse.color != null
-                      ? Colors.white
+                      ? Colors.black
                       : const Color.fromARGB(255, 80, 80, 80),
             ),
           ),
@@ -151,12 +148,10 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
                       color: _isFocused
                           ? Colors.white
                           : widget.verse.color != null
-                              ? Colors.white
+                              ? Colors.black
                               : const Color.fromARGB(255, 80, 80, 80),
                       fontStyle:
                           _isFocused ? FontStyle.italic : FontStyle.normal,
-                      backgroundColor:
-                          Color(widget.verse.color ?? Colors.transparent.value),
                     ),
                   );
                 },

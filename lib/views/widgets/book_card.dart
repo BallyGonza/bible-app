@@ -20,13 +20,14 @@ class _BookCardState extends State<BookCard> with TickerProviderStateMixin {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 300),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: appColorDarker,
       child: Column(
         children: <Widget>[
           GestureDetector(
@@ -39,18 +40,15 @@ class _BookCardState extends State<BookCard> with TickerProviderStateMixin {
             child: ListTile(
               title: Text(
                 widget.book.name,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
               ),
-              trailing: isExpanded
-                  ? const Icon(Icons.arrow_drop_up)
-                  : const Icon(Icons.arrow_drop_down),
             ),
           ),
           AnimatedSize(
-            duration: const Duration(milliseconds: 100),
+            duration: const Duration(milliseconds: 300),
             curve: Curves.fastOutSlowIn,
             child: SizeTransition(
               sizeFactor: _controller,

@@ -22,8 +22,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: appColor,
       appBar: AppBar(
-        title: const Text('Bible'),
+        title: const Text(
+          'Bible',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: PageView(
         controller: _pageController,

@@ -8,6 +8,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       : _userRepository = userRepository,
         super(const UserState.initial()) {
     on<UserInitialEvent>(_onInit);
+    on<UserSaveEvent>(_onSaveVerse);
     add(const UserEvent.init());
   }
 
@@ -23,6 +24,28 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     emit(const UserState.loading());
     try {
       _user = await _userRepository.getUser();
+      emit(UserState.loaded(_user));
+    } catch (e) {
+      emit(UserState.error(e.toString()));
+    }
+  }
+
+  Future<void> _onSaveVerse(
+    UserSaveEvent event,
+    Emitter<UserState> emit,
+  ) async {
+    emit(const UserState.loading());
+    try {
+      for (final book in _user.bible.books) {
+        for (final chapter in book.chapters) {
+          for (final verse in chapter.verses) {
+            if (verse.text == event.verse.text) {
+              verse.color = event.verse.color;
+            }
+          }
+        }
+      }
+      await _userRepository.saveUser(_user);
       emit(UserState.loaded(_user));
     } catch (e) {
       emit(UserState.error(e.toString()));

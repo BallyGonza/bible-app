@@ -1,4 +1,5 @@
 import 'package:bible_app/data/data.dart';
+import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
 
 class BookCard extends StatefulWidget {
@@ -19,17 +20,52 @@ class _BookCardState extends State<BookCard> with TickerProviderStateMixin {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 100),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: ListTile(
-        title: Text(widget.book.name),
-        subtitle: Text('Chapters: ${widget.book.chapters.length}'),
-        trailing: const Icon(Icons.arrow_forward_ios),
+      child: Column(
+        children: <Widget>[
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                isExpanded = !isExpanded;
+                isExpanded ? _controller.forward() : _controller.reverse();
+              });
+            },
+            child: ListTile(
+              title: Text(
+                widget.book.name,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              trailing: isExpanded
+                  ? const Icon(Icons.arrow_drop_up)
+                  : const Icon(Icons.arrow_drop_down),
+            ),
+          ),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.fastOutSlowIn,
+            child: SizeTransition(
+              sizeFactor: _controller,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8, right: 8),
+                child: Column(
+                  children: [
+                    for (final chapter in widget.book.chapters)
+                      ChapterCard(chapter: chapter),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

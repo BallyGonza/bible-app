@@ -10,4 +10,7 @@ ThemeData theme = ThemeData(
       color: Colors.white,
     ),
   ),
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    backgroundColor: Colors.black,
+  ),
 );

@@ -43,3 +43,9 @@ ChapterModel genesis1 = ChapterModel(
     genesis1_31,
   ],
 );
+
+ChapterModel genesis2 = ChapterModel(
+  number: 2,
+  name: 'El hombre en el huerto de Edén',
+  verses: [],
+);

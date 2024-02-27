@@ -2,8 +2,8 @@
 
 import 'package:bible_app/data/data.dart';
 
-class numberRepository {
-  numberRepository();
+class NumberRepository {
+  NumberRepository();
 }
 
 VerseModel genesis1_1 = VerseModel(

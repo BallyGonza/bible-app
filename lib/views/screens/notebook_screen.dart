@@ -1,8 +1,8 @@
 import 'package:bible_app/blocs/blocs.dart';
+import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 class NoteBookScreen extends StatefulWidget {
   const NoteBookScreen({super.key});
@@ -14,53 +14,107 @@ class NoteBookScreen extends StatefulWidget {
 class _NoteBookScreenState extends State<NoteBookScreen> {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: BlocBuilder<NotesBloc, NotesState>(
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<NoteScreen>(
+              builder: (_) => NoteScreen(
+                isNewNote: true,
+                note: NoteModel(
+                  id: 0,
+                  date: date.format(DateTime.now()),
+                  color: Colors.white.value,
+                  title: '',
+                  content: '',
+                ),
+                buttonText: 'Add',
+                onSaved: (title, content, color) {
+                  setState(() {
+                    context.read<NotesBloc>().add(
+                          NotesEvent.add(
+                            NoteModel(
+                              id: DateTime.now().millisecondsSinceEpoch,
+                              title: title,
+                              content: content,
+                              date: date.format(DateTime.now()),
+                              color: color,
+                            ),
+                          ),
+                        );
+                  });
+                },
+              ),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
+      body: BlocBuilder<NotesBloc, NotesState>(
         builder: (context, state) {
           return state.maybeWhen(
             orElse: () => const CircularProgressIndicator(),
             loaded: (notes) => notes.isEmpty
                 ? const Center(
-                    child: Text('No notes yet'),
+                    child: Text('No notes yet...'),
                   )
-                : SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.75,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 20,
-                        right: 20,
-                      ),
-                      child: ListView.separated(
-                        padding: EdgeInsets.zero,
-                        itemCount: notes.length,
-                        separatorBuilder: (context, index) => const SizedBox(
-                          height: 10,
+                : Padding(
+                    padding: const EdgeInsets.only(
+                      top: 20,
+                    ),
+                    child: SingleChildScrollView(
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.75,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            left: 20,
+                            right: 20,
+                          ),
+                          child: ListView.separated(
+                            padding: EdgeInsets.zero,
+                            itemCount: notes.length,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
+                              height: 10,
+                            ),
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return NoteCard(
+                                note: notes[index],
+                                index: index,
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute<NoteScreen>(
+                                      builder: (_) => NoteScreen(
+                                        isNewNote: false,
+                                        note: notes[index],
+                                        buttonText: 'Update',
+                                        onSaved: (title, content, color) {
+                                          setState(() {
+                                            context.read<NotesBloc>().add(
+                                                  NotesEvent.edit(
+                                                    index,
+                                                    NoteModel(
+                                                      id: notes[index].id,
+                                                      title: title,
+                                                      content: content,
+                                                      date: date.format(
+                                                        DateTime.now(),
+                                                      ),
+                                                      color: color,
+                                                    ),
+                                                  ),
+                                                );
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
                         ),
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return Slidable(
-                            key: ValueKey(notes[index]),
-                            endActionPane: ActionPane(
-                              extentRatio: 0.25,
-                              dragDismissible: false,
-                              motion: const ScrollMotion(),
-                              children: [
-                                SlidableAction(
-                                  onPressed: (_) {
-                                    context
-                                        .read<NotesBloc>()
-                                        .add(NotesEvent.delete(index));
-                                  },
-                                  icon: Icons.delete,
-                                  label: 'Delete',
-                                ),
-                              ],
-                            ),
-                            child: NoteCard(
-                              note: notes[index],
-                            ),
-                          );
-                        },
                       ),
                     ),
                   ),

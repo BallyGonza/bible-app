@@ -1,4 +1,5 @@
 import 'package:bible_app/data/data.dart';
+import 'package:bible_app/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class BibleScreen extends StatelessWidget {
@@ -8,6 +9,14 @@ class BibleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return ListView.builder(
+      itemCount: user.bible.books.length,
+      itemBuilder: (context, index) {
+        final book = user.bible.books[index];
+        return BookCard(
+          book: book,
+        );
+      },
+    );
   }
 }

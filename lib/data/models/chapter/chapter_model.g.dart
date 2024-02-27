@@ -17,8 +17,8 @@ class ChapterModelAdapter extends TypeAdapter<ChapterModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ChapterModel(
-      id: fields[0] as int,
-      title: fields[1] as String,
+      number: fields[0] as int,
+      name: fields[1] as String,
       verses: (fields[2] as List).cast<VerseModel>(),
     );
   }
@@ -28,9 +28,9 @@ class ChapterModelAdapter extends TypeAdapter<ChapterModel> {
     writer
       ..writeByte(3)
       ..writeByte(0)
-      ..write(obj.id)
+      ..write(obj.number)
       ..writeByte(1)
-      ..write(obj.title)
+      ..write(obj.name)
       ..writeByte(2)
       ..write(obj.verses);
   }

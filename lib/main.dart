@@ -23,6 +23,9 @@ class Main extends StatelessWidget {
             userRepository: UserRepository(),
           ),
         ),
+        BlocProvider(
+          create: (context) => NotesBloc(),
+        ),
       ],
       child: const App(),
     );

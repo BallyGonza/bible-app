@@ -18,15 +18,21 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
     };
     return UserModel(
       id: fields[0] as int,
+      notes: (fields[1] as List).cast<NoteModel>(),
+      bible: fields[2] as BibleModel,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserModel obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(3)
       ..writeByte(0)
-      ..write(obj.id);
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.notes)
+      ..writeByte(2)
+      ..write(obj.bible);
   }
 
   @override

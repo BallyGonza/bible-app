@@ -7,14 +7,14 @@ part 'book_model.g.dart';
 class BookModel extends HiveObject {
   BookModel({
     required this.id,
-    required this.title,
+    required this.name,
     required this.chapters,
   });
 
   @HiveField(0)
   int id;
   @HiveField(1)
-  String title;
+  String name;
   @HiveField(2)
   List<ChapterModel> chapters;
 }

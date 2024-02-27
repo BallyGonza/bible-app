@@ -17,31 +17,28 @@ class VerseModelAdapter extends TypeAdapter<VerseModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return VerseModel(
-      id: fields[0] as int,
+      number: fields[0] as int,
       book: fields[1] as String,
       chapter: fields[2] as int,
-      content: fields[3] as String,
-      color: fields[4] as String?,
-      note: fields[5] as NoteModel?,
+      text: fields[3] as String,
+      color: fields[4] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, VerseModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(5)
       ..writeByte(0)
-      ..write(obj.id)
+      ..write(obj.number)
       ..writeByte(1)
       ..write(obj.book)
       ..writeByte(2)
       ..write(obj.chapter)
       ..writeByte(3)
-      ..write(obj.content)
+      ..write(obj.text)
       ..writeByte(4)
-      ..write(obj.color)
-      ..writeByte(5)
-      ..write(obj.note);
+      ..write(obj.color);
   }
 
   @override

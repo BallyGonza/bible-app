@@ -8,7 +8,13 @@ class HiveService {
   static Future<void> initializeHive() async {
     try {
       // Registering the UserModelAdapter to serialize/deserialize UserModel objects.
-      Hive.registerAdapter(UserModelAdapter());
+      Hive
+        ..registerAdapter(UserModelAdapter())
+        ..registerAdapter(BibleModelAdapter())
+        ..registerAdapter(BookModelAdapter())
+        ..registerAdapter(ChapterModelAdapter())
+        ..registerAdapter(VerseModelAdapter())
+        ..registerAdapter(NoteModelAdapter());
       WidgetsFlutterBinding.ensureInitialized();
       await Hive.initFlutter();
       // Opening a box to store UserModel objects.

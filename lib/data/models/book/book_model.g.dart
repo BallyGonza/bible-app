@@ -18,7 +18,7 @@ class BookModelAdapter extends TypeAdapter<BookModel> {
     };
     return BookModel(
       id: fields[0] as int,
-      title: fields[1] as String,
+      name: fields[1] as String,
       chapters: (fields[2] as List).cast<ChapterModel>(),
     );
   }
@@ -30,7 +30,7 @@ class BookModelAdapter extends TypeAdapter<BookModel> {
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.title)
+      ..write(obj.name)
       ..writeByte(2)
       ..write(obj.chapters);
   }

@@ -19,7 +19,9 @@ class App extends StatelessWidget {
             orElse: () => const Center(
               child: CircularProgressIndicator(),
             ),
-            loaded: (user) => const HomeScreen(),
+            loaded: (user) => HomeScreen(
+              user: user,
+            ),
           );
         },
       ),

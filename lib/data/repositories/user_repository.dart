@@ -24,4 +24,6 @@ class UserRepository {
 
 UserModel defaultUser = UserModel(
   id: 0,
+  notes: [],
+  bible: rvr1960,
 );

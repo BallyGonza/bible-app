@@ -7,14 +7,11 @@ part 'chapter_model.g.dart';
 class ChapterModel extends HiveObject {
   ChapterModel({
     required this.number,
-    required this.name,
     required this.verses,
   });
 
   @HiveField(0)
   int number;
   @HiveField(1)
-  String name;
-  @HiveField(2)
   List<VerseModel> verses;
 }

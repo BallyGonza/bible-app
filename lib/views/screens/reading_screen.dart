@@ -27,7 +27,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
         title: FittedBox(
           fit: BoxFit.fitWidth,
           child: Text(
-            '${widget.chapter.number} ${widget.verse.book}: ${widget.chapter.name}',
+            '${widget.verse.book} ${widget.chapter.number}',
           ),
         ),
       ),

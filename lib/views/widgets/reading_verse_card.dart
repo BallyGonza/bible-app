@@ -139,22 +139,17 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
           ),
           title: Stack(
             children: [
-              BlocBuilder<UserBloc, UserState>(
-                builder: (context, state) {
-                  return Text(
-                    widget.verse.text,
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: _isFocused
-                          ? Colors.white
-                          : widget.verse.color != null
-                              ? Colors.black
-                              : const Color.fromARGB(255, 80, 80, 80),
-                      fontStyle:
-                          _isFocused ? FontStyle.italic : FontStyle.normal,
-                    ),
-                  );
-                },
+              Text(
+                widget.verse.text,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: _isFocused
+                      ? Colors.white
+                      : widget.verse.color != null
+                          ? Colors.black
+                          : const Color.fromARGB(255, 80, 80, 80),
+                  fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
+                ),
               ),
             ],
           ),

@@ -18,10 +18,10 @@ class VerseCard extends StatelessWidget {
       margin: const EdgeInsets.only(right: 5, bottom: 5),
       padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
-        color: Color(verse.color ?? Colors.grey[300]!.value),
+        color: Color(verse.color ?? appColorDarker.value),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: isSelected ? Colors.red : Colors.transparent,
+          color: isSelected ? accentColor : Colors.transparent,
         ),
       ),
       child: Text(
@@ -29,6 +29,7 @@ class VerseCard extends StatelessWidget {
         textAlign: TextAlign.center,
         style: const TextStyle(
           fontSize: 16,
+          color: Colors.white,
           fontWeight: FontWeight.bold,
         ),
       ),

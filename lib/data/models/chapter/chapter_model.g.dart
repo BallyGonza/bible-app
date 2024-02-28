@@ -18,20 +18,17 @@ class ChapterModelAdapter extends TypeAdapter<ChapterModel> {
     };
     return ChapterModel(
       number: fields[0] as int,
-      name: fields[1] as String,
-      verses: (fields[2] as List).cast<VerseModel>(),
+      verses: (fields[1] as List).cast<VerseModel>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, ChapterModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(2)
       ..writeByte(0)
       ..write(obj.number)
       ..writeByte(1)
-      ..write(obj.name)
-      ..writeByte(2)
       ..write(obj.verses);
   }
 

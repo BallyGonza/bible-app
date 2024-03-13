@@ -5,9 +5,11 @@ import 'package:bloc/bloc.dart';
 class NotesBloc extends Bloc<NotesEvent, NotesState> {
   NotesBloc() : super(const NotesState.initial()) {
     on<NotesInitialEvent>(_onInit);
-    on<NotesAddEvent>(_onAdd);
-    on<NotesEditEvent>(_onEdit);
-    on<NotesDeleteEvent>(_onDelete);
+    on<NotesAddNoteEvent>(_onAddNote);
+    on<NotesAddVerseEvent>(_onAddVerse);
+    on<NotesEditNoteEvent>(_onEditNote);
+    on<NotesRemoveVerseEvent>(_onRemoveVerse);
+    on<NotesDeleteNoteEvent>(_onDeleteNote);
 
     add(const NotesInitialEvent());
   }
@@ -26,8 +28,8 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
     emit(NotesState.loaded(notes));
   }
 
-  Future<void> _onAdd(
-    NotesAddEvent event,
+  Future<void> _onAddNote(
+    NotesAddNoteEvent event,
     Emitter<NotesState> emit,
   ) async {
     emit(const NotesState.loading());
@@ -37,8 +39,8 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
     emit(NotesState.loaded(notes));
   }
 
-  Future<void> _onEdit(
-    NotesEditEvent event,
+  Future<void> _onEditNote(
+    NotesEditNoteEvent event,
     Emitter<NotesState> emit,
   ) async {
     emit(const NotesState.loading());
@@ -48,12 +50,32 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
     emit(NotesState.loaded(notes));
   }
 
-  Future<void> _onDelete(
-    NotesDeleteEvent event,
+  Future<void> _onDeleteNote(
+    NotesDeleteNoteEvent event,
     Emitter<NotesState> emit,
   ) async {
     emit(const NotesState.loading());
     notes.removeAt(event.index);
+    await _userRepository.saveUser(user);
+    emit(NotesState.loaded(notes));
+  }
+
+  Future<void> _onAddVerse(
+    NotesAddVerseEvent event,
+    Emitter<NotesState> emit,
+  ) async {
+    emit(const NotesState.loading());
+    notes[event.index].verses.add(event.verse);
+    await _userRepository.saveUser(user);
+    emit(NotesState.loaded(notes));
+  }
+
+  Future<void> _onRemoveVerse(
+    NotesRemoveVerseEvent event,
+    Emitter<NotesState> emit,
+  ) async {
+    emit(const NotesState.loading());
+    notes[event.index].verses.removeAt(event.verseIndex);
     await _userRepository.saveUser(user);
     emit(NotesState.loaded(notes));
   }

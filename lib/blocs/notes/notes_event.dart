@@ -6,17 +6,22 @@ part 'notes_event.freezed.dart';
 @freezed
 class NotesEvent with _$NotesEvent {
   const factory NotesEvent.init() = NotesInitialEvent;
-  const factory NotesEvent.add(
+  const factory NotesEvent.addNote(
     NoteModel note,
-  ) = NotesAddEvent;
-  const factory NotesEvent.edit(
+  ) = NotesAddNoteEvent;
+  const factory NotesEvent.editNote(
     int index,
     NoteModel note,
-  ) = NotesEditEvent;
-  const factory NotesEvent.delete(
+  ) = NotesEditNoteEvent;
+  const factory NotesEvent.deleteNote(
     int index,
-  ) = NotesDeleteEvent;
-  const factory NotesEvent.deleteAll(
-    List<NoteModel> notes,
-  ) = NotesDeleteAllEvent;
+  ) = NotesDeleteNoteEvent;
+  const factory NotesEvent.addVerse(
+    int index,
+    VerseModel verse,
+  ) = NotesAddVerseEvent;
+  const factory NotesEvent.removeVerse(
+    int index,
+    int verseIndex,
+  ) = NotesRemoveVerseEvent;
 }

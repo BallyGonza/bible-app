@@ -1,3 +1,4 @@
+import 'package:bible_app/data/data.dart';
 import 'package:hive/hive.dart';
 
 part 'note_model.g.dart';
@@ -10,6 +11,7 @@ class NoteModel extends HiveObject {
     required this.content,
     required this.date,
     required this.color,
+    required this.verses,
   });
   @HiveField(0)
   final int id;
@@ -18,7 +20,9 @@ class NoteModel extends HiveObject {
   @HiveField(2)
   String content;
   @HiveField(3)
-  String date;
+  List<VerseModel> verses;
   @HiveField(4)
+  String date;
+  @HiveField(5)
   int color;
 }

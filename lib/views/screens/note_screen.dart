@@ -112,13 +112,6 @@ class NotePageState extends State<NoteScreen> {
                 textAlign: TextAlign.left,
                 cursorColor: _fontColor,
                 textCapitalization: TextCapitalization.sentences,
-                // ignore: deprecated_member_use
-                toolbarOptions: const ToolbarOptions(
-                  copy: true,
-                  paste: true,
-                  selectAll: true,
-                  cut: true,
-                ),
               ),
               const SizedBox(height: 8),
               SizedBox(

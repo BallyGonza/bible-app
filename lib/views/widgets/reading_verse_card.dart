@@ -118,6 +118,69 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
               foregroundColor: Colors.white,
               backgroundColor: accentColor,
             ),
+            SlidableAction(
+              borderRadius: BorderRadius.circular(5),
+              onPressed: (_) {
+                showModalBottomSheet<Container>(
+                  backgroundColor: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(11),
+                  ),
+                  context: context,
+                  builder: (context) => Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                      color: appColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                      ),
+                    ),
+                    height: widget.verse.text.length > 100 ? 205 : 155,
+                    child: BlocBuilder<NotesBloc, NotesState>(
+                      builder: (context, state) {
+                        return state.maybeWhen(
+                          orElse: () {
+                            return const CircularProgressIndicator();
+                          },
+                          loaded: (notes) {
+                            return ListView.builder(
+                              itemCount: notes.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    context.read<NotesBloc>().add(
+                                          NotesEvent.addVerse(
+                                            index,
+                                            widget.verse,
+                                          ),
+                                        );
+                                  },
+                                  child: ListTile(
+                                    title: Text(
+                                      notes[index].title,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge!
+                                          .copyWith(
+                                            color: Colors.white,
+                                          ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                );
+              },
+              icon: FontAwesomeIcons.heart,
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.red,
+            ),
           ],
         ),
         child: ListTile(

@@ -19,56 +19,62 @@ mixin _$NotesEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() init,
-    required TResult Function(NoteModel note) add,
-    required TResult Function(int index, NoteModel note) edit,
-    required TResult Function(int index) delete,
-    required TResult Function(List<NoteModel> notes) deleteAll,
+    required TResult Function(NoteModel note) addNote,
+    required TResult Function(int index, NoteModel note) editNote,
+    required TResult Function(int index) deleteNote,
+    required TResult Function(int index, VerseModel verse) addVerse,
+    required TResult Function(int index, int verseIndex) removeVerse,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? init,
-    TResult? Function(NoteModel note)? add,
-    TResult? Function(int index, NoteModel note)? edit,
-    TResult? Function(int index)? delete,
-    TResult? Function(List<NoteModel> notes)? deleteAll,
+    TResult? Function(NoteModel note)? addNote,
+    TResult? Function(int index, NoteModel note)? editNote,
+    TResult? Function(int index)? deleteNote,
+    TResult? Function(int index, VerseModel verse)? addVerse,
+    TResult? Function(int index, int verseIndex)? removeVerse,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? init,
-    TResult Function(NoteModel note)? add,
-    TResult Function(int index, NoteModel note)? edit,
-    TResult Function(int index)? delete,
-    TResult Function(List<NoteModel> notes)? deleteAll,
+    TResult Function(NoteModel note)? addNote,
+    TResult Function(int index, NoteModel note)? editNote,
+    TResult Function(int index)? deleteNote,
+    TResult Function(int index, VerseModel verse)? addVerse,
+    TResult Function(int index, int verseIndex)? removeVerse,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(NotesInitialEvent value) init,
-    required TResult Function(NotesAddEvent value) add,
-    required TResult Function(NotesEditEvent value) edit,
-    required TResult Function(NotesDeleteEvent value) delete,
-    required TResult Function(NotesDeleteAllEvent value) deleteAll,
+    required TResult Function(NotesAddNoteEvent value) addNote,
+    required TResult Function(NotesEditNoteEvent value) editNote,
+    required TResult Function(NotesDeleteNoteEvent value) deleteNote,
+    required TResult Function(NotesAddVerseEvent value) addVerse,
+    required TResult Function(NotesRemoveVerseEvent value) removeVerse,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(NotesInitialEvent value)? init,
-    TResult? Function(NotesAddEvent value)? add,
-    TResult? Function(NotesEditEvent value)? edit,
-    TResult? Function(NotesDeleteEvent value)? delete,
-    TResult? Function(NotesDeleteAllEvent value)? deleteAll,
+    TResult? Function(NotesAddNoteEvent value)? addNote,
+    TResult? Function(NotesEditNoteEvent value)? editNote,
+    TResult? Function(NotesDeleteNoteEvent value)? deleteNote,
+    TResult? Function(NotesAddVerseEvent value)? addVerse,
+    TResult? Function(NotesRemoveVerseEvent value)? removeVerse,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(NotesInitialEvent value)? init,
-    TResult Function(NotesAddEvent value)? add,
-    TResult Function(NotesEditEvent value)? edit,
-    TResult Function(NotesDeleteEvent value)? delete,
-    TResult Function(NotesDeleteAllEvent value)? deleteAll,
+    TResult Function(NotesAddNoteEvent value)? addNote,
+    TResult Function(NotesEditNoteEvent value)? editNote,
+    TResult Function(NotesDeleteNoteEvent value)? deleteNote,
+    TResult Function(NotesAddVerseEvent value)? addVerse,
+    TResult Function(NotesRemoveVerseEvent value)? removeVerse,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -131,10 +137,11 @@ class _$NotesInitialEventImpl implements NotesInitialEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() init,
-    required TResult Function(NoteModel note) add,
-    required TResult Function(int index, NoteModel note) edit,
-    required TResult Function(int index) delete,
-    required TResult Function(List<NoteModel> notes) deleteAll,
+    required TResult Function(NoteModel note) addNote,
+    required TResult Function(int index, NoteModel note) editNote,
+    required TResult Function(int index) deleteNote,
+    required TResult Function(int index, VerseModel verse) addVerse,
+    required TResult Function(int index, int verseIndex) removeVerse,
   }) {
     return init();
   }
@@ -143,10 +150,11 @@ class _$NotesInitialEventImpl implements NotesInitialEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? init,
-    TResult? Function(NoteModel note)? add,
-    TResult? Function(int index, NoteModel note)? edit,
-    TResult? Function(int index)? delete,
-    TResult? Function(List<NoteModel> notes)? deleteAll,
+    TResult? Function(NoteModel note)? addNote,
+    TResult? Function(int index, NoteModel note)? editNote,
+    TResult? Function(int index)? deleteNote,
+    TResult? Function(int index, VerseModel verse)? addVerse,
+    TResult? Function(int index, int verseIndex)? removeVerse,
   }) {
     return init?.call();
   }
@@ -155,10 +163,11 @@ class _$NotesInitialEventImpl implements NotesInitialEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? init,
-    TResult Function(NoteModel note)? add,
-    TResult Function(int index, NoteModel note)? edit,
-    TResult Function(int index)? delete,
-    TResult Function(List<NoteModel> notes)? deleteAll,
+    TResult Function(NoteModel note)? addNote,
+    TResult Function(int index, NoteModel note)? editNote,
+    TResult Function(int index)? deleteNote,
+    TResult Function(int index, VerseModel verse)? addVerse,
+    TResult Function(int index, int verseIndex)? removeVerse,
     required TResult orElse(),
   }) {
     if (init != null) {
@@ -171,10 +180,11 @@ class _$NotesInitialEventImpl implements NotesInitialEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(NotesInitialEvent value) init,
-    required TResult Function(NotesAddEvent value) add,
-    required TResult Function(NotesEditEvent value) edit,
-    required TResult Function(NotesDeleteEvent value) delete,
-    required TResult Function(NotesDeleteAllEvent value) deleteAll,
+    required TResult Function(NotesAddNoteEvent value) addNote,
+    required TResult Function(NotesEditNoteEvent value) editNote,
+    required TResult Function(NotesDeleteNoteEvent value) deleteNote,
+    required TResult Function(NotesAddVerseEvent value) addVerse,
+    required TResult Function(NotesRemoveVerseEvent value) removeVerse,
   }) {
     return init(this);
   }
@@ -183,10 +193,11 @@ class _$NotesInitialEventImpl implements NotesInitialEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(NotesInitialEvent value)? init,
-    TResult? Function(NotesAddEvent value)? add,
-    TResult? Function(NotesEditEvent value)? edit,
-    TResult? Function(NotesDeleteEvent value)? delete,
-    TResult? Function(NotesDeleteAllEvent value)? deleteAll,
+    TResult? Function(NotesAddNoteEvent value)? addNote,
+    TResult? Function(NotesEditNoteEvent value)? editNote,
+    TResult? Function(NotesDeleteNoteEvent value)? deleteNote,
+    TResult? Function(NotesAddVerseEvent value)? addVerse,
+    TResult? Function(NotesRemoveVerseEvent value)? removeVerse,
   }) {
     return init?.call(this);
   }
@@ -195,10 +206,11 @@ class _$NotesInitialEventImpl implements NotesInitialEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(NotesInitialEvent value)? init,
-    TResult Function(NotesAddEvent value)? add,
-    TResult Function(NotesEditEvent value)? edit,
-    TResult Function(NotesDeleteEvent value)? delete,
-    TResult Function(NotesDeleteAllEvent value)? deleteAll,
+    TResult Function(NotesAddNoteEvent value)? addNote,
+    TResult Function(NotesEditNoteEvent value)? editNote,
+    TResult Function(NotesDeleteNoteEvent value)? deleteNote,
+    TResult Function(NotesAddVerseEvent value)? addVerse,
+    TResult Function(NotesRemoveVerseEvent value)? removeVerse,
     required TResult orElse(),
   }) {
     if (init != null) {
@@ -213,20 +225,20 @@ abstract class NotesInitialEvent implements NotesEvent {
 }
 
 /// @nodoc
-abstract class _$$NotesAddEventImplCopyWith<$Res> {
-  factory _$$NotesAddEventImplCopyWith(
-          _$NotesAddEventImpl value, $Res Function(_$NotesAddEventImpl) then) =
-      __$$NotesAddEventImplCopyWithImpl<$Res>;
+abstract class _$$NotesAddNoteEventImplCopyWith<$Res> {
+  factory _$$NotesAddNoteEventImplCopyWith(_$NotesAddNoteEventImpl value,
+          $Res Function(_$NotesAddNoteEventImpl) then) =
+      __$$NotesAddNoteEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({NoteModel note});
 }
 
 /// @nodoc
-class __$$NotesAddEventImplCopyWithImpl<$Res>
-    extends _$NotesEventCopyWithImpl<$Res, _$NotesAddEventImpl>
-    implements _$$NotesAddEventImplCopyWith<$Res> {
-  __$$NotesAddEventImplCopyWithImpl(
-      _$NotesAddEventImpl _value, $Res Function(_$NotesAddEventImpl) _then)
+class __$$NotesAddNoteEventImplCopyWithImpl<$Res>
+    extends _$NotesEventCopyWithImpl<$Res, _$NotesAddNoteEventImpl>
+    implements _$$NotesAddNoteEventImplCopyWith<$Res> {
+  __$$NotesAddNoteEventImplCopyWithImpl(_$NotesAddNoteEventImpl _value,
+      $Res Function(_$NotesAddNoteEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -234,7 +246,7 @@ class __$$NotesAddEventImplCopyWithImpl<$Res>
   $Res call({
     Object? note = null,
   }) {
-    return _then(_$NotesAddEventImpl(
+    return _then(_$NotesAddNoteEventImpl(
       null == note
           ? _value.note
           : note // ignore: cast_nullable_to_non_nullable
@@ -245,22 +257,22 @@ class __$$NotesAddEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$NotesAddEventImpl implements NotesAddEvent {
-  const _$NotesAddEventImpl(this.note);
+class _$NotesAddNoteEventImpl implements NotesAddNoteEvent {
+  const _$NotesAddNoteEventImpl(this.note);
 
   @override
   final NoteModel note;
 
   @override
   String toString() {
-    return 'NotesEvent.add(note: $note)';
+    return 'NotesEvent.addNote(note: $note)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$NotesAddEventImpl &&
+            other is _$NotesAddNoteEventImpl &&
             (identical(other.note, note) || other.note == note));
   }
 
@@ -270,45 +282,49 @@ class _$NotesAddEventImpl implements NotesAddEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$NotesAddEventImplCopyWith<_$NotesAddEventImpl> get copyWith =>
-      __$$NotesAddEventImplCopyWithImpl<_$NotesAddEventImpl>(this, _$identity);
+  _$$NotesAddNoteEventImplCopyWith<_$NotesAddNoteEventImpl> get copyWith =>
+      __$$NotesAddNoteEventImplCopyWithImpl<_$NotesAddNoteEventImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() init,
-    required TResult Function(NoteModel note) add,
-    required TResult Function(int index, NoteModel note) edit,
-    required TResult Function(int index) delete,
-    required TResult Function(List<NoteModel> notes) deleteAll,
+    required TResult Function(NoteModel note) addNote,
+    required TResult Function(int index, NoteModel note) editNote,
+    required TResult Function(int index) deleteNote,
+    required TResult Function(int index, VerseModel verse) addVerse,
+    required TResult Function(int index, int verseIndex) removeVerse,
   }) {
-    return add(note);
+    return addNote(note);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? init,
-    TResult? Function(NoteModel note)? add,
-    TResult? Function(int index, NoteModel note)? edit,
-    TResult? Function(int index)? delete,
-    TResult? Function(List<NoteModel> notes)? deleteAll,
+    TResult? Function(NoteModel note)? addNote,
+    TResult? Function(int index, NoteModel note)? editNote,
+    TResult? Function(int index)? deleteNote,
+    TResult? Function(int index, VerseModel verse)? addVerse,
+    TResult? Function(int index, int verseIndex)? removeVerse,
   }) {
-    return add?.call(note);
+    return addNote?.call(note);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? init,
-    TResult Function(NoteModel note)? add,
-    TResult Function(int index, NoteModel note)? edit,
-    TResult Function(int index)? delete,
-    TResult Function(List<NoteModel> notes)? deleteAll,
+    TResult Function(NoteModel note)? addNote,
+    TResult Function(int index, NoteModel note)? editNote,
+    TResult Function(int index)? deleteNote,
+    TResult Function(int index, VerseModel verse)? addVerse,
+    TResult Function(int index, int verseIndex)? removeVerse,
     required TResult orElse(),
   }) {
-    if (add != null) {
-      return add(note);
+    if (addNote != null) {
+      return addNote(note);
     }
     return orElse();
   }
@@ -317,67 +333,71 @@ class _$NotesAddEventImpl implements NotesAddEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(NotesInitialEvent value) init,
-    required TResult Function(NotesAddEvent value) add,
-    required TResult Function(NotesEditEvent value) edit,
-    required TResult Function(NotesDeleteEvent value) delete,
-    required TResult Function(NotesDeleteAllEvent value) deleteAll,
+    required TResult Function(NotesAddNoteEvent value) addNote,
+    required TResult Function(NotesEditNoteEvent value) editNote,
+    required TResult Function(NotesDeleteNoteEvent value) deleteNote,
+    required TResult Function(NotesAddVerseEvent value) addVerse,
+    required TResult Function(NotesRemoveVerseEvent value) removeVerse,
   }) {
-    return add(this);
+    return addNote(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(NotesInitialEvent value)? init,
-    TResult? Function(NotesAddEvent value)? add,
-    TResult? Function(NotesEditEvent value)? edit,
-    TResult? Function(NotesDeleteEvent value)? delete,
-    TResult? Function(NotesDeleteAllEvent value)? deleteAll,
+    TResult? Function(NotesAddNoteEvent value)? addNote,
+    TResult? Function(NotesEditNoteEvent value)? editNote,
+    TResult? Function(NotesDeleteNoteEvent value)? deleteNote,
+    TResult? Function(NotesAddVerseEvent value)? addVerse,
+    TResult? Function(NotesRemoveVerseEvent value)? removeVerse,
   }) {
-    return add?.call(this);
+    return addNote?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(NotesInitialEvent value)? init,
-    TResult Function(NotesAddEvent value)? add,
-    TResult Function(NotesEditEvent value)? edit,
-    TResult Function(NotesDeleteEvent value)? delete,
-    TResult Function(NotesDeleteAllEvent value)? deleteAll,
+    TResult Function(NotesAddNoteEvent value)? addNote,
+    TResult Function(NotesEditNoteEvent value)? editNote,
+    TResult Function(NotesDeleteNoteEvent value)? deleteNote,
+    TResult Function(NotesAddVerseEvent value)? addVerse,
+    TResult Function(NotesRemoveVerseEvent value)? removeVerse,
     required TResult orElse(),
   }) {
-    if (add != null) {
-      return add(this);
+    if (addNote != null) {
+      return addNote(this);
     }
     return orElse();
   }
 }
 
-abstract class NotesAddEvent implements NotesEvent {
-  const factory NotesAddEvent(final NoteModel note) = _$NotesAddEventImpl;
+abstract class NotesAddNoteEvent implements NotesEvent {
+  const factory NotesAddNoteEvent(final NoteModel note) =
+      _$NotesAddNoteEventImpl;
 
   NoteModel get note;
   @JsonKey(ignore: true)
-  _$$NotesAddEventImplCopyWith<_$NotesAddEventImpl> get copyWith =>
+  _$$NotesAddNoteEventImplCopyWith<_$NotesAddNoteEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$NotesEditEventImplCopyWith<$Res> {
-  factory _$$NotesEditEventImplCopyWith(_$NotesEditEventImpl value,
-          $Res Function(_$NotesEditEventImpl) then) =
-      __$$NotesEditEventImplCopyWithImpl<$Res>;
+abstract class _$$NotesEditNoteEventImplCopyWith<$Res> {
+  factory _$$NotesEditNoteEventImplCopyWith(_$NotesEditNoteEventImpl value,
+          $Res Function(_$NotesEditNoteEventImpl) then) =
+      __$$NotesEditNoteEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({int index, NoteModel note});
 }
 
 /// @nodoc
-class __$$NotesEditEventImplCopyWithImpl<$Res>
-    extends _$NotesEventCopyWithImpl<$Res, _$NotesEditEventImpl>
-    implements _$$NotesEditEventImplCopyWith<$Res> {
-  __$$NotesEditEventImplCopyWithImpl(
-      _$NotesEditEventImpl _value, $Res Function(_$NotesEditEventImpl) _then)
+class __$$NotesEditNoteEventImplCopyWithImpl<$Res>
+    extends _$NotesEventCopyWithImpl<$Res, _$NotesEditNoteEventImpl>
+    implements _$$NotesEditNoteEventImplCopyWith<$Res> {
+  __$$NotesEditNoteEventImplCopyWithImpl(_$NotesEditNoteEventImpl _value,
+      $Res Function(_$NotesEditNoteEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -386,7 +406,7 @@ class __$$NotesEditEventImplCopyWithImpl<$Res>
     Object? index = null,
     Object? note = null,
   }) {
-    return _then(_$NotesEditEventImpl(
+    return _then(_$NotesEditNoteEventImpl(
       null == index
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
@@ -401,8 +421,8 @@ class __$$NotesEditEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$NotesEditEventImpl implements NotesEditEvent {
-  const _$NotesEditEventImpl(this.index, this.note);
+class _$NotesEditNoteEventImpl implements NotesEditNoteEvent {
+  const _$NotesEditNoteEventImpl(this.index, this.note);
 
   @override
   final int index;
@@ -411,14 +431,14 @@ class _$NotesEditEventImpl implements NotesEditEvent {
 
   @override
   String toString() {
-    return 'NotesEvent.edit(index: $index, note: $note)';
+    return 'NotesEvent.editNote(index: $index, note: $note)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$NotesEditEventImpl &&
+            other is _$NotesEditNoteEventImpl &&
             (identical(other.index, index) || other.index == index) &&
             (identical(other.note, note) || other.note == note));
   }
@@ -429,46 +449,49 @@ class _$NotesEditEventImpl implements NotesEditEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$NotesEditEventImplCopyWith<_$NotesEditEventImpl> get copyWith =>
-      __$$NotesEditEventImplCopyWithImpl<_$NotesEditEventImpl>(
+  _$$NotesEditNoteEventImplCopyWith<_$NotesEditNoteEventImpl> get copyWith =>
+      __$$NotesEditNoteEventImplCopyWithImpl<_$NotesEditNoteEventImpl>(
           this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() init,
-    required TResult Function(NoteModel note) add,
-    required TResult Function(int index, NoteModel note) edit,
-    required TResult Function(int index) delete,
-    required TResult Function(List<NoteModel> notes) deleteAll,
+    required TResult Function(NoteModel note) addNote,
+    required TResult Function(int index, NoteModel note) editNote,
+    required TResult Function(int index) deleteNote,
+    required TResult Function(int index, VerseModel verse) addVerse,
+    required TResult Function(int index, int verseIndex) removeVerse,
   }) {
-    return edit(index, note);
+    return editNote(index, note);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? init,
-    TResult? Function(NoteModel note)? add,
-    TResult? Function(int index, NoteModel note)? edit,
-    TResult? Function(int index)? delete,
-    TResult? Function(List<NoteModel> notes)? deleteAll,
+    TResult? Function(NoteModel note)? addNote,
+    TResult? Function(int index, NoteModel note)? editNote,
+    TResult? Function(int index)? deleteNote,
+    TResult? Function(int index, VerseModel verse)? addVerse,
+    TResult? Function(int index, int verseIndex)? removeVerse,
   }) {
-    return edit?.call(index, note);
+    return editNote?.call(index, note);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? init,
-    TResult Function(NoteModel note)? add,
-    TResult Function(int index, NoteModel note)? edit,
-    TResult Function(int index)? delete,
-    TResult Function(List<NoteModel> notes)? deleteAll,
+    TResult Function(NoteModel note)? addNote,
+    TResult Function(int index, NoteModel note)? editNote,
+    TResult Function(int index)? deleteNote,
+    TResult Function(int index, VerseModel verse)? addVerse,
+    TResult Function(int index, int verseIndex)? removeVerse,
     required TResult orElse(),
   }) {
-    if (edit != null) {
-      return edit(index, note);
+    if (editNote != null) {
+      return editNote(index, note);
     }
     return orElse();
   }
@@ -477,69 +500,72 @@ class _$NotesEditEventImpl implements NotesEditEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(NotesInitialEvent value) init,
-    required TResult Function(NotesAddEvent value) add,
-    required TResult Function(NotesEditEvent value) edit,
-    required TResult Function(NotesDeleteEvent value) delete,
-    required TResult Function(NotesDeleteAllEvent value) deleteAll,
+    required TResult Function(NotesAddNoteEvent value) addNote,
+    required TResult Function(NotesEditNoteEvent value) editNote,
+    required TResult Function(NotesDeleteNoteEvent value) deleteNote,
+    required TResult Function(NotesAddVerseEvent value) addVerse,
+    required TResult Function(NotesRemoveVerseEvent value) removeVerse,
   }) {
-    return edit(this);
+    return editNote(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(NotesInitialEvent value)? init,
-    TResult? Function(NotesAddEvent value)? add,
-    TResult? Function(NotesEditEvent value)? edit,
-    TResult? Function(NotesDeleteEvent value)? delete,
-    TResult? Function(NotesDeleteAllEvent value)? deleteAll,
+    TResult? Function(NotesAddNoteEvent value)? addNote,
+    TResult? Function(NotesEditNoteEvent value)? editNote,
+    TResult? Function(NotesDeleteNoteEvent value)? deleteNote,
+    TResult? Function(NotesAddVerseEvent value)? addVerse,
+    TResult? Function(NotesRemoveVerseEvent value)? removeVerse,
   }) {
-    return edit?.call(this);
+    return editNote?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(NotesInitialEvent value)? init,
-    TResult Function(NotesAddEvent value)? add,
-    TResult Function(NotesEditEvent value)? edit,
-    TResult Function(NotesDeleteEvent value)? delete,
-    TResult Function(NotesDeleteAllEvent value)? deleteAll,
+    TResult Function(NotesAddNoteEvent value)? addNote,
+    TResult Function(NotesEditNoteEvent value)? editNote,
+    TResult Function(NotesDeleteNoteEvent value)? deleteNote,
+    TResult Function(NotesAddVerseEvent value)? addVerse,
+    TResult Function(NotesRemoveVerseEvent value)? removeVerse,
     required TResult orElse(),
   }) {
-    if (edit != null) {
-      return edit(this);
+    if (editNote != null) {
+      return editNote(this);
     }
     return orElse();
   }
 }
 
-abstract class NotesEditEvent implements NotesEvent {
-  const factory NotesEditEvent(final int index, final NoteModel note) =
-      _$NotesEditEventImpl;
+abstract class NotesEditNoteEvent implements NotesEvent {
+  const factory NotesEditNoteEvent(final int index, final NoteModel note) =
+      _$NotesEditNoteEventImpl;
 
   int get index;
   NoteModel get note;
   @JsonKey(ignore: true)
-  _$$NotesEditEventImplCopyWith<_$NotesEditEventImpl> get copyWith =>
+  _$$NotesEditNoteEventImplCopyWith<_$NotesEditNoteEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$NotesDeleteEventImplCopyWith<$Res> {
-  factory _$$NotesDeleteEventImplCopyWith(_$NotesDeleteEventImpl value,
-          $Res Function(_$NotesDeleteEventImpl) then) =
-      __$$NotesDeleteEventImplCopyWithImpl<$Res>;
+abstract class _$$NotesDeleteNoteEventImplCopyWith<$Res> {
+  factory _$$NotesDeleteNoteEventImplCopyWith(_$NotesDeleteNoteEventImpl value,
+          $Res Function(_$NotesDeleteNoteEventImpl) then) =
+      __$$NotesDeleteNoteEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({int index});
 }
 
 /// @nodoc
-class __$$NotesDeleteEventImplCopyWithImpl<$Res>
-    extends _$NotesEventCopyWithImpl<$Res, _$NotesDeleteEventImpl>
-    implements _$$NotesDeleteEventImplCopyWith<$Res> {
-  __$$NotesDeleteEventImplCopyWithImpl(_$NotesDeleteEventImpl _value,
-      $Res Function(_$NotesDeleteEventImpl) _then)
+class __$$NotesDeleteNoteEventImplCopyWithImpl<$Res>
+    extends _$NotesEventCopyWithImpl<$Res, _$NotesDeleteNoteEventImpl>
+    implements _$$NotesDeleteNoteEventImplCopyWith<$Res> {
+  __$$NotesDeleteNoteEventImplCopyWithImpl(_$NotesDeleteNoteEventImpl _value,
+      $Res Function(_$NotesDeleteNoteEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -547,7 +573,7 @@ class __$$NotesDeleteEventImplCopyWithImpl<$Res>
   $Res call({
     Object? index = null,
   }) {
-    return _then(_$NotesDeleteEventImpl(
+    return _then(_$NotesDeleteNoteEventImpl(
       null == index
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
@@ -558,22 +584,22 @@ class __$$NotesDeleteEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$NotesDeleteEventImpl implements NotesDeleteEvent {
-  const _$NotesDeleteEventImpl(this.index);
+class _$NotesDeleteNoteEventImpl implements NotesDeleteNoteEvent {
+  const _$NotesDeleteNoteEventImpl(this.index);
 
   @override
   final int index;
 
   @override
   String toString() {
-    return 'NotesEvent.delete(index: $index)';
+    return 'NotesEvent.deleteNote(index: $index)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$NotesDeleteEventImpl &&
+            other is _$NotesDeleteNoteEventImpl &&
             (identical(other.index, index) || other.index == index));
   }
 
@@ -583,46 +609,50 @@ class _$NotesDeleteEventImpl implements NotesDeleteEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$NotesDeleteEventImplCopyWith<_$NotesDeleteEventImpl> get copyWith =>
-      __$$NotesDeleteEventImplCopyWithImpl<_$NotesDeleteEventImpl>(
-          this, _$identity);
+  _$$NotesDeleteNoteEventImplCopyWith<_$NotesDeleteNoteEventImpl>
+      get copyWith =>
+          __$$NotesDeleteNoteEventImplCopyWithImpl<_$NotesDeleteNoteEventImpl>(
+              this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() init,
-    required TResult Function(NoteModel note) add,
-    required TResult Function(int index, NoteModel note) edit,
-    required TResult Function(int index) delete,
-    required TResult Function(List<NoteModel> notes) deleteAll,
+    required TResult Function(NoteModel note) addNote,
+    required TResult Function(int index, NoteModel note) editNote,
+    required TResult Function(int index) deleteNote,
+    required TResult Function(int index, VerseModel verse) addVerse,
+    required TResult Function(int index, int verseIndex) removeVerse,
   }) {
-    return delete(index);
+    return deleteNote(index);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? init,
-    TResult? Function(NoteModel note)? add,
-    TResult? Function(int index, NoteModel note)? edit,
-    TResult? Function(int index)? delete,
-    TResult? Function(List<NoteModel> notes)? deleteAll,
+    TResult? Function(NoteModel note)? addNote,
+    TResult? Function(int index, NoteModel note)? editNote,
+    TResult? Function(int index)? deleteNote,
+    TResult? Function(int index, VerseModel verse)? addVerse,
+    TResult? Function(int index, int verseIndex)? removeVerse,
   }) {
-    return delete?.call(index);
+    return deleteNote?.call(index);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? init,
-    TResult Function(NoteModel note)? add,
-    TResult Function(int index, NoteModel note)? edit,
-    TResult Function(int index)? delete,
-    TResult Function(List<NoteModel> notes)? deleteAll,
+    TResult Function(NoteModel note)? addNote,
+    TResult Function(int index, NoteModel note)? editNote,
+    TResult Function(int index)? deleteNote,
+    TResult Function(int index, VerseModel verse)? addVerse,
+    TResult Function(int index, int verseIndex)? removeVerse,
     required TResult orElse(),
   }) {
-    if (delete != null) {
-      return delete(index);
+    if (deleteNote != null) {
+      return deleteNote(index);
     }
     return orElse();
   }
@@ -631,156 +661,165 @@ class _$NotesDeleteEventImpl implements NotesDeleteEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(NotesInitialEvent value) init,
-    required TResult Function(NotesAddEvent value) add,
-    required TResult Function(NotesEditEvent value) edit,
-    required TResult Function(NotesDeleteEvent value) delete,
-    required TResult Function(NotesDeleteAllEvent value) deleteAll,
+    required TResult Function(NotesAddNoteEvent value) addNote,
+    required TResult Function(NotesEditNoteEvent value) editNote,
+    required TResult Function(NotesDeleteNoteEvent value) deleteNote,
+    required TResult Function(NotesAddVerseEvent value) addVerse,
+    required TResult Function(NotesRemoveVerseEvent value) removeVerse,
   }) {
-    return delete(this);
+    return deleteNote(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(NotesInitialEvent value)? init,
-    TResult? Function(NotesAddEvent value)? add,
-    TResult? Function(NotesEditEvent value)? edit,
-    TResult? Function(NotesDeleteEvent value)? delete,
-    TResult? Function(NotesDeleteAllEvent value)? deleteAll,
+    TResult? Function(NotesAddNoteEvent value)? addNote,
+    TResult? Function(NotesEditNoteEvent value)? editNote,
+    TResult? Function(NotesDeleteNoteEvent value)? deleteNote,
+    TResult? Function(NotesAddVerseEvent value)? addVerse,
+    TResult? Function(NotesRemoveVerseEvent value)? removeVerse,
   }) {
-    return delete?.call(this);
+    return deleteNote?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(NotesInitialEvent value)? init,
-    TResult Function(NotesAddEvent value)? add,
-    TResult Function(NotesEditEvent value)? edit,
-    TResult Function(NotesDeleteEvent value)? delete,
-    TResult Function(NotesDeleteAllEvent value)? deleteAll,
+    TResult Function(NotesAddNoteEvent value)? addNote,
+    TResult Function(NotesEditNoteEvent value)? editNote,
+    TResult Function(NotesDeleteNoteEvent value)? deleteNote,
+    TResult Function(NotesAddVerseEvent value)? addVerse,
+    TResult Function(NotesRemoveVerseEvent value)? removeVerse,
     required TResult orElse(),
   }) {
-    if (delete != null) {
-      return delete(this);
+    if (deleteNote != null) {
+      return deleteNote(this);
     }
     return orElse();
   }
 }
 
-abstract class NotesDeleteEvent implements NotesEvent {
-  const factory NotesDeleteEvent(final int index) = _$NotesDeleteEventImpl;
+abstract class NotesDeleteNoteEvent implements NotesEvent {
+  const factory NotesDeleteNoteEvent(final int index) =
+      _$NotesDeleteNoteEventImpl;
 
   int get index;
   @JsonKey(ignore: true)
-  _$$NotesDeleteEventImplCopyWith<_$NotesDeleteEventImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$NotesDeleteNoteEventImplCopyWith<_$NotesDeleteNoteEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$NotesDeleteAllEventImplCopyWith<$Res> {
-  factory _$$NotesDeleteAllEventImplCopyWith(_$NotesDeleteAllEventImpl value,
-          $Res Function(_$NotesDeleteAllEventImpl) then) =
-      __$$NotesDeleteAllEventImplCopyWithImpl<$Res>;
+abstract class _$$NotesAddVerseEventImplCopyWith<$Res> {
+  factory _$$NotesAddVerseEventImplCopyWith(_$NotesAddVerseEventImpl value,
+          $Res Function(_$NotesAddVerseEventImpl) then) =
+      __$$NotesAddVerseEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<NoteModel> notes});
+  $Res call({int index, VerseModel verse});
 }
 
 /// @nodoc
-class __$$NotesDeleteAllEventImplCopyWithImpl<$Res>
-    extends _$NotesEventCopyWithImpl<$Res, _$NotesDeleteAllEventImpl>
-    implements _$$NotesDeleteAllEventImplCopyWith<$Res> {
-  __$$NotesDeleteAllEventImplCopyWithImpl(_$NotesDeleteAllEventImpl _value,
-      $Res Function(_$NotesDeleteAllEventImpl) _then)
+class __$$NotesAddVerseEventImplCopyWithImpl<$Res>
+    extends _$NotesEventCopyWithImpl<$Res, _$NotesAddVerseEventImpl>
+    implements _$$NotesAddVerseEventImplCopyWith<$Res> {
+  __$$NotesAddVerseEventImplCopyWithImpl(_$NotesAddVerseEventImpl _value,
+      $Res Function(_$NotesAddVerseEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? notes = null,
+    Object? index = null,
+    Object? verse = null,
   }) {
-    return _then(_$NotesDeleteAllEventImpl(
-      null == notes
-          ? _value._notes
-          : notes // ignore: cast_nullable_to_non_nullable
-              as List<NoteModel>,
+    return _then(_$NotesAddVerseEventImpl(
+      null == index
+          ? _value.index
+          : index // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == verse
+          ? _value.verse
+          : verse // ignore: cast_nullable_to_non_nullable
+              as VerseModel,
     ));
   }
 }
 
 /// @nodoc
 
-class _$NotesDeleteAllEventImpl implements NotesDeleteAllEvent {
-  const _$NotesDeleteAllEventImpl(final List<NoteModel> notes) : _notes = notes;
+class _$NotesAddVerseEventImpl implements NotesAddVerseEvent {
+  const _$NotesAddVerseEventImpl(this.index, this.verse);
 
-  final List<NoteModel> _notes;
   @override
-  List<NoteModel> get notes {
-    if (_notes is EqualUnmodifiableListView) return _notes;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_notes);
-  }
+  final int index;
+  @override
+  final VerseModel verse;
 
   @override
   String toString() {
-    return 'NotesEvent.deleteAll(notes: $notes)';
+    return 'NotesEvent.addVerse(index: $index, verse: $verse)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$NotesDeleteAllEventImpl &&
-            const DeepCollectionEquality().equals(other._notes, _notes));
+            other is _$NotesAddVerseEventImpl &&
+            (identical(other.index, index) || other.index == index) &&
+            (identical(other.verse, verse) || other.verse == verse));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_notes));
+  int get hashCode => Object.hash(runtimeType, index, verse);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$NotesDeleteAllEventImplCopyWith<_$NotesDeleteAllEventImpl> get copyWith =>
-      __$$NotesDeleteAllEventImplCopyWithImpl<_$NotesDeleteAllEventImpl>(
+  _$$NotesAddVerseEventImplCopyWith<_$NotesAddVerseEventImpl> get copyWith =>
+      __$$NotesAddVerseEventImplCopyWithImpl<_$NotesAddVerseEventImpl>(
           this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() init,
-    required TResult Function(NoteModel note) add,
-    required TResult Function(int index, NoteModel note) edit,
-    required TResult Function(int index) delete,
-    required TResult Function(List<NoteModel> notes) deleteAll,
+    required TResult Function(NoteModel note) addNote,
+    required TResult Function(int index, NoteModel note) editNote,
+    required TResult Function(int index) deleteNote,
+    required TResult Function(int index, VerseModel verse) addVerse,
+    required TResult Function(int index, int verseIndex) removeVerse,
   }) {
-    return deleteAll(notes);
+    return addVerse(index, verse);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? init,
-    TResult? Function(NoteModel note)? add,
-    TResult? Function(int index, NoteModel note)? edit,
-    TResult? Function(int index)? delete,
-    TResult? Function(List<NoteModel> notes)? deleteAll,
+    TResult? Function(NoteModel note)? addNote,
+    TResult? Function(int index, NoteModel note)? editNote,
+    TResult? Function(int index)? deleteNote,
+    TResult? Function(int index, VerseModel verse)? addVerse,
+    TResult? Function(int index, int verseIndex)? removeVerse,
   }) {
-    return deleteAll?.call(notes);
+    return addVerse?.call(index, verse);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? init,
-    TResult Function(NoteModel note)? add,
-    TResult Function(int index, NoteModel note)? edit,
-    TResult Function(int index)? delete,
-    TResult Function(List<NoteModel> notes)? deleteAll,
+    TResult Function(NoteModel note)? addNote,
+    TResult Function(int index, NoteModel note)? editNote,
+    TResult Function(int index)? deleteNote,
+    TResult Function(int index, VerseModel verse)? addVerse,
+    TResult Function(int index, int verseIndex)? removeVerse,
     required TResult orElse(),
   }) {
-    if (deleteAll != null) {
-      return deleteAll(notes);
+    if (addVerse != null) {
+      return addVerse(index, verse);
     }
     return orElse();
   }
@@ -789,49 +828,223 @@ class _$NotesDeleteAllEventImpl implements NotesDeleteAllEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(NotesInitialEvent value) init,
-    required TResult Function(NotesAddEvent value) add,
-    required TResult Function(NotesEditEvent value) edit,
-    required TResult Function(NotesDeleteEvent value) delete,
-    required TResult Function(NotesDeleteAllEvent value) deleteAll,
+    required TResult Function(NotesAddNoteEvent value) addNote,
+    required TResult Function(NotesEditNoteEvent value) editNote,
+    required TResult Function(NotesDeleteNoteEvent value) deleteNote,
+    required TResult Function(NotesAddVerseEvent value) addVerse,
+    required TResult Function(NotesRemoveVerseEvent value) removeVerse,
   }) {
-    return deleteAll(this);
+    return addVerse(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(NotesInitialEvent value)? init,
-    TResult? Function(NotesAddEvent value)? add,
-    TResult? Function(NotesEditEvent value)? edit,
-    TResult? Function(NotesDeleteEvent value)? delete,
-    TResult? Function(NotesDeleteAllEvent value)? deleteAll,
+    TResult? Function(NotesAddNoteEvent value)? addNote,
+    TResult? Function(NotesEditNoteEvent value)? editNote,
+    TResult? Function(NotesDeleteNoteEvent value)? deleteNote,
+    TResult? Function(NotesAddVerseEvent value)? addVerse,
+    TResult? Function(NotesRemoveVerseEvent value)? removeVerse,
   }) {
-    return deleteAll?.call(this);
+    return addVerse?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(NotesInitialEvent value)? init,
-    TResult Function(NotesAddEvent value)? add,
-    TResult Function(NotesEditEvent value)? edit,
-    TResult Function(NotesDeleteEvent value)? delete,
-    TResult Function(NotesDeleteAllEvent value)? deleteAll,
+    TResult Function(NotesAddNoteEvent value)? addNote,
+    TResult Function(NotesEditNoteEvent value)? editNote,
+    TResult Function(NotesDeleteNoteEvent value)? deleteNote,
+    TResult Function(NotesAddVerseEvent value)? addVerse,
+    TResult Function(NotesRemoveVerseEvent value)? removeVerse,
     required TResult orElse(),
   }) {
-    if (deleteAll != null) {
-      return deleteAll(this);
+    if (addVerse != null) {
+      return addVerse(this);
     }
     return orElse();
   }
 }
 
-abstract class NotesDeleteAllEvent implements NotesEvent {
-  const factory NotesDeleteAllEvent(final List<NoteModel> notes) =
-      _$NotesDeleteAllEventImpl;
+abstract class NotesAddVerseEvent implements NotesEvent {
+  const factory NotesAddVerseEvent(final int index, final VerseModel verse) =
+      _$NotesAddVerseEventImpl;
 
-  List<NoteModel> get notes;
+  int get index;
+  VerseModel get verse;
   @JsonKey(ignore: true)
-  _$$NotesDeleteAllEventImplCopyWith<_$NotesDeleteAllEventImpl> get copyWith =>
+  _$$NotesAddVerseEventImplCopyWith<_$NotesAddVerseEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$NotesRemoveVerseEventImplCopyWith<$Res> {
+  factory _$$NotesRemoveVerseEventImplCopyWith(
+          _$NotesRemoveVerseEventImpl value,
+          $Res Function(_$NotesRemoveVerseEventImpl) then) =
+      __$$NotesRemoveVerseEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int index, int verseIndex});
+}
+
+/// @nodoc
+class __$$NotesRemoveVerseEventImplCopyWithImpl<$Res>
+    extends _$NotesEventCopyWithImpl<$Res, _$NotesRemoveVerseEventImpl>
+    implements _$$NotesRemoveVerseEventImplCopyWith<$Res> {
+  __$$NotesRemoveVerseEventImplCopyWithImpl(_$NotesRemoveVerseEventImpl _value,
+      $Res Function(_$NotesRemoveVerseEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? index = null,
+    Object? verseIndex = null,
+  }) {
+    return _then(_$NotesRemoveVerseEventImpl(
+      null == index
+          ? _value.index
+          : index // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == verseIndex
+          ? _value.verseIndex
+          : verseIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$NotesRemoveVerseEventImpl implements NotesRemoveVerseEvent {
+  const _$NotesRemoveVerseEventImpl(this.index, this.verseIndex);
+
+  @override
+  final int index;
+  @override
+  final int verseIndex;
+
+  @override
+  String toString() {
+    return 'NotesEvent.removeVerse(index: $index, verseIndex: $verseIndex)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$NotesRemoveVerseEventImpl &&
+            (identical(other.index, index) || other.index == index) &&
+            (identical(other.verseIndex, verseIndex) ||
+                other.verseIndex == verseIndex));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, index, verseIndex);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$NotesRemoveVerseEventImplCopyWith<_$NotesRemoveVerseEventImpl>
+      get copyWith => __$$NotesRemoveVerseEventImplCopyWithImpl<
+          _$NotesRemoveVerseEventImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() init,
+    required TResult Function(NoteModel note) addNote,
+    required TResult Function(int index, NoteModel note) editNote,
+    required TResult Function(int index) deleteNote,
+    required TResult Function(int index, VerseModel verse) addVerse,
+    required TResult Function(int index, int verseIndex) removeVerse,
+  }) {
+    return removeVerse(index, verseIndex);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? init,
+    TResult? Function(NoteModel note)? addNote,
+    TResult? Function(int index, NoteModel note)? editNote,
+    TResult? Function(int index)? deleteNote,
+    TResult? Function(int index, VerseModel verse)? addVerse,
+    TResult? Function(int index, int verseIndex)? removeVerse,
+  }) {
+    return removeVerse?.call(index, verseIndex);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? init,
+    TResult Function(NoteModel note)? addNote,
+    TResult Function(int index, NoteModel note)? editNote,
+    TResult Function(int index)? deleteNote,
+    TResult Function(int index, VerseModel verse)? addVerse,
+    TResult Function(int index, int verseIndex)? removeVerse,
+    required TResult orElse(),
+  }) {
+    if (removeVerse != null) {
+      return removeVerse(index, verseIndex);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(NotesInitialEvent value) init,
+    required TResult Function(NotesAddNoteEvent value) addNote,
+    required TResult Function(NotesEditNoteEvent value) editNote,
+    required TResult Function(NotesDeleteNoteEvent value) deleteNote,
+    required TResult Function(NotesAddVerseEvent value) addVerse,
+    required TResult Function(NotesRemoveVerseEvent value) removeVerse,
+  }) {
+    return removeVerse(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(NotesInitialEvent value)? init,
+    TResult? Function(NotesAddNoteEvent value)? addNote,
+    TResult? Function(NotesEditNoteEvent value)? editNote,
+    TResult? Function(NotesDeleteNoteEvent value)? deleteNote,
+    TResult? Function(NotesAddVerseEvent value)? addVerse,
+    TResult? Function(NotesRemoveVerseEvent value)? removeVerse,
+  }) {
+    return removeVerse?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(NotesInitialEvent value)? init,
+    TResult Function(NotesAddNoteEvent value)? addNote,
+    TResult Function(NotesEditNoteEvent value)? editNote,
+    TResult Function(NotesDeleteNoteEvent value)? deleteNote,
+    TResult Function(NotesAddVerseEvent value)? addVerse,
+    TResult Function(NotesRemoveVerseEvent value)? removeVerse,
+    required TResult orElse(),
+  }) {
+    if (removeVerse != null) {
+      return removeVerse(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class NotesRemoveVerseEvent implements NotesEvent {
+  const factory NotesRemoveVerseEvent(final int index, final int verseIndex) =
+      _$NotesRemoveVerseEventImpl;
+
+  int get index;
+  int get verseIndex;
+  @JsonKey(ignore: true)
+  _$$NotesRemoveVerseEventImplCopyWith<_$NotesRemoveVerseEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

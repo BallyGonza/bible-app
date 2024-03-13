@@ -28,7 +28,7 @@ class NoteCard extends StatelessWidget {
           SlidableAction(
             borderRadius: BorderRadius.circular(8),
             onPressed: (_) {
-              context.read<NotesBloc>().add(NotesEvent.delete(index));
+              context.read<NotesBloc>().add(NotesEvent.deleteNote(index));
             },
             icon: Icons.delete,
             label: 'Delete',

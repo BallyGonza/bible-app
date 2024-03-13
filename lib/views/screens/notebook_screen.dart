@@ -26,6 +26,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                   id: 0,
                   date: date.format(DateTime.now()),
                   color: Colors.white.value,
+                  verses: const [],
                   title: '',
                   content: '',
                 ),
@@ -33,11 +34,12 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                 onSaved: (title, content, color) {
                   setState(() {
                     context.read<NotesBloc>().add(
-                          NotesEvent.add(
+                          NotesEvent.addNote(
                             NoteModel(
                               id: DateTime.now().millisecondsSinceEpoch,
                               title: title,
                               content: content,
+                              verses: const [],
                               date: date.format(DateTime.now()),
                               color: color,
                             ),
@@ -97,12 +99,14 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                                         onSaved: (title, content, color) {
                                           setState(() {
                                             context.read<NotesBloc>().add(
-                                                  NotesEvent.edit(
+                                                  NotesEvent.editNote(
                                                     index,
                                                     NoteModel(
                                                       id: notes[index].id,
                                                       title: title,
                                                       content: content,
+                                                      verses:
+                                                          notes[index].verses,
                                                       date: date.format(
                                                         DateTime.now(),
                                                       ),

@@ -20,15 +20,16 @@ class NoteModelAdapter extends TypeAdapter<NoteModel> {
       id: fields[0] as int,
       title: fields[1] as String,
       content: fields[2] as String,
-      date: fields[3] as String,
-      color: fields[4] as int,
+      date: fields[4] as String,
+      color: fields[5] as int,
+      verses: (fields[3] as List).cast<VerseModel>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, NoteModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -36,8 +37,10 @@ class NoteModelAdapter extends TypeAdapter<NoteModel> {
       ..writeByte(2)
       ..write(obj.content)
       ..writeByte(3)
-      ..write(obj.date)
+      ..write(obj.verses)
       ..writeByte(4)
+      ..write(obj.date)
+      ..writeByte(5)
       ..write(obj.color);
   }
 

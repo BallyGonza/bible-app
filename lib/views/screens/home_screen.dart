@@ -23,14 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: appColor,
-      appBar: AppBar(
-        title: const Text(
-          'Bible',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) {

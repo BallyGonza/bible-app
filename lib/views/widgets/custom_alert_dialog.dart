@@ -2,17 +2,26 @@ import 'package:bible_app/data/data.dart';
 import 'package:flutter/material.dart';
 
 class CustomAlertDialog extends StatelessWidget {
-  const CustomAlertDialog({
+  const CustomAlertDialog.red({
     required this.title,
     required this.description,
     required this.rightButtonText,
     required this.onRightButtonPressed,
     super.key,
-  });
+  }) : rightButtonColor = Colors.red;
+
+  const CustomAlertDialog.green({
+    required this.title,
+    required this.description,
+    required this.rightButtonText,
+    required this.onRightButtonPressed,
+    super.key,
+  }) : rightButtonColor = Colors.green;
 
   final String title;
   final String description;
   final String rightButtonText;
+  final Color rightButtonColor;
   final VoidCallback onRightButtonPressed;
 
   @override
@@ -43,7 +52,7 @@ class CustomAlertDialog extends StatelessWidget {
             Navigator.pop(context);
           },
           child:
-              Text(rightButtonText, style: const TextStyle(color: Colors.red)),
+              Text(rightButtonText, style: TextStyle(color: rightButtonColor)),
         ),
       ],
     );

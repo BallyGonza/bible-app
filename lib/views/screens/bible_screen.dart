@@ -9,15 +9,27 @@ class BibleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      itemCount: user.bible.books.length,
-      itemBuilder: (context, index) {
-        final book = user.bible.books[index];
-        return BookCard(
-          book: book,
-        );
-      },
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Bible',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: appColorDarker,
+        elevation: 0,
+      ),
+      body: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        itemCount: user.bible.books.length,
+        itemBuilder: (context, index) {
+          final book = user.bible.books[index];
+          return BookCard(
+            book: book,
+          );
+        },
+      ),
     );
   }
 }

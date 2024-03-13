@@ -1,25 +1,26 @@
+import 'package:bible_app/blocs/blocs.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class NoteScreen extends StatefulWidget {
   const NoteScreen({
+    required this.index,
     required this.note,
-    required this.buttonText,
-    required this.onSaved,
-    required this.isNewNote,
     super.key,
-  });
-  final NoteModel note;
-  final String buttonText;
+  }) : isNewNote = false;
+
+  const NoteScreen.add({
+    this.note,
+    super.key,
+  })  : isNewNote = true,
+        index = -1;
+
+  final int index;
+  final NoteModel? note;
   final bool isNewNote;
-  final void Function(
-    String title,
-    String author,
-    String content,
-    int currentColor,
-  ) onSaved;
 
   @override
   NotePageState createState() => NotePageState();
@@ -40,10 +41,10 @@ class NotePageState extends State<NoteScreen> {
   void initState() {
     super.initState();
     _isEditing = widget.isNewNote;
-    _titleController.text = widget.note.title;
-    _authorController.text = widget.note.author ?? '';
-    _contentController.text = widget.note.content;
-    _currentColor = Color(widget.note.color);
+    _titleController.text = widget.note?.title ?? '';
+    _authorController.text = widget.note?.author ?? '';
+    _contentController.text = widget.note?.content ?? '';
+    _currentColor = Color(widget.note?.color ?? Colors.white.value);
     _iconColor = _currentColor != Colors.white ? Colors.white : Colors.black;
     _fontColor = _currentColor != Colors.white ? Colors.white : Colors.black;
   }
@@ -87,12 +88,9 @@ class NotePageState extends State<NoteScreen> {
           ),
           IconButton(
             onPressed: () {
-              widget.onSaved(
-                _titleController.text,
-                _authorController.text,
-                _contentController.text,
-                _currentColor.value,
-              );
+              setState(() {
+                widget.isNewNote ? _saveNewNote(context) : _updateNote(context);
+              });
               Navigator.of(context).pop();
             },
             icon: FaIcon(FontAwesomeIcons.check, color: _iconColor),
@@ -183,7 +181,7 @@ class NotePageState extends State<NoteScreen> {
               physics: const BouncingScrollPhysics(),
               child: SizedBox(
                 height: MediaQuery.of(context).size.height * 0.75,
-                child: widget.note.verses.isEmpty
+                child: widget.note?.verses.isEmpty ?? true
                     ? Center(
                         child: Text(
                           'No se han seleccionado versículos...',
@@ -192,9 +190,9 @@ class NotePageState extends State<NoteScreen> {
                       )
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),
-                        itemCount: widget.note.verses.length,
+                        itemCount: widget.note?.verses.length ?? 0,
                         itemBuilder: (context, index) {
-                          final verse = widget.note.verses[index];
+                          final verse = widget.note!.verses[index];
                           return ListTile(
                             title: Text(
                               verse.text,
@@ -225,7 +223,7 @@ class NotePageState extends State<NoteScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Edited: ${widget.note.date}',
+                'Edited: ${widget.note?.date ?? date.format(DateTime.now())}',
                 style: TextStyle(color: _fontColor.withOpacity(0.6)),
               ),
               Row(
@@ -328,5 +326,40 @@ class NotePageState extends State<NoteScreen> {
         ),
       ),
     );
+  }
+
+  void _saveNewNote(BuildContext context) {
+    context.read<NotesBloc>().add(
+          NotesEvent.addNote(
+            NoteModel(
+              id: DateTime.now().millisecondsSinceEpoch,
+              title: _titleController.text,
+              author: _authorController.text,
+              content: _contentController.text,
+              verses: const [],
+              date: date.format(DateTime.now()),
+              color: _currentColor.value,
+            ),
+          ),
+        );
+  }
+
+  void _updateNote(BuildContext context) {
+    context.read<NotesBloc>().add(
+          NotesEvent.editNote(
+            widget.index,
+            NoteModel(
+              id: widget.note!.id,
+              title: _titleController.text,
+              author: _authorController.text,
+              content: _contentController.text,
+              verses: widget.note!.verses,
+              date: date.format(
+                DateTime.now(),
+              ),
+              color: _currentColor.value,
+            ),
+          ),
+        );
   }
 }

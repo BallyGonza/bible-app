@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:bible_app/blocs/blocs.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
@@ -242,7 +244,8 @@ class NotePageState extends State<NoteScreen> {
                                   subtitle: Text(
                                     '${verse.book} ${verse.chapter}:${verse.number}',
                                     style: TextStyle(
-                                        color: _fontColor.withOpacity(0.6)),
+                                      color: _fontColor.withOpacity(0.6),
+                                    ),
                                   ),
                                 ),
                               );

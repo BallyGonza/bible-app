@@ -36613,7 +36613,6 @@ ChapterModel juan2_1 = ChapterModel(
   ],
 );
 
-
 ChapterModel juan3_1 = ChapterModel(
   number: 1,
   verses: [
@@ -36634,7 +36633,6 @@ ChapterModel juan3_1 = ChapterModel(
     juan3_1_15,
   ],
 );
-
 
 ChapterModel judas1 = ChapterModel(
   number: 1,
@@ -36666,7 +36664,6 @@ ChapterModel judas1 = ChapterModel(
     judas1_25,
   ],
 );
-
 
 ChapterModel apocalipsis1 = ChapterModel(
   number: 1,
@@ -37182,5 +37179,3 @@ ChapterModel apocalipsis22 = ChapterModel(
     apocalipsis22_21,
   ],
 );
-
-

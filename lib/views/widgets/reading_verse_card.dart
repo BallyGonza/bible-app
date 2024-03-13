@@ -46,7 +46,7 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
       },
       child: Slidable(
         endActionPane: ActionPane(
-          extentRatio: 0.20,
+          extentRatio: 0.40,
           dragDismissible: false,
           motion: const ScrollMotion(),
           children: [
@@ -155,6 +155,7 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
                                             widget.verse,
                                           ),
                                         );
+                                    Navigator.pop(context);
                                   },
                                   child: ListTile(
                                     title: Text(

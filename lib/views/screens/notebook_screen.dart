@@ -31,13 +31,14 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                   content: '',
                 ),
                 buttonText: 'Add',
-                onSaved: (title, content, color) {
+                onSaved: (title, author, content, color) {
                   setState(() {
                     context.read<NotesBloc>().add(
                           NotesEvent.addNote(
                             NoteModel(
                               id: DateTime.now().millisecondsSinceEpoch,
                               title: title,
+                              author: author,
                               content: content,
                               verses: const [],
                               date: date.format(DateTime.now()),
@@ -96,7 +97,8 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                                         isNewNote: false,
                                         note: notes[index],
                                         buttonText: 'Update',
-                                        onSaved: (title, content, color) {
+                                        onSaved:
+                                            (title, author, content, color) {
                                           setState(() {
                                             context.read<NotesBloc>().add(
                                                   NotesEvent.editNote(
@@ -104,6 +106,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                                                     NoteModel(
                                                       id: notes[index].id,
                                                       title: title,
+                                                      author: author,
                                                       content: content,
                                                       verses:
                                                           notes[index].verses,

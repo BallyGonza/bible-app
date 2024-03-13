@@ -14,15 +14,23 @@ class NoteScreen extends StatefulWidget {
   final NoteModel note;
   final String buttonText;
   final bool isNewNote;
-  final void Function(String title, String content, int currentColor) onSaved;
+  final void Function(
+    String title,
+    String author,
+    String content,
+    int currentColor,
+  ) onSaved;
 
   @override
   NotePageState createState() => NotePageState();
 }
 
 class NotePageState extends State<NoteScreen> {
+  final _pageController = PageController();
   final _titleController = TextEditingController();
+  final _authorController = TextEditingController();
   final _contentController = TextEditingController();
+  int _currentIndex = 0;
   late Color _currentColor;
   late Color _iconColor;
   late Color _fontColor;
@@ -33,6 +41,7 @@ class NotePageState extends State<NoteScreen> {
     super.initState();
     _isEditing = widget.isNewNote;
     _titleController.text = widget.note.title;
+    _authorController.text = widget.note.author ?? '';
     _contentController.text = widget.note.content;
     _currentColor = Color(widget.note.color);
     _iconColor = _currentColor != Colors.white ? Colors.white : Colors.black;
@@ -42,6 +51,7 @@ class NotePageState extends State<NoteScreen> {
   @override
   void dispose() {
     _titleController.dispose();
+    _authorController.dispose();
     _contentController.dispose();
     super.dispose();
   }
@@ -79,6 +89,7 @@ class NotePageState extends State<NoteScreen> {
             onPressed: () {
               widget.onSaved(
                 _titleController.text,
+                _authorController.text,
                 _contentController.text,
                 _currentColor.value,
               );
@@ -92,55 +103,114 @@ class NotePageState extends State<NoteScreen> {
         padding: EdgeInsets.symmetric(
           horizontal: MediaQuery.of(context).size.width * (1 / 20),
         ),
-        child: SingleChildScrollView(
-          child: Wrap(
-            children: [
-              TextField(
-                enabled: _isEditing,
-                controller: _titleController,
-                decoration: InputDecoration(
-                  hintText: 'Titulo',
-                  hintStyle: TextStyle(color: _fontColor.withOpacity(0.6)),
-                  border: InputBorder.none,
-                ),
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w500,
-                  color: _fontColor,
-                ),
-                keyboardType: TextInputType.multiline,
-                textAlign: TextAlign.left,
-                cursorColor: _fontColor,
-                textCapitalization: TextCapitalization.sentences,
-              ),
-              const SizedBox(height: 8),
-              SizedBox(
-                height: MediaQuery.of(context).size.height,
-                child: TextField(
-                  enabled: _isEditing,
-                  controller: _contentController,
-                  decoration: InputDecoration(
-                    hintText: 'Descripción...',
-                    hintStyle: TextStyle(
-                      color: _fontColor.withOpacity(0.6),
-                      fontStyle: FontStyle.italic,
+        child: PageView(
+          controller: _pageController,
+          children: [
+            SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Wrap(
+                children: [
+                  SizedBox(
+                    height: 45,
+                    child: TextField(
+                      enabled: _isEditing,
+                      controller: _titleController,
+                      decoration: InputDecoration(
+                        hintText: 'Titulo',
+                        hintStyle:
+                            TextStyle(color: _fontColor.withOpacity(0.6)),
+                        border: InputBorder.none,
+                      ),
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: _fontColor,
+                      ),
+                      textAlign: TextAlign.left,
+                      cursorColor: _fontColor,
+                      textCapitalization: TextCapitalization.words,
+                      textInputAction: TextInputAction.done,
                     ),
-                    border: InputBorder.none,
                   ),
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: _fontColor,
-                    fontWeight: FontWeight.normal,
+                  SizedBox(
+                    height: 25,
+                    child: TextField(
+                      enabled: _isEditing,
+                      controller: _authorController,
+                      decoration: InputDecoration(
+                        hintText: 'by Author...',
+                        hintStyle:
+                            TextStyle(color: _fontColor.withOpacity(0.6)),
+                        border: InputBorder.none,
+                      ),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.italic,
+                        color: _fontColor,
+                      ),
+                      textAlign: TextAlign.left,
+                      cursorColor: _fontColor,
+                      textCapitalization: TextCapitalization.sentences,
+                    ),
                   ),
-                  keyboardType: TextInputType.multiline,
-                  textAlign: TextAlign.left,
-                  cursorColor: _fontColor,
-                  textCapitalization: TextCapitalization.sentences,
-                  maxLines: null,
-                ),
+                  TextField(
+                    enabled: _isEditing,
+                    controller: _contentController,
+                    decoration: InputDecoration(
+                      hintText: 'Descripción...',
+                      hintStyle: TextStyle(
+                        color: _fontColor.withOpacity(0.6),
+                        fontStyle: FontStyle.italic,
+                      ),
+                      border: InputBorder.none,
+                    ),
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: _fontColor,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    keyboardType: TextInputType.multiline,
+                    textAlign: TextAlign.left,
+                    cursorColor: _fontColor,
+                    textCapitalization: TextCapitalization.sentences,
+                    maxLines: null,
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.75,
+                child: widget.note.verses.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No se han seleccionado versículos...',
+                          style: TextStyle(color: _fontColor),
+                        ),
+                      )
+                    : ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: widget.note.verses.length,
+                        itemBuilder: (context, index) {
+                          final verse = widget.note.verses[index];
+                          return ListTile(
+                            title: Text(
+                              verse.text,
+                              style: TextStyle(color: _fontColor),
+                            ),
+                            subtitle: Text(
+                              '${verse.book} ${verse.chapter}:${verse.number}',
+                              style:
+                                  TextStyle(color: _fontColor.withOpacity(0.6)),
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -158,75 +228,100 @@ class NotePageState extends State<NoteScreen> {
                 'Edited: ${widget.note.date}',
                 style: TextStyle(color: _fontColor.withOpacity(0.6)),
               ),
-              IconButton(
-                onPressed: () {
-                  showModalBottomSheet<SizedBox>(
-                    context: context,
-                    builder: (context) {
-                      return SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.55,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: BlockPicker(
-                                availableColors: [
-                                  Colors.white,
-                                  Colors.red,
-                                  Colors.red[300]!,
-                                  Colors.purple,
-                                  Colors.purple[200]!,
-                                  Colors.purple[100]!,
-                                  Colors.deepPurple,
-                                  Colors.deepPurple[300]!,
-                                  Colors.deepPurple[200]!,
-                                  Colors.indigo,
-                                  Colors.indigo[200]!,
-                                  Colors.blue,
-                                  Colors.blue[200]!,
-                                  Colors.cyan,
-                                  Colors.cyan[200]!,
-                                  Colors.teal,
-                                  Colors.teal[200]!,
-                                  Colors.green,
-                                  Colors.green[200]!,
-                                  Colors.green[300]!,
-                                  Colors.orange[300]!,
-                                  Colors.deepOrange,
-                                  Colors.brown,
-                                  Colors.brown[200]!,
-                                  Colors.grey,
-                                  Colors.blueGrey,
-                                  Colors.black,
-                                ],
-                                layoutBuilder: (context, colors, child) {
-                                  return GridView.count(
-                                    crossAxisCount: 4,
-                                    children: [
-                                      ...colors.map(
-                                        (color) => GestureDetector(
-                                          onTap: () {
-                                            _onColorChanged(color);
-                                          },
-                                          child: Container(
-                                            color: color,
-                                          ),
-                                        ),
-                                      ),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _currentIndex == 0
+                            ? _pageController.animateToPage(
+                                1,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              )
+                            : _pageController.animateToPage(
+                                0,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                        _currentIndex == 0
+                            ? _currentIndex = 1
+                            : _currentIndex = 0;
+                      });
+                    },
+                    icon: FaIcon(FontAwesomeIcons.book, color: _iconColor),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      showModalBottomSheet<SizedBox>(
+                        context: context,
+                        builder: (context) {
+                          return SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.55,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: BlockPicker(
+                                    availableColors: [
+                                      Colors.white,
+                                      Colors.red,
+                                      Colors.red[300]!,
+                                      Colors.purple,
+                                      Colors.purple[200]!,
+                                      Colors.purple[100]!,
+                                      Colors.deepPurple,
+                                      Colors.deepPurple[300]!,
+                                      Colors.deepPurple[200]!,
+                                      Colors.indigo,
+                                      Colors.indigo[200]!,
+                                      Colors.blue,
+                                      Colors.blue[200]!,
+                                      Colors.cyan,
+                                      Colors.cyan[200]!,
+                                      Colors.teal,
+                                      Colors.teal[200]!,
+                                      Colors.green,
+                                      Colors.green[200]!,
+                                      Colors.green[300]!,
+                                      Colors.orange[300]!,
+                                      Colors.deepOrange,
+                                      Colors.brown,
+                                      Colors.brown[200]!,
+                                      Colors.grey,
+                                      Colors.blueGrey,
+                                      Colors.black,
                                     ],
-                                  );
-                                },
-                                pickerColor: _currentColor,
-                                onColorChanged: _onColorChanged,
-                              ),
+                                    layoutBuilder: (context, colors, child) {
+                                      return GridView.count(
+                                        crossAxisCount: 4,
+                                        children: [
+                                          ...colors.map(
+                                            (color) => GestureDetector(
+                                              onTap: () {
+                                                _onColorChanged(color);
+                                              },
+                                              child: Container(
+                                                color: color,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                    pickerColor: _currentColor,
+                                    onColorChanged: _onColorChanged,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          );
+                        },
                       );
                     },
-                  );
-                },
-                icon: FaIcon(FontAwesomeIcons.palette, color: _iconColor),
+                    icon: FaIcon(FontAwesomeIcons.palette, color: _iconColor),
+                  ),
+                ],
               ),
             ],
           ),

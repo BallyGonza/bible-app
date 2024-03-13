@@ -12,17 +12,20 @@ class NoteModel extends HiveObject {
     required this.date,
     required this.color,
     required this.verses,
+    this.author,
   });
   @HiveField(0)
   final int id;
   @HiveField(1)
   String title;
   @HiveField(2)
-  String content;
+  String? author;
   @HiveField(3)
-  List<VerseModel> verses;
+  String content;
   @HiveField(4)
-  String date;
+  List<VerseModel> verses;
   @HiveField(5)
+  String date;
+  @HiveField(6)
   int color;
 }

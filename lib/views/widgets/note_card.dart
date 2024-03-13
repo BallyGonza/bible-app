@@ -1,5 +1,6 @@
 import 'package:bible_app/blocs/blocs.dart';
 import 'package:bible_app/data/data.dart';
+import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -28,7 +29,21 @@ class NoteCard extends StatelessWidget {
           SlidableAction(
             borderRadius: BorderRadius.circular(8),
             onPressed: (_) {
-              context.read<NotesBloc>().add(NotesEvent.deleteNote(index));
+              showDialog<AlertDialog>(
+                context: context,
+                builder: (context) {
+                  return CustomAlertDialog(
+                    title: 'Delete Note',
+                    description: 'Are you sure you want to delete this note?',
+                    rightButtonText: 'Delete',
+                    onRightButtonPressed: () {
+                      context
+                          .read<NotesBloc>()
+                          .add(NotesEvent.deleteNote(index));
+                    },
+                  );
+                },
+              );
             },
             icon: Icons.delete,
             label: 'Delete',

@@ -8,8 +8,18 @@ ThemeData theme = ThemeData(
   useMaterial3: false,
   textTheme: GoogleFonts.dmSansTextTheme(
     const TextTheme(
+      titleLarge: TextStyle(
+        color: Colors.white,
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+      ),
+      displayMedium: TextStyle(
+        color: Colors.white,
+        fontSize: 20,
+      ),
       displaySmall: TextStyle(
         color: Colors.white,
+        fontSize: 16,
       ),
     ),
   ),

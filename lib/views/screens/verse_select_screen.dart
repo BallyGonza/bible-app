@@ -38,66 +38,65 @@ class _VerseSelectScreenState extends State<VerseSelectScreen> {
                 return Wrap(
                   children: [
                     for (final verse in widget.chapter.verses)
-                      InkWell(
+                      GestureDetector(
+                        // onTap: () {
+                        //   setState(() {
+                        //     selectedVerse == verse
+                        //         ? selectedVerse = null
+                        //         : selectedVerse = verse;
+                        //   });
+                        //   showModalBottomSheet<Container>(
+                        //     backgroundColor: Colors.transparent,
+                        //     shape: RoundedRectangleBorder(
+                        //       borderRadius: BorderRadius.circular(11),
+                        //     ),
+                        //     context: context,
+                        //     builder: (context) => Container(
+                        //       padding: const EdgeInsets.all(8),
+                        //       decoration: const BoxDecoration(
+                        //         color: appColor,
+                        //         borderRadius: BorderRadius.only(
+                        //           topLeft: Radius.circular(10),
+                        //           topRight: Radius.circular(10),
+                        //         ),
+                        //       ),
+                        //       height: verse.text.length > 100 ? 205 : 155,
+                        //       child: ListTile(
+                        //         subtitle: Text(
+                        //           '${verse.book} ${widget.chapter.number}:${verse.number}',
+                        //           textAlign: TextAlign.right,
+                        //           style: Theme.of(context)
+                        //               .textTheme
+                        //               .bodyLarge!
+                        //               .copyWith(
+                        //                 color: Colors.white,
+                        //               ),
+                        //         ),
+                        //         title: Text(
+                        //           verse.text,
+                        //           style: Theme.of(context)
+                        //               .textTheme
+                        //               .titleLarge!
+                        //               .copyWith(
+                        //                 color: Colors.white,
+                        //               ),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   );
+                        // },
                         onTap: () {
-                          setState(() {
-                            selectedVerse == verse
-                                ? selectedVerse = null
-                                : selectedVerse = verse;
-                          });
-                          showModalBottomSheet<Container>(
-                            backgroundColor: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(11),
-                            ),
-                            context: context,
-                            builder: (context) => Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: const BoxDecoration(
-                                color: appColor,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  topRight: Radius.circular(10),
-                                ),
-                              ),
-                              height: verse.text.length > 100 ? 205 : 155,
-                              child: ListTile(
-                                subtitle: Text(
-                                  '${verse.book} ${widget.chapter.number}:${verse.number}',
-                                  textAlign: TextAlign.right,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .copyWith(
-                                        color: Colors.white,
-                                      ),
-                                ),
-                                title: Text(
-                                  verse.text,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge!
-                                      .copyWith(
-                                        color: Colors.white,
-                                      ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        onLongPress: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute<ReadingScreen>(
                               builder: (context) => ReadingScreen(
                                 chapter: widget.chapter,
-                                verse: verse,
                               ),
                             ),
                           );
-                          setState(() {
-                            selectedVerse = null;
-                          });
+                          // setState(() {
+                          //   selectedVerse = null;
+                          // });
                         },
                         child: VerseCard(
                           isSelected: selectedVerse == verse,

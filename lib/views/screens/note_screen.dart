@@ -1,8 +1,10 @@
 import 'package:bible_app/blocs/blocs.dart';
 import 'package:bible_app/data/data.dart';
+import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class NoteScreen extends StatefulWidget {
@@ -188,21 +190,63 @@ class NotePageState extends State<NoteScreen> {
                           style: TextStyle(color: _fontColor),
                         ),
                       )
-                    : ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: widget.note?.verses.length ?? 0,
-                        itemBuilder: (context, index) {
-                          final verse = widget.note!.verses[index];
-                          return ListTile(
-                            title: Text(
-                              verse.text,
-                              style: TextStyle(color: _fontColor),
-                            ),
-                            subtitle: Text(
-                              '${verse.book} ${verse.chapter}:${verse.number}',
-                              style:
-                                  TextStyle(color: _fontColor.withOpacity(0.6)),
-                            ),
+                    : BlocBuilder<NotesBloc, NotesState>(
+                        builder: (context, state) {
+                          return ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: widget.note?.verses.length ?? 0,
+                            itemBuilder: (context, index) {
+                              final verse = widget.note!.verses[index];
+                              return Slidable(
+                                key: ValueKey(index),
+                                endActionPane: ActionPane(
+                                  extentRatio: 0.25,
+                                  dragDismissible: false,
+                                  motion: const ScrollMotion(),
+                                  children: [
+                                    SlidableAction(
+                                      borderRadius: BorderRadius.circular(8),
+                                      onPressed: (_) {
+                                        showDialog<AlertDialog>(
+                                          context: context,
+                                          builder: (context) {
+                                            return CustomAlertDialog.red(
+                                              title: 'Delete Verse',
+                                              description:
+                                                  'Are you sure you want to delete this verse?',
+                                              rightButtonText: 'Delete',
+                                              onRightButtonPressed: () {
+                                                context.read<NotesBloc>().add(
+                                                      NotesEvent.removeVerse(
+                                                        widget.index,
+                                                        index,
+                                                      ),
+                                                    );
+                                              },
+                                            );
+                                          },
+                                        );
+                                      },
+                                      icon: Icons.delete,
+                                      label: 'Delete',
+                                      foregroundColor: Colors.white,
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  ],
+                                ),
+                                child: ListTile(
+                                  title: Text(
+                                    verse.text,
+                                    style: TextStyle(color: _fontColor),
+                                  ),
+                                  subtitle: Text(
+                                    '${verse.book} ${verse.chapter}:${verse.number}',
+                                    style: TextStyle(
+                                        color: _fontColor.withOpacity(0.6)),
+                                  ),
+                                ),
+                              );
+                            },
                           );
                         },
                       ),

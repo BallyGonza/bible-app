@@ -149,13 +149,13 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
                               itemBuilder: (context, index) {
                                 return GestureDetector(
                                   onTap: () {
+                                    Navigator.pop(context);
                                     context.read<NotesBloc>().add(
                                           NotesEvent.addVerse(
                                             index,
                                             widget.verse,
                                           ),
                                         );
-                                    Navigator.pop(context);
                                   },
                                   child: ListTile(
                                     title: Text(

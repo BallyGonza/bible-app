@@ -65,7 +65,11 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
     Emitter<NotesState> emit,
   ) async {
     emit(const NotesState.loading());
-    notes[event.index].verses.add(event.verse);
+
+    notes[event.index] = notes[event.index].copyWith(
+      verses: [...notes[event.index].verses, event.verse],
+    );
+
     await _userRepository.saveUser(user);
     emit(NotesState.loaded(notes));
   }

@@ -30,10 +30,7 @@ class BookCard extends StatelessWidget {
             child: ListTile(
               title: Text(
                 book.name,
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                style: Theme.of(context).textTheme.displayMedium!.copyWith(),
               ),
             ),
           ),

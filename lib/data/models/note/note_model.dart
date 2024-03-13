@@ -28,4 +28,23 @@ class NoteModel extends HiveObject {
   String date;
   @HiveField(6)
   int color;
+
+  NoteModel copyWith({
+    int? id,
+    String? title,
+    String? author,
+    String? content,
+    List<VerseModel>? verses,
+    String? date,
+    int? color,
+  }) {
+    return NoteModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      date: date ?? this.date,
+      color: color ?? this.color,
+      verses: verses ?? this.verses,
+    );
+  }
 }

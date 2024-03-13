@@ -18,8 +18,8 @@ class ChapterCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute<VerseSelectScreen>(
-            builder: (context) => VerseSelectScreen(
+          MaterialPageRoute<ReadingScreen>(
+            builder: (context) => ReadingScreen(
               chapter: book.chapters[index],
             ),
           ),

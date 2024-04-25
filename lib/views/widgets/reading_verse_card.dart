@@ -134,9 +134,9 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
                   ),
                 );
               },
-              icon: FontAwesomeIcons.heart,
+              icon: FontAwesomeIcons.floppyDisk,
               foregroundColor: Colors.white,
-              backgroundColor: Colors.red,
+              backgroundColor: Colors.blue,
             ),
           ],
         ),
@@ -148,25 +148,31 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
             SlidableAction(
               borderRadius: BorderRadius.circular(5),
               onPressed: (_) {
-                showModalBottomSheet<SizedBox>(
+                showModalBottomSheet<Container>(
                   backgroundColor: Colors.transparent,
                   context: context,
                   builder: (context) {
-                    return SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.15,
+                    return Container(
+                      color: appColor,
+                      height: MediaQuery.of(context).size.height * 0.5,
                       child: BlockPicker(
                         availableColors: [
                           Colors.white,
                           Colors.red[300]!,
+                          Colors.red[200]!,
+                          Colors.purple[300]!,
                           Colors.purple[200]!,
                           Colors.purple[100]!,
                           Colors.deepPurple[300]!,
                           Colors.deepPurple[200]!,
+                          Colors.deepPurple[100]!,
                           Colors.indigo[200]!,
                           Colors.blue,
                           Colors.blue[200]!,
+                          Colors.blue[300]!,
                           Colors.cyan,
                           Colors.cyan[200]!,
+                          Colors.cyan[300]!,
                           Colors.teal,
                           Colors.teal[200]!,
                           Colors.green[200]!,
@@ -177,9 +183,20 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
                           Colors.grey,
                           Colors.blueGrey,
                           Colors.yellow[200]!,
+                          Colors.amber[200]!,
+                          Colors.amber[300]!,
+                          Colors.lime[200]!,
+                          Colors.lime[300]!,
+                          Colors.lightGreen[200]!,
+                          Colors.lightGreen[300]!,
+                          Colors.lightBlue[200]!,
+                          Colors.lightBlue[300]!,
+                          Colors.pink[200]!,
+                          Colors.pink[300]!,
                         ],
                         layoutBuilder: (context, colors, child) {
                           return GridView.count(
+                            physics: const BouncingScrollPhysics(),
                             crossAxisCount: 6,
                             children: [
                               ...colors.map(
@@ -219,17 +236,15 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
           ),
-          tileColor: Color(widget.verse.color ?? Colors.transparent.value),
+          tileColor: _isFocused ? Colors.grey[900] : Colors.transparent,
           leading: Text(
             '${widget.verse.number}',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: _isFocused
-                  ? Colors.white
-                  : widget.verse.color != null
-                      ? Colors.black
-                      : const Color.fromARGB(255, 80, 80, 80),
+              color: widget.verse.color != null
+                  ? Color(widget.verse.color!)
+                  : Colors.white,
             ),
           ),
           title: Stack(
@@ -238,11 +253,9 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
                 widget.verse.text,
                 style: TextStyle(
                   fontSize: 20,
-                  color: _isFocused
-                      ? Colors.white
-                      : widget.verse.color != null
-                          ? Colors.black
-                          : const Color.fromARGB(255, 80, 80, 80),
+                  color: widget.verse.color != null
+                      ? Color(widget.verse.color!)
+                      : Colors.white,
                   fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
                 ),
               ),

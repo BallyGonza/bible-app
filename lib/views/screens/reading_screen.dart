@@ -5,6 +5,7 @@ import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ReadingScreen extends StatefulWidget {
   const ReadingScreen({
@@ -43,16 +44,21 @@ class _ReadingScreenState extends State<ReadingScreen> {
                 collapsedBackgroundColor: appColor,
                 controller: _expansionTileController,
                 onExpansionChanged: (value) {
-                  isExpanded = value;
+                  setState(() {
+                    isExpanded = value;
+                  });
                 },
                 title: Text(
                   'Select Verse',
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         color: Colors.white,
                       ),
                 ),
-                trailing: const Icon(
-                  Icons.arrow_drop_down,
+                trailing: Icon(
+                  isExpanded == true
+                      ? FontAwesomeIcons.chevronUp
+                      : FontAwesomeIcons.chevronDown,
+                  size: 15,
                   color: Colors.white,
                 ),
                 children: [

@@ -20,7 +20,7 @@ class NoteCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: Slidable(
         key: ValueKey(index),
         endActionPane: ActionPane(

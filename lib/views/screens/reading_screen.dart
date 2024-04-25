@@ -4,6 +4,7 @@ import 'package:bible_app/blocs/blocs.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -62,28 +63,35 @@ class _ReadingScreenState extends State<ReadingScreen> {
                   color: Colors.white,
                 ),
                 children: [
-                  Wrap(
-                    children: [
-                      for (final verse in widget.chapter.verses)
-                        GestureDetector(
-                          onTap: () {
-                            isExpanded
-                                ? _expansionTileController.collapse()
-                                : _expansionTileController.expand();
-                            isExpanded = !isExpanded;
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 10,
+                    ),
+                    itemCount: widget.chapter.verses.length,
+                    itemBuilder: (context, index) {
+                      final verse = widget.chapter.verses[index];
+                      return GestureDetector(
+                        onTap: () {
+                          isExpanded
+                              ? _expansionTileController.collapse()
+                              : _expansionTileController.expand();
+                          isExpanded = !isExpanded;
 
-                            _sc.animateTo(
-                              verse.number * 100,
-                              duration: const Duration(seconds: 1),
-                              curve: Curves.fastOutSlowIn,
-                            );
-                          },
-                          child: VerseCard(
-                            isSelected: false,
-                            verse: verse,
-                          ),
+                          _sc.animateTo(
+                            verse.number * 100,
+                            duration: const Duration(seconds: 1),
+                            curve: Curves.fastOutSlowIn,
+                          );
+                        },
+                        child: VerseCard(
+                          isSelected: false,
+                          verse: verse,
                         ),
-                    ],
+                      );
+                    },
                   ),
                 ],
               );

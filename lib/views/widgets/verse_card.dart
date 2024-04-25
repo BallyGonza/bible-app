@@ -14,7 +14,7 @@ class VerseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 33,
+      width: 40,
       margin: const EdgeInsets.only(right: 5, bottom: 5),
       padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(

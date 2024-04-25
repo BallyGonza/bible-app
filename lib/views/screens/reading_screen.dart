@@ -39,6 +39,8 @@ class _ReadingScreenState extends State<ReadingScreen> {
           BlocBuilder<UserBloc, UserState>(
             builder: (context, state) {
               return ExpansionTile(
+                backgroundColor: appColor,
+                collapsedBackgroundColor: appColor,
                 controller: _expansionTileController,
                 onExpansionChanged: (value) {
                   isExpanded = value;

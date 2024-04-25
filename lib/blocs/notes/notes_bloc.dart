@@ -25,6 +25,7 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
     emit(const NotesState.loading());
     user = await _userRepository.getUser();
     notes = user.notes;
+    notes.sort((a, b) => b.date.compareTo(a.date));
     emit(NotesState.loaded(notes));
   }
 
@@ -36,6 +37,8 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
 
     notes.add(event.note);
     await _userRepository.saveUser(user);
+    notes.sort((a, b) => b.date.compareTo(a.date));
+
     emit(NotesState.loaded(notes));
   }
 
@@ -47,6 +50,8 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
 
     notes[event.index] = event.note;
     await _userRepository.saveUser(user);
+    notes.sort((a, b) => b.date.compareTo(a.date));
+
     emit(NotesState.loaded(notes));
   }
 
@@ -57,6 +62,8 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
     emit(const NotesState.loading());
     notes.removeAt(event.index);
     await _userRepository.saveUser(user);
+    notes.sort((a, b) => b.date.compareTo(a.date));
+
     emit(NotesState.loaded(notes));
   }
 

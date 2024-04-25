@@ -42,6 +42,7 @@ class NoteModel extends HiveObject {
       id: id ?? this.id,
       title: title ?? this.title,
       content: content ?? this.content,
+      author: author ?? this.author,
       date: date ?? this.date,
       color: color ?? this.color,
       verses: verses ?? this.verses,

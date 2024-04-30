@@ -6,7 +6,7 @@ ThemeData theme = ThemeData(
   scaffoldBackgroundColor: appColor,
   primaryColor: Colors.white,
   useMaterial3: false,
-  fontFamily: GoogleFonts.dmSans().fontFamily,
+  fontFamily: 'DM Sans',
   textTheme: GoogleFonts.dmSansTextTheme(
     const TextTheme(
       titleLarge: TextStyle(

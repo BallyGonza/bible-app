@@ -135,7 +135,7 @@ class NotePageState extends State<NoteScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: 25,
+                    height: 15,
                     child: TextField(
                       enabled: _isEditing,
                       controller: _authorController,

@@ -230,7 +230,6 @@ class NotePageState extends State<NoteScreen> {
                                         );
                                       },
                                       icon: Icons.delete,
-                                      label: 'Delete',
                                       foregroundColor: Colors.white,
                                       backgroundColor: Colors.red,
                                     ),

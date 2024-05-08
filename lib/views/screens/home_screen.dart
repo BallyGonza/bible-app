@@ -17,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final PageController _pageController = PageController();
-  int _currentIndex = 0;
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
         controller: _pageController,
         onPageChanged: (index) {
           setState(() {
-            _currentIndex = index;
+            _selectedIndex = index;
           });
         },
         children: [
@@ -37,32 +37,32 @@ class _HomeScreenState extends State<HomeScreen> {
           const NoteBookScreen(),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        items: const [
-          BottomNavigationBarItem(
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected: (index) {
+          setState(() {
+            _selectedIndex = index;
+            _pageController.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          });
+        },
+        selectedIndex: _selectedIndex,
+        destinations: const [
+          NavigationDestination(
             icon: Icon(
               FontAwesomeIcons.book,
             ),
             label: 'Bible',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(
               FontAwesomeIcons.noteSticky,
             ),
             label: 'Notebook',
           ),
         ],
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-          _pageController.animateToPage(
-            index,
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-          );
-        },
       ),
     );
   }

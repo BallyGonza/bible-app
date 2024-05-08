@@ -1,11 +1,16 @@
+import 'package:bible_app/data/constants/colors.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 ThemeData theme = ThemeData(
   scaffoldBackgroundColor: appColor,
+  colorScheme: ColorScheme.fromSeed(seedColor: appColor).copyWith(
+    primary: appColor,
+    secondary: appColorDarker,
+    surfaceTint: appColorDarker,
+  ),
   primaryColor: Colors.white,
-  useMaterial3: false,
   fontFamily: 'DM Sans',
   textTheme: GoogleFonts.dmSansTextTheme(
     const TextTheme(
@@ -25,8 +30,13 @@ ThemeData theme = ThemeData(
     ),
   ),
   appBarTheme: const AppBarTheme(
-    backgroundColor: appColor,
-    elevation: 0,
+    backgroundColor: appColorDarker,
+    titleTextStyle: TextStyle(
+      color: Colors.white,
+      fontSize: 24,
+      fontWeight: FontWeight.bold,
+      fontFamily: 'DM Sans',
+    ),
     iconTheme: IconThemeData(
       color: Colors.white,
     ),
@@ -34,9 +44,23 @@ ThemeData theme = ThemeData(
   floatingActionButtonTheme: FloatingActionButtonThemeData(
     backgroundColor: accentColor,
   ),
-  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-    backgroundColor: appColor,
-    selectedItemColor: Colors.white,
-    unselectedItemColor: Colors.grey,
+  navigationBarTheme: NavigationBarThemeData(
+    backgroundColor: appColorDarker,
+    indicatorColor: accentColor,
+    iconTheme: MaterialStateProperty.all(
+      const IconThemeData(
+        color: appColor,
+      ),
+    ),
+  ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ButtonStyle(
+      backgroundColor: MaterialStateProperty.all(appColor),
+      foregroundColor: MaterialStateProperty.all(accentColor),
+    ),
+  ),
+  dividerTheme: const DividerThemeData(
+    color: Colors.transparent,
+    thickness: 1,
   ),
 );

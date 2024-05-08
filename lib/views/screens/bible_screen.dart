@@ -15,8 +15,6 @@ class BibleScreen extends StatelessWidget {
           'Bible',
           style: Theme.of(context).textTheme.titleLarge!.copyWith(),
         ),
-        backgroundColor: appColorDarker,
-        elevation: 0,
       ),
       body: ListView.builder(
         physics: const BouncingScrollPhysics(),

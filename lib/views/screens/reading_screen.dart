@@ -4,7 +4,6 @@ import 'package:bible_app/blocs/blocs.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -64,6 +63,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
                 ),
                 children: [
                   GridView.builder(
+                    padding: const EdgeInsets.all(8),
                     shrinkWrap: true,
                     physics: const BouncingScrollPhysics(),
                     gridDelegate:
@@ -104,6 +104,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
               itemCount: widget.chapter.verses.length,
               separatorBuilder: (context, index) => const Divider(
                 height: 3,
+                color: Colors.transparent,
               ),
               itemBuilder: (context, index) {
                 final verse = widget.chapter.verses[index];

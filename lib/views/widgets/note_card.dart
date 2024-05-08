@@ -48,7 +48,6 @@ class NoteCard extends StatelessWidget {
                 );
               },
               icon: Icons.delete,
-              label: 'Delete',
               foregroundColor: Colors.white,
               backgroundColor: Colors.red,
             ),

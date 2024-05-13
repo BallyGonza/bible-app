@@ -60,7 +60,10 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                   return notes.isEmpty
                       ? const SliverFillRemaining(
                           child: Center(
-                            child: Text('No notes yet'),
+                            child: Text(
+                              'No notes yet',
+                              style: TextStyle(color: Colors.grey),
+                            ),
                           ),
                         )
                       : SliverList(

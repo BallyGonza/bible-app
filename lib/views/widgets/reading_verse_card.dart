@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:bible_app/blocs/blocs.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
@@ -294,44 +296,39 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        child: Stack(
-          children: [
-            Positioned(
-              right: 16,
-              bottom: 0,
-              child: Text(
-                widget.verse.number.toString(),
-                style: TextStyle(
-                  color: Colors.grey[800],
-                  fontSize: 40,
-                  fontStyle: FontStyle.italic,
-                ),
+        child: ListTile(
+          onTap: () => setState(() {
+            _isFocused = !_isFocused;
+          }),
+          minVerticalPadding: 8,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          tileColor: _isFocused ? Colors.grey[900] : appColorDarker,
+          title: SizedBox(
+            width: double.infinity,
+            child: Text(
+              widget.verse.text,
+              style: TextStyle(
+                fontSize: 20,
+                color: widget.verse.color != null
+                    ? Color(widget.verse.color!)
+                    : Colors.white,
+                fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
               ),
             ),
-            ListTile(
-              onTap: () => setState(() {
-                _isFocused = !_isFocused;
-              }),
-              minVerticalPadding: 8,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              tileColor: _isFocused ? Colors.grey[900] : appColorDarker,
-              title: SizedBox(
-                width: double.infinity,
-                child: Text(
-                  widget.verse.text,
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: widget.verse.color != null
-                        ? Color(widget.verse.color!)
-                        : Colors.white,
-                    fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
-                  ),
-                ),
+          ),
+          subtitle: Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              ' ${widget.verse.book} ${widget.verse.chapter}:${widget.verse.number}',
+              style: TextStyle(
+                color: Colors.grey[800],
+                fontSize: 14,
+                fontStyle: FontStyle.italic,
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

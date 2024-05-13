@@ -19,18 +19,24 @@ class NoteVerseScreen extends StatefulWidget {
 }
 
 class _NoteVerseScreenState extends State<NoteVerseScreen> {
-  final _controller = TextEditingController();
+  final _contentController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _contentController.text = widget.verse.note?.content ?? '';
+  }
 
   @override
   Widget build(BuildContext context) {
-    _controller.text = widget.verse.note?.content ?? '';
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
             onPressed: () {
               setState(() {
-                widget.verse.note = VerseNoteModel(content: _controller.text);
+                widget.verse.note =
+                    VerseNoteModel(content: _contentController.text);
                 context
                     .read<UserBloc>()
                     .add(UserEvent.saveVerse(verse: widget.verse));
@@ -95,7 +101,7 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
             Expanded(
               child: SingleChildScrollView(
                 child: TextField(
-                  controller: _controller,
+                  controller: _contentController,
                   decoration: const InputDecoration(
                     hintText: 'Descripción...',
                     hintStyle: TextStyle(

@@ -42,6 +42,17 @@ class NoteCard extends StatelessWidget {
                         context
                             .read<NotesBloc>()
                             .add(NotesEvent.deleteNote(index));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Note deleted',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        );
                       },
                     );
                   },
@@ -103,7 +114,7 @@ class NoteCard extends StatelessWidget {
                 if (note.content.isNotEmpty)
                   Text(
                     note.content,
-                    maxLines: 3,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: note.color == Colors.white.value

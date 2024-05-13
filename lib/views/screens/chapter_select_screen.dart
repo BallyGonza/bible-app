@@ -11,18 +11,42 @@ class ChapterSelectScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: appColor,
-      appBar: AppBar(
-        title: Text(book.name),
-      ),
-      body: GridView.builder(
-        shrinkWrap: true,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 5,
-        ),
-        itemCount: book.chapters.length,
-        itemBuilder: (context, index) {
-          return ChapterCard(book: book, index: index);
-        },
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            backgroundColor: appColorDarker,
+            expandedHeight: 150,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              // color gray as background
+              background: Container(
+                color: appColorDarker,
+              ),
+              titlePadding: const EdgeInsets.only(
+                left: 50,
+                bottom: 13,
+              ),
+              title: Text(
+                book.name,
+                style: const TextStyle(
+                  fontSize: 24,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 5,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return ChapterCard(book: book, index: index);
+              },
+              childCount: book.chapters.length,
+            ),
+          ),
+        ],
       ),
     );
   }

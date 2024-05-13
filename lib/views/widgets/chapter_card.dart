@@ -34,8 +34,7 @@ class ChapterCard extends StatelessWidget {
         child: Center(
           child: Text(
             '${index + 1}',
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  fontWeight: FontWeight.bold,
+            style: Theme.of(context).textTheme.displayMedium!.copyWith(
                   color: Colors.white,
                 ),
           ),

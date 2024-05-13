@@ -1,4 +1,5 @@
 import 'package:bible_app/blocs/blocs.dart';
+import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,12 +15,6 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Notebook',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
@@ -30,40 +25,69 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
         },
         child: const Icon(Icons.add),
       ),
-      body: BlocBuilder<NotesBloc, NotesState>(
-        builder: (context, state) {
-          return state.maybeWhen(
-            orElse: () => const CircularProgressIndicator(),
-            loaded: (notes) => notes.isEmpty
-                ? const Center(
-                    child: Text(
-                      'No notes yet...',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                : ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: notes.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return NoteCard(
-                        note: notes[index],
-                        index: index,
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute<NoteScreen>(
-                              builder: (_) => NoteScreen(
-                                index: index,
-                                note: notes[index],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            backgroundColor: appColorDarker,
+            expandedHeight: 150,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                color: appColorDarker,
+              ),
+              titlePadding: const EdgeInsets.only(
+                left: 16,
+                bottom: 16,
+              ),
+              title: const Text(
+                'Notebook',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+          ),
+          BlocBuilder<NotesBloc, NotesState>(
+            builder: (context, state) {
+              return state.maybeWhen(
+                orElse: () => const SliverFillRemaining(
+                  child: Center(
+                    child: CircularProgressIndicator(),
                   ),
-          );
-        },
+                ),
+                loaded: (notes) {
+                  return notes.isEmpty
+                      ? const SliverFillRemaining(
+                          child: Center(
+                            child: Text('No notes yet'),
+                          ),
+                        )
+                      : SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              final note = notes[index];
+                              return NoteCard(
+                                index: index,
+                                onTap: () => Navigator.of(context).push(
+                                  MaterialPageRoute<NoteScreen>(
+                                    builder: (_) => NoteScreen(
+                                      index: index,
+                                      note: notes[index],
+                                    ),
+                                  ),
+                                ),
+                                note: note,
+                              );
+                            },
+                            childCount: notes.length,
+                          ),
+                        );
+                },
+              );
+            },
+          ),
+        ],
       ),
     );
   }

@@ -25,7 +25,7 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
     emit(const NotesState.loading());
     user = await _userRepository.getUser();
     notes = user.notes;
-    notes.sort((a, b) => b.date.compareTo(a.date));
+    notes.reversed.toList();
     emit(NotesState.loaded(notes));
   }
 

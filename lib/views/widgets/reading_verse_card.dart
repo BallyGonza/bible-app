@@ -54,7 +54,7 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
                 ),
                 context: context,
                 builder: (context) => Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(16),
                   decoration: const BoxDecoration(
                     color: appColor,
                     borderRadius: BorderRadius.only(
@@ -70,54 +70,107 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
                           return const CircularProgressIndicator();
                         },
                         loaded: (notes) {
-                          return ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: notes.length,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  context.read<NotesBloc>().add(
-                                        NotesEvent.addVerse(
-                                          index,
-                                          widget.verse,
+                          return Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Add to Note',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge!
+                                        .copyWith(
+                                          color: Colors.white,
                                         ),
-                                      );
-                                },
-                                child: Card(
-                                  color: Color(notes[index].color),
-                                  child: ListTile(
-                                    title: Text(
-                                      notes[index].title,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge!
-                                          .copyWith(
-                                            color: notes[index].color ==
-                                                    Colors.white.value
-                                                ? Colors.black
-                                                : Colors.white,
-                                          ),
-                                    ),
-                                    subtitle: notes[index].author != null
-                                        ? Text(
-                                            notes[index].author!,
-                                            style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontStyle: FontStyle.italic,
-                                            ),
-                                          )
-                                        : null,
-                                    trailing: Icon(
-                                      notes[index].verses.contains(widget.verse)
-                                          ? Icons.check
-                                          : null,
-                                      color: Colors.green,
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    icon: const FaIcon(
+                                      FontAwesomeIcons.xmark,
+                                      color: Colors.white,
                                     ),
                                   ),
+                                ],
+                              ),
+                              Expanded(
+                                child: ListView.builder(
+                                  physics: const BouncingScrollPhysics(),
+                                  itemCount: notes.length,
+                                  itemBuilder: (context, index) {
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.pop(context);
+
+                                        if (!notes[index]
+                                            .verses
+                                            .contains(widget.verse)) {
+                                          context.read<NotesBloc>().add(
+                                                NotesEvent.addVerse(
+                                                  index,
+                                                  widget.verse,
+                                                ),
+                                              );
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                'Verse added to note',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                'Verse already added to note',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      child: Card(
+                                        color: Color(notes[index].color),
+                                        child: ListTile(
+                                          title: Text(
+                                            notes[index].title,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge!
+                                                .copyWith(
+                                                  color: notes[index].color ==
+                                                          Colors.white.value
+                                                      ? Colors.black
+                                                      : Colors.white,
+                                                ),
+                                          ),
+                                          trailing: Icon(
+                                            notes[index]
+                                                    .verses
+                                                    .contains(widget.verse)
+                                                ? Icons.check
+                                                : null,
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
+                              ),
+                            ],
                           );
                         },
                       );

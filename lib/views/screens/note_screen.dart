@@ -3,7 +3,9 @@
 import 'package:bible_app/blocs/blocs.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -105,153 +107,154 @@ class NotePageState extends State<NoteScreen> {
         padding: EdgeInsets.symmetric(
           horizontal: MediaQuery.of(context).size.width * (1 / 20),
         ),
-        child: PageView(
-          controller: _pageController,
+        child: Column(
           children: [
-            SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Wrap(
+            SizedBox(
+              height: 80,
+              child: TextField(
+                enabled: _isEditing,
+                controller: _titleController,
+                decoration: InputDecoration(
+                  hintText: 'Titulo',
+                  hintStyle: TextStyle(color: _fontColor.withOpacity(0.6)),
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(
+                  fontSize: 34,
+                  fontWeight: FontWeight.bold,
+                  color: _fontColor,
+                ),
+                textAlign: TextAlign.left,
+                cursorColor: _fontColor,
+                textCapitalization: TextCapitalization.words,
+                textInputAction: TextInputAction.done,
+              ),
+            ),
+            SizedBox(
+              height: 20,
+              child: TextField(
+                enabled: _isEditing,
+                controller: _authorController,
+                decoration: InputDecoration(
+                  hintText: 'by Author...',
+                  hintStyle: TextStyle(color: _fontColor.withOpacity(0.6)),
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  fontStyle: FontStyle.italic,
+                  color: _fontColor,
+                ),
+                textAlign: TextAlign.left,
+                cursorColor: _fontColor,
+                textCapitalization: TextCapitalization.sentences,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: PageView(
+                controller: _pageController,
                 children: [
-                  SizedBox(
-                    height: 45,
+                  SingleChildScrollView(
                     child: TextField(
                       enabled: _isEditing,
-                      controller: _titleController,
+                      controller: _contentController,
                       decoration: InputDecoration(
-                        hintText: 'Titulo',
-                        hintStyle:
-                            TextStyle(color: _fontColor.withOpacity(0.6)),
+                        hintText: 'Descripción...',
+                        hintStyle: TextStyle(
+                          color: _fontColor.withOpacity(0.6),
+                          fontStyle: FontStyle.italic,
+                        ),
                         border: InputBorder.none,
                       ),
                       style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
                         color: _fontColor,
+                        fontWeight: FontWeight.normal,
                       ),
-                      textAlign: TextAlign.left,
-                      cursorColor: _fontColor,
-                      textCapitalization: TextCapitalization.words,
-                      textInputAction: TextInputAction.done,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                    child: TextField(
-                      enabled: _isEditing,
-                      controller: _authorController,
-                      decoration: InputDecoration(
-                        hintText: 'by Author...',
-                        hintStyle:
-                            TextStyle(color: _fontColor.withOpacity(0.6)),
-                        border: InputBorder.none,
-                      ),
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                        color: _fontColor,
-                      ),
+                      keyboardType: TextInputType.multiline,
                       textAlign: TextAlign.left,
                       cursorColor: _fontColor,
                       textCapitalization: TextCapitalization.sentences,
+                      maxLines: null,
                     ),
                   ),
-                  TextField(
-                    enabled: _isEditing,
-                    controller: _contentController,
-                    decoration: InputDecoration(
-                      hintText: 'Descripción...',
-                      hintStyle: TextStyle(
-                        color: _fontColor.withOpacity(0.6),
-                        fontStyle: FontStyle.italic,
-                      ),
-                      border: InputBorder.none,
-                    ),
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: _fontColor,
-                      fontWeight: FontWeight.normal,
-                    ),
-                    keyboardType: TextInputType.multiline,
-                    textAlign: TextAlign.left,
-                    cursorColor: _fontColor,
-                    textCapitalization: TextCapitalization.sentences,
-                    maxLines: null,
-                  ),
-                ],
-              ),
-            ),
-            SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.75,
-                child: widget.note?.verses.isEmpty ?? true
-                    ? Center(
-                        child: Text(
-                          'No se han seleccionado versículos...',
-                          style: TextStyle(color: _fontColor),
-                        ),
-                      )
-                    : BlocBuilder<NotesBloc, NotesState>(
-                        builder: (context, state) {
-                          return ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: widget.note?.verses.length ?? 0,
-                            itemBuilder: (context, index) {
-                              final verse = widget.note!.verses[index];
-                              return Slidable(
-                                key: ValueKey(index),
-                                endActionPane: ActionPane(
-                                  extentRatio: 0.25,
-                                  dragDismissible: false,
-                                  motion: const ScrollMotion(),
-                                  children: [
-                                    SlidableAction(
-                                      borderRadius: BorderRadius.circular(8),
-                                      onPressed: (_) {
-                                        showDialog<AlertDialog>(
-                                          context: context,
-                                          builder: (context) {
-                                            return CustomAlertDialog.red(
-                                              title: 'Delete Verse',
-                                              description:
-                                                  'Are you sure you want to delete this verse?',
-                                              rightButtonText: 'Delete',
-                                              onRightButtonPressed: () {
-                                                context.read<NotesBloc>().add(
-                                                      NotesEvent.removeVerse(
-                                                        widget.index,
-                                                        index,
-                                                      ),
-                                                    );
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.70,
+                    child: widget.note?.verses.isEmpty ?? true
+                        ? Center(
+                            child: Text(
+                              'No se han seleccionado versículos.',
+                              style: TextStyle(color: _fontColor),
+                            ),
+                          )
+                        : BlocBuilder<NotesBloc, NotesState>(
+                            builder: (context, state) {
+                              return ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: widget.note?.verses.length ?? 0,
+                                itemBuilder: (context, index) {
+                                  final verse = widget.note!.verses[index];
+                                  return Slidable(
+                                    key: ValueKey(index),
+                                    endActionPane: ActionPane(
+                                      extentRatio: 0.25,
+                                      dragDismissible: false,
+                                      motion: const ScrollMotion(),
+                                      children: [
+                                        SlidableAction(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          onPressed: (_) {
+                                            showDialog<AlertDialog>(
+                                              context: context,
+                                              builder: (context) {
+                                                return CustomAlertDialog.red(
+                                                  title: 'Delete Verse',
+                                                  description:
+                                                      'Are you sure you want to delete this verse?',
+                                                  rightButtonText: 'Delete',
+                                                  onRightButtonPressed: () {
+                                                    context
+                                                        .read<NotesBloc>()
+                                                        .add(
+                                                          NotesEvent
+                                                              .removeVerse(
+                                                            widget.index,
+                                                            index,
+                                                          ),
+                                                        );
+                                                  },
+                                                );
                                               },
                                             );
                                           },
-                                        );
-                                      },
-                                      icon: Icons.delete,
-                                      foregroundColor: Colors.white,
-                                      backgroundColor: Colors.red,
+                                          icon: Icons.delete,
+                                          foregroundColor: Colors.white,
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                                child: ListTile(
-                                  title: Text(
-                                    verse.text,
-                                    style: TextStyle(color: _fontColor),
-                                  ),
-                                  subtitle: Text(
-                                    '${verse.book} ${verse.chapter}:${verse.number}',
-                                    style: TextStyle(
-                                      color: _fontColor.withOpacity(0.6),
+                                    child: ListTile(
+                                      title: Text(
+                                        verse.text,
+                                        style: TextStyle(color: _fontColor),
+                                      ),
+                                      subtitle: Text(
+                                        '${verse.book} ${verse.chapter}:${verse.number}',
+                                        style: TextStyle(
+                                          color: _fontColor.withOpacity(0.6),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
+                                  );
+                                },
                               );
                             },
-                          );
-                        },
-                      ),
+                          ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -388,6 +391,17 @@ class NotePageState extends State<NoteScreen> {
             ),
           ),
         );
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Note created',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
   }
 
   void _updateNote(BuildContext context) {
@@ -407,5 +421,16 @@ class NotePageState extends State<NoteScreen> {
             ),
           ),
         );
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Note updated',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
   }
 }

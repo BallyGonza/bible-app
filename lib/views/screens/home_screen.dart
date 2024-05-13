@@ -38,31 +38,24 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (index) {
-          setState(() {
-            _selectedIndex = index;
-            _pageController.animateToPage(
-              index,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
-          });
-        },
         selectedIndex: _selectedIndex,
         destinations: const [
           NavigationDestination(
-            icon: Icon(
-              FontAwesomeIcons.book,
-            ),
+            icon: FaIcon(FontAwesomeIcons.book),
             label: 'Bible',
           ),
           NavigationDestination(
-            icon: Icon(
-              FontAwesomeIcons.noteSticky,
-            ),
+            icon: FaIcon(FontAwesomeIcons.noteSticky),
             label: 'Notebook',
           ),
         ],
+        onDestinationSelected: (index) {
+          _pageController.animateToPage(
+            index,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        },
       ),
     );
   }

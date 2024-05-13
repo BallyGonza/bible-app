@@ -10,21 +10,42 @@ class BibleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Bible',
-          style: Theme.of(context).textTheme.titleLarge!.copyWith(),
-        ),
-      ),
-      body: ListView.builder(
-        physics: const BouncingScrollPhysics(),
-        itemCount: user.bible.books.length,
-        itemBuilder: (context, index) {
-          final book = user.bible.books[index];
-          return BookCard(
-            book: book,
-          );
-        },
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            backgroundColor: appColorDarker,
+            expandedHeight: 150,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              // color gray as background
+              background: Container(
+                color: appColorDarker,
+              ),
+              titlePadding: const EdgeInsets.only(
+                left: 16,
+                bottom: 16,
+              ),
+              title: const Text(
+                'Bible',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final book = user.bible.books[index];
+                return BookCard(
+                  book: book,
+                );
+              },
+              childCount: user.bible.books.length,
+            ),
+          ),
+        ],
       ),
     );
   }

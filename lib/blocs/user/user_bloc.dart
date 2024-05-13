@@ -40,7 +40,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         for (final chapter in book.chapters) {
           for (final verse in chapter.verses) {
             if (verse.text == event.verse.text) {
-              verse.color = event.verse.color;
+              verse
+                ..color = event.verse.color
+                ..note = event.verse.note;
             }
           }
         }

@@ -14,6 +14,7 @@ class HiveService {
         ..registerAdapter(BookModelAdapter())
         ..registerAdapter(ChapterModelAdapter())
         ..registerAdapter(VerseModelAdapter())
+        ..registerAdapter(VerseNoteModelAdapter())
         ..registerAdapter(NoteModelAdapter());
       WidgetsFlutterBinding.ensureInitialized();
       await Hive.initFlutter();

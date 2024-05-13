@@ -1,3 +1,4 @@
+import 'package:bible_app/data/data.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
@@ -10,6 +11,7 @@ class VerseModel extends HiveObject {
     required this.book,
     required this.chapter,
     required this.text,
+    this.note,
     this.color,
   });
 
@@ -22,5 +24,25 @@ class VerseModel extends HiveObject {
   @HiveField(3)
   String text;
   @HiveField(4)
+  VerseNoteModel? note;
+  @HiveField(5)
   int? color = Colors.transparent.value;
+
+  VerseModel copyWith({
+    int? number,
+    String? book,
+    int? chapter,
+    String? text,
+    VerseNoteModel? note,
+    int? color,
+  }) {
+    return VerseModel(
+      number: number ?? this.number,
+      book: book ?? this.book,
+      chapter: chapter ?? this.chapter,
+      text: text ?? this.text,
+      note: note ?? this.note,
+      color: color ?? this.color,
+    );
+  }
 }

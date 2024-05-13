@@ -21,14 +21,15 @@ class VerseModelAdapter extends TypeAdapter<VerseModel> {
       book: fields[1] as String,
       chapter: fields[2] as int,
       text: fields[3] as String,
-      color: fields[4] as int?,
+      note: fields[4] as VerseNoteModel?,
+      color: fields[5] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, VerseModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.number)
       ..writeByte(1)
@@ -38,6 +39,8 @@ class VerseModelAdapter extends TypeAdapter<VerseModel> {
       ..writeByte(3)
       ..write(obj.text)
       ..writeByte(4)
+      ..write(obj.note)
+      ..writeByte(5)
       ..write(obj.color);
   }
 

@@ -1,5 +1,6 @@
 import 'package:bible_app/blocs/blocs.dart';
 import 'package:bible_app/data/data.dart';
+import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -186,7 +187,7 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
         ],
       ),
       endActionPane: ActionPane(
-        extentRatio: 0.20,
+        extentRatio: 0.40,
         dragDismissible: false,
         motion: const ScrollMotion(),
         children: [
@@ -271,6 +272,21 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
               );
             },
             icon: FontAwesomeIcons.palette,
+            foregroundColor: Colors.white,
+            backgroundColor: appColor,
+          ),
+          SlidableAction(
+            onPressed: (_) {
+              Navigator.push(
+                context,
+                MaterialPageRoute<NoteVerseScreen>(
+                  builder: (context) => NoteVerseScreen(
+                    verse: widget.verse,
+                  ),
+                ),
+              );
+            },
+            icon: FontAwesomeIcons.noteSticky,
             foregroundColor: Colors.white,
             backgroundColor: appColor,
           ),

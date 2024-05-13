@@ -8,6 +8,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       : _userRepository = userRepository,
         super(const UserState.initial()) {
     on<UserInitialEvent>(_onInit);
+
     on<UserSaveEvent>(_onSaveVerse);
     add(const UserEvent.init());
   }

@@ -33,7 +33,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
-                color: appColorDarker,
+                color: appColor,
               ),
               titlePadding: const EdgeInsets.only(
                 left: 16,

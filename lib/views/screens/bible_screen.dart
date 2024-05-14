@@ -3,6 +3,7 @@ import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class BibleScreen extends StatefulWidget {
   const BibleScreen({required this.user, super.key});
@@ -32,14 +33,50 @@ class _BibleScreenState extends State<BibleScreen> {
             expandedHeight: 150,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              // color gray as background
-              background: Column(
-                children: <Widget>[
-                  const SizedBox(height: 40),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 6, 16, 16),
+              background: Container(
+                color: appColor,
+              ),
+              titlePadding: const EdgeInsets.only(
+                left: 16,
+                bottom: 16,
+              ),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Bible',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(right: 16),
+                    height: 30,
+                    width: 170,
                     child: SearchBar(
-                      hintText: 'Search Bible',
+                      elevation: MaterialStateProperty.all(0),
+                      textCapitalization: TextCapitalization.words,
+                      textStyle: MaterialStateProperty.all(
+                        const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                      backgroundColor:
+                          MaterialStateProperty.all(appColorDarker),
+                      leading: FaIcon(
+                        size: 12,
+                        FontAwesomeIcons.magnifyingGlass,
+                        color: Colors.grey[600],
+                      ),
+                      hintText: 'Search...',
+                      hintStyle: MaterialStateProperty.all(
+                        TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 16,
+                        ),
+                      ),
                       onChanged: (value) {
                         context.read<SearchBarBookBloc>().add(
                               SearchBarBookEvent.search(
@@ -51,18 +88,6 @@ class _BibleScreenState extends State<BibleScreen> {
                     ),
                   ),
                 ],
-              ),
-
-              titlePadding: const EdgeInsets.only(
-                left: 16,
-                bottom: 16,
-              ),
-              title: const Text(
-                'Bible',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
               ),
             ),
           ),

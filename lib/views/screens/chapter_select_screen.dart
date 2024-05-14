@@ -20,7 +20,7 @@ class ChapterSelectScreen extends StatelessWidget {
             flexibleSpace: FlexibleSpaceBar(
               // color gray as background
               background: Container(
-                color: appColorDarker,
+                color: appColor,
               ),
               titlePadding: const EdgeInsets.only(
                 left: 50,

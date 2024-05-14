@@ -34,6 +34,7 @@ class BookCard extends StatelessWidget {
                   book.name,
                   style: Theme.of(context).textTheme.displayMedium!.copyWith(),
                 ),
+                //!TODO: Add description to book
               ),
             ),
           ],

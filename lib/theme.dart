@@ -1,4 +1,5 @@
 import 'package:bible_app/data/constants/colors.dart';
+import 'package:bible_app/data/constants/constants.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -46,10 +47,10 @@ ThemeData theme = ThemeData(
   ),
   navigationBarTheme: NavigationBarThemeData(
     backgroundColor: appColorDarker,
-    indicatorColor: accentColor,
+    indicatorColor: Colors.grey[800],
     iconTheme: MaterialStateProperty.all(
       const IconThemeData(
-        color: appColor,
+        color: Colors.white,
       ),
     ),
   ),

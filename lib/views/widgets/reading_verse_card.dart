@@ -295,38 +295,42 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+          ),
           onTap: () => setState(() {
             _isFocused = !_isFocused;
           }),
-          minVerticalPadding: 8,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          tileColor: _isFocused ? Colors.grey[900] : appColorDarker,
-          title: SizedBox(
-            width: double.infinity,
-            child: Text(
-              widget.verse.text,
-              style: TextStyle(
-                fontSize: 20,
-                color: widget.verse.color != null
-                    ? Color(widget.verse.color!)
-                    : Colors.white,
-                fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
-              ),
-            ),
-          ),
-          subtitle: Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              ' ${widget.verse.book} ${widget.verse.chapter}:${widget.verse.number}',
-              style: TextStyle(
-                color: Colors.grey[800],
-                fontSize: 14,
-                fontStyle: FontStyle.italic,
-              ),
+          tileColor: _isFocused ? Colors.grey[900] : Colors.transparent,
+          title: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: widget.verse.number.toString(),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: widget.verse.color != null
+                        ? Color(widget.verse.color!)
+                        : Colors.grey,
+                    fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
+                  ),
+                ),
+                TextSpan(
+                  text: ' ${widget.verse.text}',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: widget.verse.color != null
+                        ? Color(widget.verse.color!)
+                        : Colors.white,
+                    fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
+                  ),
+                ),
+              ],
             ),
           ),
         ),

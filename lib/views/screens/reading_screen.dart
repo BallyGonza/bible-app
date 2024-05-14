@@ -32,7 +32,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
             flexibleSpace: FlexibleSpaceBar(
               // color gray as background
               background: Container(
-                color: appColorDarker,
+                color: appColor,
               ),
               titlePadding: const EdgeInsets.only(
                 left: 50,

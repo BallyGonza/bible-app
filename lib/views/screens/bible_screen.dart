@@ -53,22 +53,22 @@ class _BibleScreenState extends State<BibleScreen> {
                 height: 30,
                 width: double.infinity,
                 child: SearchBar(
-                  elevation: MaterialStateProperty.all(0),
+                  elevation: WidgetStateProperty.all(0),
                   textCapitalization: TextCapitalization.words,
-                  textStyle: MaterialStateProperty.all(
+                  textStyle: WidgetStateProperty.all(
                     const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
                     ),
                   ),
-                  backgroundColor: MaterialStateProperty.all(appColorDarker),
+                  backgroundColor: WidgetStateProperty.all(appColorDarker),
                   leading: FaIcon(
                     size: 9,
                     FontAwesomeIcons.magnifyingGlass,
                     color: Colors.grey[600],
                   ),
                   hintText: 'Search...',
-                  hintStyle: MaterialStateProperty.all(
+                  hintStyle: WidgetStateProperty.all(
                     TextStyle(
                       color: Colors.grey[600],
                       fontSize: 12,

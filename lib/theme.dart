@@ -48,7 +48,7 @@ ThemeData theme = ThemeData(
   navigationBarTheme: NavigationBarThemeData(
     backgroundColor: appColorDarker,
     indicatorColor: Colors.grey[800],
-    iconTheme: MaterialStateProperty.all(
+    iconTheme: WidgetStateProperty.all(
       const IconThemeData(
         color: Colors.white,
       ),
@@ -56,8 +56,8 @@ ThemeData theme = ThemeData(
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.all(appColor),
-      foregroundColor: MaterialStateProperty.all(accentColor),
+      backgroundColor: WidgetStateProperty.all(appColor),
+      foregroundColor: WidgetStateProperty.all(accentColor),
     ),
   ),
   dividerTheme: const DividerThemeData(

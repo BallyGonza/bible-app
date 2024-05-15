@@ -13,32 +13,21 @@ class BookCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-      child: Card(
-        color: appColorDarker,
-        child: Column(
-          children: <Widget>[
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<ChapterSelectScreen>(
-                    builder: (context) => ChapterSelectScreen(
-                      book: book,
-                    ),
-                  ),
-                );
-              },
-              child: ListTile(
-                title: Text(
-                  book.name,
-                  style: Theme.of(context).textTheme.displayMedium!.copyWith(),
-                ),
-                //!TODO: Add description to book
-              ),
+      padding: const EdgeInsets.only(left: 16),
+      child: ListTile(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute<ChapterSelectScreen>(
+            builder: (context) => ChapterSelectScreen(
+              book: book,
             ),
-          ],
+          ),
         ),
+        title: Text(
+          book.name,
+          style: Theme.of(context).textTheme.displayMedium!.copyWith(),
+        ),
+        //!TODO: Add description to book
       ),
     );
   }

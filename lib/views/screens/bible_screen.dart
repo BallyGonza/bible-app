@@ -34,60 +34,55 @@ class _BibleScreenState extends State<BibleScreen> {
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
+                padding: const EdgeInsets.only(top: 60, left: 16),
                 color: appColor,
+                child: const Text(
+                  'Bible',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                  ),
+                ),
               ),
               titlePadding: const EdgeInsets.only(
                 left: 16,
                 bottom: 16,
               ),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Bible',
-                    style: TextStyle(
+              title: Container(
+                padding: const EdgeInsets.only(right: 16),
+                height: 30,
+                width: double.infinity,
+                child: SearchBar(
+                  elevation: MaterialStateProperty.all(0),
+                  textCapitalization: TextCapitalization.words,
+                  textStyle: MaterialStateProperty.all(
+                    const TextStyle(
                       color: Colors.white,
-                      fontSize: 24,
+                      fontSize: 12,
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.only(right: 16),
-                    height: 30,
-                    width: 170,
-                    child: SearchBar(
-                      elevation: MaterialStateProperty.all(0),
-                      textCapitalization: TextCapitalization.words,
-                      textStyle: MaterialStateProperty.all(
-                        const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
-                      backgroundColor:
-                          MaterialStateProperty.all(appColorDarker),
-                      leading: FaIcon(
-                        size: 12,
-                        FontAwesomeIcons.magnifyingGlass,
-                        color: Colors.grey[600],
-                      ),
-                      hintText: 'Search...',
-                      hintStyle: MaterialStateProperty.all(
-                        TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 16,
-                        ),
-                      ),
-                      onChanged: (value) {
-                        context.read<SearchBarBookBloc>().add(
-                              SearchBarBookEvent.search(
-                                widget.user.bible,
-                                value.toLowerCase(),
-                              ),
-                            );
-                      },
+                  backgroundColor: MaterialStateProperty.all(appColorDarker),
+                  leading: FaIcon(
+                    size: 9,
+                    FontAwesomeIcons.magnifyingGlass,
+                    color: Colors.grey[600],
+                  ),
+                  hintText: 'Search...',
+                  hintStyle: MaterialStateProperty.all(
+                    TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 12,
                     ),
                   ),
-                ],
+                  onChanged: (value) {
+                    context.read<SearchBarBookBloc>().add(
+                          SearchBarBookEvent.search(
+                            widget.user.bible,
+                            value.toLowerCase(),
+                          ),
+                        );
+                  },
+                ),
               ),
             ),
           ),

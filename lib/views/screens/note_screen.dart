@@ -5,7 +5,6 @@ import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -303,62 +302,27 @@ class NotePageState extends State<NoteScreen> {
                         builder: (context) {
                           return SizedBox(
                             height: MediaQuery.of(context).size.height * 0.55,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: BlockPicker(
-                                    availableColors: [
-                                      Colors.white,
-                                      Colors.red,
-                                      Colors.red[300]!,
-                                      Colors.purple,
-                                      Colors.purple[200]!,
-                                      Colors.purple[100]!,
-                                      Colors.deepPurple,
-                                      Colors.deepPurple[300]!,
-                                      Colors.deepPurple[200]!,
-                                      Colors.indigo,
-                                      Colors.indigo[200]!,
-                                      Colors.blue,
-                                      Colors.blue[200]!,
-                                      Colors.cyan,
-                                      Colors.cyan[200]!,
-                                      Colors.teal,
-                                      Colors.teal[200]!,
-                                      Colors.green,
-                                      Colors.green[200]!,
-                                      Colors.green[300]!,
-                                      Colors.orange[300]!,
-                                      Colors.deepOrange,
-                                      Colors.brown,
-                                      Colors.brown[200]!,
-                                      Colors.grey,
-                                      Colors.blueGrey,
-                                      Colors.black,
-                                    ],
-                                    layoutBuilder: (context, colors, child) {
-                                      return GridView.count(
-                                        crossAxisCount: 4,
-                                        children: [
-                                          ...colors.map(
-                                            (color) => GestureDetector(
-                                              onTap: () {
-                                                _onColorChanged(color);
-                                              },
-                                              child: Container(
-                                                color: color,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                    pickerColor: _currentColor,
-                                    onColorChanged: _onColorChanged,
+                            child: GridView.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 5,
+                              ),
+                              itemCount: colors.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    _onColorChanged(colors[index]);
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      color: colors[index],
+                                      shape: BoxShape.circle,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                );
+                              },
                             ),
                           );
                         },

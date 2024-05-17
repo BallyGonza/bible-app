@@ -309,16 +309,16 @@ class NotePageState extends State<NoteScreen> {
                               ),
                               itemCount: colors.length,
                               itemBuilder: (context, index) {
-                                return GestureDetector(
+                                return InkWell(
                                   onTap: () {
                                     _onColorChanged(colors[index]);
-                                    Navigator.of(context).pop();
+                                    Navigator.pop(context);
                                   },
                                   child: Container(
-                                    margin: const EdgeInsets.all(5),
+                                    margin: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
                                       color: colors[index],
-                                      shape: BoxShape.circle,
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
                                 );

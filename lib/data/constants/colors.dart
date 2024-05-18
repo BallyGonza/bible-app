@@ -4,7 +4,7 @@ const appColor = Color.fromARGB(255, 19, 18, 18);
 const appColorDarker = Color.fromARGB(255, 15, 14, 14);
 final accentColor = Colors.green[300]!;
 
- List<Color> colors = [
+List<Color> colors = [
   Colors.white,
   Colors.red[300]!,
   Colors.red[200]!,
@@ -31,7 +31,6 @@ final accentColor = Colors.green[300]!;
   Colors.grey,
   Colors.blueGrey,
   Colors.yellow[200]!,
-  Colors.amber[200]!,
   Colors.amber[300]!,
   Colors.lime[200]!,
   Colors.lime[300]!,

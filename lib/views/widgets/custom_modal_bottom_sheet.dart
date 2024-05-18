@@ -7,6 +7,7 @@ class CustomModalBottomSheet {
     void Function(Color) onSelect,
   ) {
     showModalBottomSheet<Container>(
+      backgroundColor: appColor,
       context: context,
       builder: (BuildContext context) {
         return Container(

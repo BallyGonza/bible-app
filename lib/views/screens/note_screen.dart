@@ -297,34 +297,11 @@ class NotePageState extends State<NoteScreen> {
                   ),
                   IconButton(
                     onPressed: () {
-                      showModalBottomSheet<SizedBox>(
+                      showModalBottomSheet<Container>(
+                        backgroundColor: appColor,
                         context: context,
                         builder: (context) {
-                          return SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.55,
-                            child: GridView.builder(
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 5,
-                              ),
-                              itemCount: colors.length,
-                              itemBuilder: (context, index) {
-                                return InkWell(
-                                  onTap: () {
-                                    _onColorChanged(colors[index]);
-                                    Navigator.pop(context);
-                                  },
-                                  child: Container(
-                                    margin: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: colors[index],
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          );
+                          return ColorPicker(onSelect: _onColorChanged);
                         },
                       );
                     },

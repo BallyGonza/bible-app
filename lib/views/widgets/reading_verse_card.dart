@@ -186,13 +186,7 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
         children: [
           SlidableAction(
             onPressed: (_) {
-              showModalBottomSheet<Container>(
-                backgroundColor: appColor,
-                context: context,
-                builder: (context) {
-                  return ColorPicker(onSelect: _onColorChanged);
-                },
-              );
+              CustomModalBottomSheet.colorPicker(context, _onColorChanged);
             },
             icon: FontAwesomeIcons.palette,
             foregroundColor: Colors.white,

@@ -47,7 +47,7 @@ class NotePageState extends State<NoteScreen> {
     _titleController.text = widget.note?.title ?? '';
     _authorController.text = widget.note?.author ?? '';
     _contentController.text = widget.note?.content ?? '';
-    _currentColor = Color(widget.note?.color ?? Colors.white.value);
+    _currentColor = Color(widget.note?.color ?? appColor.value);
     _iconColor = _currentColor != Colors.white ? Colors.white : Colors.black;
     _fontColor = _currentColor != Colors.white ? Colors.white : Colors.black;
   }
@@ -183,7 +183,8 @@ class NotePageState extends State<NoteScreen> {
                         ? Center(
                             child: Text(
                               'No se han seleccionado versículos.',
-                              style: TextStyle(color: _fontColor),
+                              style:
+                                  TextStyle(color: _fontColor.withOpacity(0.6)),
                             ),
                           )
                         : BlocBuilder<NotesBloc, NotesState>(
@@ -296,15 +297,10 @@ class NotePageState extends State<NoteScreen> {
                     icon: FaIcon(FontAwesomeIcons.book, color: _iconColor),
                   ),
                   IconButton(
-                    onPressed: () {
-                      showModalBottomSheet<Container>(
-                        backgroundColor: appColor,
-                        context: context,
-                        builder: (context) {
-                          return ColorPicker(onSelect: _onColorChanged);
-                        },
-                      );
-                    },
+                    onPressed: () => CustomModalBottomSheet.colorPicker(
+                      context,
+                      _onColorChanged,
+                    ),
                     icon: FaIcon(FontAwesomeIcons.palette, color: _iconColor),
                   ),
                 ],

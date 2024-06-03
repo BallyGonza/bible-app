@@ -4,6 +4,7 @@ import 'package:bible_app/blocs/blocs.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -37,8 +38,8 @@ class NotePageState extends State<NoteScreen> {
   int _currentIndex = 0;
   late Color _currentColor;
   late Color _iconColor;
-  late Color _fontColor;
   late bool _isEditing;
+  late Color _fontColor;
 
   @override
   void initState() {
@@ -48,8 +49,10 @@ class NotePageState extends State<NoteScreen> {
     _authorController.text = widget.note?.author ?? '';
     _contentController.text = widget.note?.content ?? '';
     _currentColor = Color(widget.note?.color ?? appColor.value);
-    _iconColor = _currentColor != Colors.white ? Colors.white : Colors.black;
-    _fontColor = _currentColor != Colors.white ? Colors.white : Colors.black;
+    _iconColor =
+        _currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+    _fontColor =
+        _currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
   }
 
   @override
@@ -57,15 +60,75 @@ class NotePageState extends State<NoteScreen> {
     _titleController.dispose();
     _authorController.dispose();
     _contentController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
   void _onColorChanged(Color color) {
     setState(() {
       _currentColor = color;
-      _iconColor = _currentColor != Colors.white ? Colors.white : Colors.black;
-      _fontColor = _currentColor != Colors.white ? Colors.white : Colors.black;
+      _iconColor =
+          _currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+      _fontColor =
+          _currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
     });
+  }
+
+  void _saveNewNote(BuildContext context) {
+    context.read<NotesBloc>().add(
+          NotesEvent.addNote(
+            NoteModel(
+              id: DateTime.now().millisecondsSinceEpoch,
+              title: _titleController.text,
+              author: _authorController.text,
+              content: _contentController.text,
+              verses: const [],
+              date: date.format(DateTime.now()),
+              color: _currentColor.value,
+            ),
+          ),
+        );
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Note created',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _updateNote(BuildContext context) {
+    context.read<NotesBloc>().add(
+          NotesEvent.editNote(
+            widget.index,
+            NoteModel(
+              id: widget.note!.id,
+              title: _titleController.text,
+              author: _authorController.text,
+              content: _contentController.text,
+              verses: widget.note!.verses,
+              date: date.format(
+                DateTime.now(),
+              ),
+              color: _currentColor.value,
+            ),
+          ),
+        );
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Note updated',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -73,6 +136,11 @@ class NotePageState extends State<NoteScreen> {
     return Scaffold(
       backgroundColor: _currentColor,
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarIconBrightness: _currentColor.computeLuminance() > 0.5
+              ? Brightness.dark
+              : Brightness.light,
+        ),
         elevation: 0,
         backgroundColor: Colors.transparent,
         leading: IconButton(
@@ -83,7 +151,6 @@ class NotePageState extends State<NoteScreen> {
           IconButton(
             icon: FaIcon(FontAwesomeIcons.pencil, color: _iconColor),
             onPressed: () {
-              // habilitar edicion
               setState(() {
                 _isEditing = !_isEditing;
               });
@@ -306,63 +373,6 @@ class NotePageState extends State<NoteScreen> {
                 ],
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _saveNewNote(BuildContext context) {
-    context.read<NotesBloc>().add(
-          NotesEvent.addNote(
-            NoteModel(
-              id: DateTime.now().millisecondsSinceEpoch,
-              title: _titleController.text,
-              author: _authorController.text,
-              content: _contentController.text,
-              verses: const [],
-              date: date.format(DateTime.now()),
-              color: _currentColor.value,
-            ),
-          ),
-        );
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Note created',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _updateNote(BuildContext context) {
-    context.read<NotesBloc>().add(
-          NotesEvent.editNote(
-            widget.index,
-            NoteModel(
-              id: widget.note!.id,
-              title: _titleController.text,
-              author: _authorController.text,
-              content: _contentController.text,
-              verses: widget.note!.verses,
-              date: date.format(
-                DateTime.now(),
-              ),
-              color: _currentColor.value,
-            ),
-          ),
-        );
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Note updated',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
           ),
         ),
       ),

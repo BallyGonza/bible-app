@@ -1,5 +1,3 @@
-// ignore_for_file: lines_longer_than_80_chars
-
 import 'package:bible_app/blocs/blocs.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
@@ -24,10 +22,9 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
   bool _isFocused = false;
 
   void _onColorChanged(Color color) {
-    setState(() {
-      widget.verse.color = color.value;
-      context.read<UserBloc>().add(UserEvent.saveVerse(verse: widget.verse));
-    });
+    context.read<UserBloc>().add(
+          UserEvent.saveVerse(verse: widget.verse.copyWith(color: color.value)),
+        );
   }
 
   @override
@@ -40,139 +37,7 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
         children: [
           SlidableAction(
             borderRadius: BorderRadius.circular(5),
-            onPressed: (_) {
-              showModalBottomSheet<Container>(
-                backgroundColor: Colors.transparent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(11),
-                ),
-                context: context,
-                builder: (context) => Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: const BoxDecoration(
-                    color: appColor,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
-                    ),
-                  ),
-                  height: MediaQuery.of(context).size.height * 0.5,
-                  child: BlocBuilder<NotesBloc, NotesState>(
-                    builder: (context, state) {
-                      return state.maybeWhen(
-                        orElse: () {
-                          return const CircularProgressIndicator();
-                        },
-                        loaded: (notes) {
-                          return Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Add to Note',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleLarge!
-                                        .copyWith(
-                                          color: Colors.white,
-                                        ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    icon: const FaIcon(
-                                      FontAwesomeIcons.xmark,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Expanded(
-                                child: ListView.builder(
-                                  physics: const BouncingScrollPhysics(),
-                                  itemCount: notes.length,
-                                  itemBuilder: (context, index) {
-                                    return InkWell(
-                                      onTap: () {
-                                        Navigator.pop(context);
-
-                                        if (!notes[index]
-                                            .verses
-                                            .contains(widget.verse)) {
-                                          context.read<NotesBloc>().add(
-                                                NotesEvent.addVerse(
-                                                  index,
-                                                  widget.verse,
-                                                ),
-                                              );
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                'Verse added to note',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                'Verse already added to note',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      child: Card(
-                                        color: Color(notes[index].color),
-                                        child: ListTile(
-                                          title: Text(
-                                            notes[index].title,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleLarge!
-                                                .copyWith(
-                                                  color: notes[index].color ==
-                                                          Colors.white.value
-                                                      ? Colors.black
-                                                      : Colors.white,
-                                                ),
-                                          ),
-                                          trailing: Icon(
-                                            notes[index]
-                                                    .verses
-                                                    .contains(widget.verse)
-                                                ? Icons.check
-                                                : null,
-                                            color: Colors.green,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ),
-              );
-            },
+            onPressed: (_) => _showAddToNoteModal(context),
             icon: FontAwesomeIcons.floppyDisk,
             foregroundColor: Colors.white,
             backgroundColor: appColor,
@@ -185,24 +50,19 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
         motion: const ScrollMotion(),
         children: [
           SlidableAction(
-            onPressed: (_) {
-              CustomModalBottomSheet.colorPicker(context, _onColorChanged);
-            },
+            onPressed: (_) =>
+                CustomModalBottomSheet.colorPicker(context, _onColorChanged),
             icon: FontAwesomeIcons.palette,
             foregroundColor: Colors.white,
             backgroundColor: appColor,
           ),
           SlidableAction(
-            onPressed: (_) {
-              Navigator.push(
-                context,
-                MaterialPageRoute<NoteVerseScreen>(
-                  builder: (context) => NoteVerseScreen(
-                    verse: widget.verse,
-                  ),
-                ),
-              );
-            },
+            onPressed: (_) => Navigator.push(
+              context,
+              MaterialPageRoute<NoteVerseScreen>(
+                builder: (context) => NoteVerseScreen(verse: widget.verse),
+              ),
+            ),
             icon: FontAwesomeIcons.noteSticky,
             foregroundColor: Colors.white,
             backgroundColor: appColor,
@@ -211,43 +71,188 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: ListTile(
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
+        child: BlocBuilder<UserBloc, UserState>(
+          builder: (context, state) {
+            return ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+              onTap: () => setState(() => _isFocused = !_isFocused),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              tileColor: _isFocused ? Colors.grey[900] : Colors.transparent,
+              title: _buildVerseText(),
+              subtitle: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (widget.verse.note != null)
+                    const FaIcon(
+                      FontAwesomeIcons.noteSticky,
+                      size: 15,
+                    )
+                  else
+                    const SizedBox.shrink(),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVerseText() {
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(text: '${widget.verse.number} ', style: _numberStyle()),
+          TextSpan(text: widget.verse.text, style: _textStyle()),
+        ],
+      ),
+    );
+  }
+
+  TextStyle _numberStyle() {
+    return TextStyle(
+      fontSize: 14,
+      color: _color(),
+      fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
+    );
+  }
+
+  TextStyle _textStyle() {
+    return TextStyle(
+      fontSize: 20,
+      color: _color(),
+      fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
+    );
+  }
+
+  Color _color() {
+    return widget.verse.color != null
+        ? Color(widget.verse.color!)
+        : Colors.white;
+  }
+
+  void _showAddToNoteModal(BuildContext context) {
+    showModalBottomSheet<Container>(
+      backgroundColor: Colors.transparent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(11),
+      ),
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: const BoxDecoration(
+          color: appColor,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10),
+            topRight: Radius.circular(10),
           ),
-          onTap: () => setState(() {
-            _isFocused = !_isFocused;
-          }),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          tileColor: _isFocused ? Colors.grey[900] : Colors.transparent,
-          title: Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: widget.verse.number.toString(),
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: widget.verse.color != null
-                        ? Color(widget.verse.color!)
-                        : Colors.grey,
-                    fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
-                  ),
-                ),
-                TextSpan(
-                  text: ' ${widget.verse.text}',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: widget.verse.color != null
-                        ? Color(widget.verse.color!)
-                        : Colors.white,
-                    fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
-                  ),
-                ),
-              ],
-            ),
-          ),
+        ),
+        height: MediaQuery.of(context).size.height * 0.5,
+        child: BlocBuilder<NotesBloc, NotesState>(
+          builder: (context, state) {
+            return state.maybeWhen(
+              orElse: () {
+                return const CircularProgressIndicator();
+              },
+              loaded: (notes) {
+                return Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Add to Note',
+                          style:
+                              Theme.of(context).textTheme.titleLarge!.copyWith(
+                                    color: Colors.white,
+                                  ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const FaIcon(
+                            FontAwesomeIcons.xmark,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: notes.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+
+                              if (!notes[index].verses.contains(widget.verse)) {
+                                context.read<NotesBloc>().add(
+                                      NotesEvent.addVerse(
+                                        index,
+                                        widget.verse,
+                                      ),
+                                    );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Verse added to note',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Verse already added to note',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: Card(
+                              color: Color(notes[index].color),
+                              child: ListTile(
+                                title: Text(
+                                  notes[index].title,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(
+                                        color: notes[index].color ==
+                                                Colors.white.value
+                                            ? Colors.black
+                                            : Colors.white,
+                                      ),
+                                ),
+                                trailing: Icon(
+                                  notes[index].verses.contains(widget.verse)
+                                      ? Icons.check
+                                      : null,
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
         ),
       ),
     );

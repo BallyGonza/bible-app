@@ -1,7 +1,6 @@
-// ignore_for_file: lines_longer_than_80_chars
-
 import 'package:bible_app/blocs/blocs.dart';
 import 'package:bible_app/data/data.dart';
+import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -34,23 +33,35 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              setState(() {
-                widget.verse.note =
-                    VerseNoteModel(content: _contentController.text);
-                context
-                    .read<UserBloc>()
-                    .add(UserEvent.saveVerse(verse: widget.verse));
-              });
-              Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Note saved.'),
-                  duration: Duration(seconds: 2),
+              showDialog<void>(
+                context: context,
+                builder: (context) => CustomAlertDialog.red(
+                  title: 'Delete note',
+                  description: 'Are you sure you want to delete this note?',
+                  rightButtonText: 'Delete',
+                  onRightButtonPressed: () {
+                    setState(() {
+                      widget.verse.note = null;
+                      context
+                          .read<UserBloc>()
+                          .add(UserEvent.saveVerse(verse: widget.verse));
+                    });
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Note deleted.'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
                 ),
               );
             },
-            icon:
-                const FaIcon(FontAwesomeIcons.floppyDisk, color: Colors.white),
+            icon: const FaIcon(
+              FontAwesomeIcons.trashCan,
+              color: Colors.white,
+              size: 18,
+            ),
           ),
         ],
         elevation: 0,
@@ -59,6 +70,26 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
           onPressed: () => Navigator.of(context).pop(),
           icon: const FaIcon(FontAwesomeIcons.arrowLeft, color: Colors.white),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            widget.verse.note =
+                VerseNoteModel(content: _contentController.text);
+            context
+                .read<UserBloc>()
+                .add(UserEvent.saveVerse(verse: widget.verse));
+          });
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Note saved.'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        },
+        backgroundColor: accentColor,
+        child: const FaIcon(FontAwesomeIcons.floppyDisk, color: Colors.black),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(

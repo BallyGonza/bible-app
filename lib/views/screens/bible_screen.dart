@@ -17,10 +17,8 @@ class BibleScreen extends StatefulWidget {
 class _BibleScreenState extends State<BibleScreen> {
   @override
   void initState() {
-    context.read<SearchBarBookBloc>().add(
-          SearchBarBookEvent.init(widget.user),
-        );
     super.initState();
+    context.read<SearchBarBookBloc>().add(SearchBarBookEvent.init(widget.user));
   }
 
   @override
@@ -44,76 +42,68 @@ class _BibleScreenState extends State<BibleScreen> {
                   ),
                 ),
               ),
-              titlePadding: const EdgeInsets.only(
-                left: 16,
-                bottom: 16,
-              ),
-              title: Container(
-                padding: const EdgeInsets.only(right: 16),
-                height: 30,
-                width: double.infinity,
-                child: SearchBar(
-                  elevation: WidgetStateProperty.all(0),
-                  textCapitalization: TextCapitalization.words,
-                  textStyle: WidgetStateProperty.all(
-                    const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                    ),
-                  ),
-                  backgroundColor: WidgetStateProperty.all(appColorDarker),
-                  leading: FaIcon(
-                    size: 9,
-                    FontAwesomeIcons.magnifyingGlass,
-                    color: Colors.grey[600],
-                  ),
-                  hintText: 'Search...',
-                  hintStyle: WidgetStateProperty.all(
-                    TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 12,
-                    ),
-                  ),
-                  onChanged: (value) {
-                    context.read<SearchBarBookBloc>().add(
-                          SearchBarBookEvent.search(
-                            widget.user.bible,
-                            value.toLowerCase(),
-                          ),
-                        );
-                  },
-                ),
-              ),
+              titlePadding: const EdgeInsets.only(left: 16, bottom: 16),
+              title: _buildSearchBar(),
             ),
           ),
-          BlocBuilder<SearchBarBookBloc, SearchBarBookState>(
-            builder: (context, state) {
-              return state.maybeWhen(
-                orElse: () {
-                  return const SliverFillRemaining(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                },
-                loaded: (books) {
-                  return SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final book = books[index];
-                        return BookCard(
-                          book: book,
-                        );
-                      },
-                      childCount: books.length,
-                    ),
-                  );
-                },
-              );
-            },
-          ),
+          _buildBookList(),
         ],
       ),
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return Container(
+      padding: const EdgeInsets.only(right: 16),
+      height: 30,
+      width: double.infinity,
+      child: SearchBar(
+        elevation: WidgetStateProperty.all(0),
+        textCapitalization: TextCapitalization.words,
+        textStyle: WidgetStateProperty.all(
+          const TextStyle(color: Colors.white, fontSize: 12),
+        ),
+        backgroundColor: WidgetStateProperty.all(appColorDarker),
+        leading: FaIcon(
+          size: 9,
+          FontAwesomeIcons.magnifyingGlass,
+          color: Colors.grey[600],
+        ),
+        hintText: 'Search...',
+        onTapOutside: (event) => FocusScope.of(context).unfocus(),
+        hintStyle: WidgetStateProperty.all(
+          TextStyle(color: Colors.grey[600], fontSize: 12),
+        ),
+        onChanged: (value) {
+          context.read<SearchBarBookBloc>().add(
+                SearchBarBookEvent.search(
+                  widget.user.bible,
+                  value.toLowerCase(),
+                ),
+              );
+        },
+      ),
+    );
+  }
+
+  Widget _buildBookList() {
+    return BlocBuilder<SearchBarBookBloc, SearchBarBookState>(
+      builder: (context, state) {
+        return state.maybeWhen(
+          orElse: () => const SliverFillRemaining(
+            child: Center(child: CircularProgressIndicator()),
+          ),
+          loaded: (books) => SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final book = books[index];
+                return BookCard(book: book);
+              },
+              childCount: books.length,
+            ),
+          ),
+        );
+      },
     );
   }
 }

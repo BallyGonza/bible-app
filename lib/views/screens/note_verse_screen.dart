@@ -10,7 +10,6 @@ class NoteVerseScreen extends StatefulWidget {
     required this.verse,
     super.key,
   });
-
   final VerseModel verse;
 
   @override
@@ -27,36 +26,54 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
   }
 
   @override
+  void dispose() {
+    _contentController.dispose();
+    super.dispose();
+  }
+
+  void _saveNote() {
+    final updatedVerse = widget.verse.copyWith(
+      note: VerseNoteModel(content: _contentController.text),
+    );
+    context.read<UserBloc>().add(UserEvent.saveVerse(verse: updatedVerse));
+
+    Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Note saved.'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _deleteNote() {
+    widget.verse.note = null;
+    context.read<UserBloc>().add(UserEvent.saveVerse(verse: widget.verse));
+
+    Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Note deleted.'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () {
-              showDialog<void>(
-                context: context,
-                builder: (context) => CustomAlertDialog.red(
-                  title: 'Delete note',
-                  description: 'Are you sure you want to delete this note?',
-                  rightButtonText: 'Delete',
-                  onRightButtonPressed: () {
-                    setState(() {
-                      widget.verse.note = null;
-                      context
-                          .read<UserBloc>()
-                          .add(UserEvent.saveVerse(verse: widget.verse));
-                    });
-                    Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Note deleted.'),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
-                  },
-                ),
-              );
-            },
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (context) => CustomAlertDialog.red(
+                title: 'Delete note',
+                description: 'Are you sure you want to delete this note?',
+                rightButtonText: 'Delete',
+                onRightButtonPressed: _deleteNote,
+              ),
+            ),
             icon: const FaIcon(
               FontAwesomeIcons.trashCan,
               color: Colors.white,
@@ -72,22 +89,7 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            widget.verse.note =
-                VerseNoteModel(content: _contentController.text);
-            context
-                .read<UserBloc>()
-                .add(UserEvent.saveVerse(verse: widget.verse));
-          });
-          Navigator.of(context).pop();
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Note saved.'),
-              duration: Duration(seconds: 2),
-            ),
-          );
-        },
+        onPressed: _saveNote,
         backgroundColor: accentColor,
         child: const FaIcon(FontAwesomeIcons.floppyDisk, color: Colors.black),
       ),

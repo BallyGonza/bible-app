@@ -40,7 +40,7 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
             onPressed: (_) => _showAddToNoteModal(context),
             icon: FontAwesomeIcons.floppyDisk,
             foregroundColor: Colors.white,
-            backgroundColor: appColor,
+            backgroundColor: Colors.white,
           ),
         ],
       ),
@@ -54,7 +54,7 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
                 CustomModalBottomSheet.colorPicker(context, _onColorChanged),
             icon: FontAwesomeIcons.palette,
             foregroundColor: Colors.white,
-            backgroundColor: appColor,
+            backgroundColor: Colors.white,
           ),
           SlidableAction(
             onPressed: (_) => Navigator.push(
@@ -65,7 +65,7 @@ class _ReadingVerseCardState extends State<ReadingVerseCard> {
             ),
             icon: FontAwesomeIcons.noteSticky,
             foregroundColor: Colors.white,
-            backgroundColor: appColor,
+            backgroundColor: Colors.white,
           ),
         ],
       ),

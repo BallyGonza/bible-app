@@ -154,11 +154,13 @@ class _VerseCardState extends State<VerseCard>
                       if (widget.onSelect != null) {
                         widget.onSelect!(widget.verse);
                       }
-                      setState(() => _isFocused = !_isFocused);
-                      if (_isFocused) {
-                        _animationController.forward();
-                      } else {
-                        _animationController.reverse();
+                      if (widget.type == VerseCardType.bible) {
+                        setState(() => _isFocused = !_isFocused);
+                        if (_isFocused) {
+                          _animationController.forward();
+                        } else {
+                          _animationController.reverse();
+                        }
                       }
                     },
                     child: Padding(

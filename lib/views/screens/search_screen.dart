@@ -16,6 +16,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final _searchController = TextEditingController();
+  final bibleRepository = BibleRepository();
 
   @override
   void dispose() {
@@ -165,15 +166,21 @@ class _SearchScreenState extends State<SearchScreen> {
 
                                 return VerseCard.onSearch(
                                   verse: verse,
-                                  // onSelect: (verse) {
-                                  //   Navigator.of(context).push(
-                                  //     MaterialPageRoute(
-                                  //       builder: (context) => ReadingScreen(
-                                  //         chapter: verse.chapter,
-                                  //       ),
-                                  //     ),
-                                  //   );
-                                  // },
+                                  onSelect: (verse) async {
+                                    final chapter =
+                                        await bibleRepository.getChapterOfVerse(
+                                      bible: rvr1960,
+                                      verse: verse,
+                                    );
+
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => ReadingScreen(
+                                          chapter: chapter,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 );
                               },
                               childCount: verses.length,

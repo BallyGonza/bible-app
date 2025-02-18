@@ -2,6 +2,21 @@ import 'package:bible_app/data/data.dart';
 
 class BibleRepository {
   BibleRepository();
+
+  Future<ChapterModel> getChapterOfVerse({
+    required BibleModel bible,
+    required VerseModel verse,
+  }) async {
+    final chapterNumber = bible.books
+        .firstWhere((book) => book.name == verse.book)
+        .chapters
+        .indexWhere((chapter) => chapter.number == verse.chapter);
+    final chapter = bible.books
+        .firstWhere((book) => book.name == verse.book)
+        .chapters[chapterNumber];
+
+    return chapter;
+  }
 }
 
 BibleModel rvr1960 = BibleModel(

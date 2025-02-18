@@ -7,29 +7,36 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class ReadingVerseCard extends StatefulWidget {
-  const ReadingVerseCard({
+class VerseCard extends StatefulWidget {
+  const VerseCard.onBible({
     required this.verse,
     this.onSelect,
     super.key,
   });
 
+  const VerseCard.onSearch({
+    required this.verse,
+    super.key,
+  }) : onSelect = null;
+
   final VerseModel verse;
   final Function(VerseModel)? onSelect;
 
   @override
-  State<ReadingVerseCard> createState() => _ReadingVerseCardState();
+  State<VerseCard> createState() => _VerseCardState();
 }
 
-class _ReadingVerseCardState extends State<ReadingVerseCard>
+class _VerseCardState extends State<VerseCard>
     with SingleTickerProviderStateMixin {
   bool _isFocused = false;
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
+  Color _color = Colors.white;
 
   @override
   void initState() {
     super.initState();
+    _isFocused = false;
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: this,
@@ -42,6 +49,7 @@ class _ReadingVerseCardState extends State<ReadingVerseCard>
   @override
   void dispose() {
     _animationController.dispose();
+    _isFocused = false;
     super.dispose();
   }
 
@@ -49,6 +57,9 @@ class _ReadingVerseCardState extends State<ReadingVerseCard>
     context.read<UserBloc>().add(
           UserEvent.saveVerse(verse: widget.verse.copyWith(color: color.value)),
         );
+    setState(() {
+      _color = color;
+    });
   }
 
   @override
@@ -189,7 +200,7 @@ class _ReadingVerseCardState extends State<ReadingVerseCard>
   TextStyle _numberStyle() {
     return TextStyle(
       fontSize: 14,
-      color: _color(),
+      color: _getColor(),
       fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
     );
   }
@@ -197,15 +208,13 @@ class _ReadingVerseCardState extends State<ReadingVerseCard>
   TextStyle _textStyle() {
     return TextStyle(
       fontSize: 20,
-      color: _color(),
+      color: _getColor(),
       fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
     );
   }
 
-  Color _color() {
-    return widget.verse.color != null
-        ? Color(widget.verse.color!)
-        : Colors.white;
+  Color _getColor() {
+    return widget.verse.color != null ? Color(widget.verse.color!) : _color;
   }
 
   void _showAddToNoteModal(BuildContext context) {

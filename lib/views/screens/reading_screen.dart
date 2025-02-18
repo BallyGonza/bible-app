@@ -87,7 +87,7 @@ ${widget.chapter.verses[0].book} ${widget.chapter.number}:${_verses.first.number
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
                   final verse = widget.chapter.verses[index];
-                  return ReadingVerseCard(
+                  return VerseCard.onBible(
                     verse: verse,
                     onSelect: (verse) {
                       setState(() {

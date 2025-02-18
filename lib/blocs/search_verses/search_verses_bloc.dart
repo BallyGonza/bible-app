@@ -22,6 +22,7 @@ class SearchVersesBloc extends Bloc<SearchVersesEvent, SearchVersesState> {
     Emitter<SearchVersesState> emit,
   ) async {
     emit(const SearchVersesState.loading());
+
     try {
       final verses = event.bible.books.expand((book) {
         return book.chapters.expand((chapter) {
@@ -35,6 +36,7 @@ class SearchVersesBloc extends Bloc<SearchVersesEvent, SearchVersesState> {
               ));
         });
       }).toList();
+      await Future.delayed(const Duration(milliseconds: 100));
 
       emit(SearchVersesState.loaded(verses: verses));
     } catch (e) {

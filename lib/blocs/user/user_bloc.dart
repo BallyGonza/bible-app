@@ -35,7 +35,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     UserSaveEvent event,
     Emitter<UserState> emit,
   ) async {
-    emit(const UserState.loading());
+    // emit(const UserState.loading());
     try {
       for (final book in _user.bible.books) {
         for (final chapter in book.chapters) {

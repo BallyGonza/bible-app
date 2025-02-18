@@ -5,8 +5,7 @@ part 'search_verses_event.freezed.dart';
 
 @freezed
 class SearchVersesEvent with _$SearchVersesEvent {
-  const factory SearchVersesEvent.init(UserModel user) =
-      SearchVersesInitialEvent;
+  const factory SearchVersesEvent.initial() = SearchVersesInitialEvent;
   const factory SearchVersesEvent.search(BibleModel bible, String query) =
       SearchVersesSearchEvent;
 }

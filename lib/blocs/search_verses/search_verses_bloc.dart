@@ -6,18 +6,15 @@ class SearchVersesBloc extends Bloc<SearchVersesEvent, SearchVersesState> {
   SearchVersesBloc() : super(const SearchVersesState.initial()) {
     on<SearchVersesInitialEvent>(_onInit);
     on<SearchVersesSearchEvent>(_onSearch);
+
+    add(const SearchVersesInitialEvent());
   }
 
   Future<void> _onInit(
     SearchVersesInitialEvent event,
     Emitter<SearchVersesState> emit,
   ) async {
-    emit(const SearchVersesState.loading());
-    try {
-      emit(SearchVersesState.loaded(verses: []));
-    } catch (e) {
-      emit(SearchVersesState.error(e.toString()));
-    }
+    emit(const SearchVersesState.loaded(verses: []));
   }
 
   Future<void> _onSearch(

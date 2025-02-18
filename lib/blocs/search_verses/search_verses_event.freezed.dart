@@ -18,38 +18,38 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$SearchVersesEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(UserModel user) init,
+    required TResult Function() initial,
     required TResult Function(BibleModel bible, String query) search,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(UserModel user)? init,
+    TResult? Function()? initial,
     TResult? Function(BibleModel bible, String query)? search,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(UserModel user)? init,
+    TResult Function()? initial,
     TResult Function(BibleModel bible, String query)? search,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(SearchVersesInitialEvent value) init,
+    required TResult Function(SearchVersesInitialEvent value) initial,
     required TResult Function(SearchVersesSearchEvent value) search,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(SearchVersesInitialEvent value)? init,
+    TResult? Function(SearchVersesInitialEvent value)? initial,
     TResult? Function(SearchVersesSearchEvent value)? search,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(SearchVersesInitialEvent value)? init,
+    TResult Function(SearchVersesInitialEvent value)? initial,
     TResult Function(SearchVersesSearchEvent value)? search,
     required TResult orElse(),
   }) =>
@@ -83,8 +83,6 @@ abstract class _$$SearchVersesInitialEventImplCopyWith<$Res> {
           _$SearchVersesInitialEventImpl value,
           $Res Function(_$SearchVersesInitialEventImpl) then) =
       __$$SearchVersesInitialEventImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({UserModel user});
 }
 
 /// @nodoc
@@ -99,80 +97,55 @@ class __$$SearchVersesInitialEventImplCopyWithImpl<$Res>
 
   /// Create a copy of SearchVersesEvent
   /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? user = null,
-  }) {
-    return _then(_$SearchVersesInitialEventImpl(
-      null == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as UserModel,
-    ));
-  }
 }
 
 /// @nodoc
 
 class _$SearchVersesInitialEventImpl implements SearchVersesInitialEvent {
-  const _$SearchVersesInitialEventImpl(this.user);
-
-  @override
-  final UserModel user;
+  const _$SearchVersesInitialEventImpl();
 
   @override
   String toString() {
-    return 'SearchVersesEvent.init(user: $user)';
+    return 'SearchVersesEvent.initial()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SearchVersesInitialEventImpl &&
-            (identical(other.user, user) || other.user == user));
+            other is _$SearchVersesInitialEventImpl);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, user);
-
-  /// Create a copy of SearchVersesEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$SearchVersesInitialEventImplCopyWith<_$SearchVersesInitialEventImpl>
-      get copyWith => __$$SearchVersesInitialEventImplCopyWithImpl<
-          _$SearchVersesInitialEventImpl>(this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(UserModel user) init,
+    required TResult Function() initial,
     required TResult Function(BibleModel bible, String query) search,
   }) {
-    return init(user);
+    return initial();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(UserModel user)? init,
+    TResult? Function()? initial,
     TResult? Function(BibleModel bible, String query)? search,
   }) {
-    return init?.call(user);
+    return initial?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(UserModel user)? init,
+    TResult Function()? initial,
     TResult Function(BibleModel bible, String query)? search,
     required TResult orElse(),
   }) {
-    if (init != null) {
-      return init(user);
+    if (initial != null) {
+      return initial();
     }
     return orElse();
   }
@@ -180,46 +153,37 @@ class _$SearchVersesInitialEventImpl implements SearchVersesInitialEvent {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(SearchVersesInitialEvent value) init,
+    required TResult Function(SearchVersesInitialEvent value) initial,
     required TResult Function(SearchVersesSearchEvent value) search,
   }) {
-    return init(this);
+    return initial(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(SearchVersesInitialEvent value)? init,
+    TResult? Function(SearchVersesInitialEvent value)? initial,
     TResult? Function(SearchVersesSearchEvent value)? search,
   }) {
-    return init?.call(this);
+    return initial?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(SearchVersesInitialEvent value)? init,
+    TResult Function(SearchVersesInitialEvent value)? initial,
     TResult Function(SearchVersesSearchEvent value)? search,
     required TResult orElse(),
   }) {
-    if (init != null) {
-      return init(this);
+    if (initial != null) {
+      return initial(this);
     }
     return orElse();
   }
 }
 
 abstract class SearchVersesInitialEvent implements SearchVersesEvent {
-  const factory SearchVersesInitialEvent(final UserModel user) =
-      _$SearchVersesInitialEventImpl;
-
-  UserModel get user;
-
-  /// Create a copy of SearchVersesEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SearchVersesInitialEventImplCopyWith<_$SearchVersesInitialEventImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  const factory SearchVersesInitialEvent() = _$SearchVersesInitialEventImpl;
 }
 
 /// @nodoc
@@ -301,7 +265,7 @@ class _$SearchVersesSearchEventImpl implements SearchVersesSearchEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(UserModel user) init,
+    required TResult Function() initial,
     required TResult Function(BibleModel bible, String query) search,
   }) {
     return search(bible, query);
@@ -310,7 +274,7 @@ class _$SearchVersesSearchEventImpl implements SearchVersesSearchEvent {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(UserModel user)? init,
+    TResult? Function()? initial,
     TResult? Function(BibleModel bible, String query)? search,
   }) {
     return search?.call(bible, query);
@@ -319,7 +283,7 @@ class _$SearchVersesSearchEventImpl implements SearchVersesSearchEvent {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(UserModel user)? init,
+    TResult Function()? initial,
     TResult Function(BibleModel bible, String query)? search,
     required TResult orElse(),
   }) {
@@ -332,7 +296,7 @@ class _$SearchVersesSearchEventImpl implements SearchVersesSearchEvent {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(SearchVersesInitialEvent value) init,
+    required TResult Function(SearchVersesInitialEvent value) initial,
     required TResult Function(SearchVersesSearchEvent value) search,
   }) {
     return search(this);
@@ -341,7 +305,7 @@ class _$SearchVersesSearchEventImpl implements SearchVersesSearchEvent {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(SearchVersesInitialEvent value)? init,
+    TResult? Function(SearchVersesInitialEvent value)? initial,
     TResult? Function(SearchVersesSearchEvent value)? search,
   }) {
     return search?.call(this);
@@ -350,7 +314,7 @@ class _$SearchVersesSearchEventImpl implements SearchVersesSearchEvent {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(SearchVersesInitialEvent value)? init,
+    TResult Function(SearchVersesInitialEvent value)? initial,
     TResult Function(SearchVersesSearchEvent value)? search,
     required TResult orElse(),
   }) {

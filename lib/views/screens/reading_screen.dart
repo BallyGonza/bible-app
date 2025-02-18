@@ -53,14 +53,16 @@ ${widget.chapter.verses[0].book} ${widget.chapter.number}:${_verses.first.number
             expandedHeight: 150,
             pinned: true,
             actions: [
-              IconButton(
-                onPressed: _verses.isEmpty ? null : _shareSelectedVerses,
-                icon: FaIcon(
-                  FontAwesomeIcons.share,
-                  color: _verses.isEmpty ? Colors.grey : Colors.white,
-                  size: 20,
-                ),
-              ),
+              _verses.isEmpty
+                  ? const SizedBox.shrink()
+                  : IconButton(
+                      onPressed: _shareSelectedVerses,
+                      icon: FaIcon(
+                        FontAwesomeIcons.share,
+                        color: _verses.isEmpty ? Colors.grey : Colors.white,
+                        size: 20,
+                      ),
+                    ),
             ],
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
@@ -79,27 +81,30 @@ ${widget.chapter.verses[0].book} ${widget.chapter.number}:${_verses.first.number
               ),
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final verse = widget.chapter.verses[index];
-                return ReadingVerseCard(
-                  verse: verse,
-                  onSelect: (verse) {
-                    setState(() {
-                      final verseIndex =
-                          _verses.indexWhere((v) => v.number == verse.number);
-                      if (verseIndex != -1) {
-                        _verses.removeAt(verseIndex);
-                      } else {
-                        _verses.add(verse);
-                        _verses.sort((a, b) => a.number.compareTo(b.number));
-                      }
-                    });
-                  },
-                );
-              },
-              childCount: widget.chapter.verses.length,
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 24.0),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final verse = widget.chapter.verses[index];
+                  return ReadingVerseCard(
+                    verse: verse,
+                    onSelect: (verse) {
+                      setState(() {
+                        final verseIndex =
+                            _verses.indexWhere((v) => v.number == verse.number);
+                        if (verseIndex != -1) {
+                          _verses.removeAt(verseIndex);
+                        } else {
+                          _verses.add(verse);
+                          _verses.sort((a, b) => a.number.compareTo(b.number));
+                        }
+                      });
+                    },
+                  );
+                },
+                childCount: widget.chapter.verses.length,
+              ),
             ),
           ),
         ],

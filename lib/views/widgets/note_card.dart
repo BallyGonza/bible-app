@@ -19,6 +19,13 @@ class NoteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+// Calculate text color based on background color luminance
+    Color getTextColor(int backgroundColor) {
+      final color = Color(backgroundColor);
+      final luminance = color.computeLuminance();
+      return luminance > 0.47 ? Colors.black : Colors.white;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: Slidable(
@@ -99,9 +106,7 @@ class NoteCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: note.color == Colors.white.value
-                          ? Colors.black
-                          : Colors.white,
+                      color: getTextColor(note.color),
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -118,9 +123,7 @@ class NoteCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: note.color == Colors.white.value
-                          ? Colors.black.withOpacity(0.6)
-                          : Colors.white.withOpacity(0.6),
+                      color: getTextColor(note.color),
                       fontSize: 16,
                     ),
                   )
@@ -131,14 +134,25 @@ class NoteCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     if (note.author != null && note.author!.isNotEmpty)
-                      Text(
-                        'by ${note.author!}',
-                        style: TextStyle(
-                          color: note.color == Colors.white.value
-                              ? Colors.black.withOpacity(0.6)
-                              : Colors.white.withOpacity(0.6),
-                          fontSize: 14,
-                          fontStyle: FontStyle.italic,
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Autor: ',
+                              style: TextStyle(
+                                color: getTextColor(note.color),
+                                fontSize: 14,
+                              ),
+                            ),
+                            TextSpan(
+                              text: note.author,
+                              style: TextStyle(
+                                color: getTextColor(note.color),
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       )
                     else
@@ -146,9 +160,7 @@ class NoteCard extends StatelessWidget {
                     Text(
                       note.date,
                       style: TextStyle(
-                        color: note.color == Colors.white.value
-                            ? Colors.black.withOpacity(0.6)
-                            : Colors.white.withOpacity(0.6),
+                        color: getTextColor(note.color),
                         fontSize: 14,
                       ),
                     ),

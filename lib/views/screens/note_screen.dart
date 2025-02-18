@@ -50,9 +50,9 @@ class NotePageState extends State<NoteScreen> {
     _contentController.text = widget.note?.content ?? '';
     _currentColor = Color(widget.note?.color ?? appColor.value);
     _iconColor =
-        _currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+        _currentColor.computeLuminance() > 0.47 ? Colors.black : Colors.white;
     _fontColor =
-        _currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+        _currentColor.computeLuminance() > 0.47 ? Colors.black : Colors.white;
   }
 
   @override
@@ -84,7 +84,9 @@ class NotePageState extends State<NoteScreen> {
               content: _contentController.text,
               verses: const [],
               date: date.format(DateTime.now()),
-              color: _currentColor.value,
+              color: _currentColor.value == appColor.value
+                  ? accentColor.value
+                  : _currentColor.value,
             ),
           ),
         );

@@ -96,6 +96,9 @@ class _$NotesEventCopyWithImpl<$Res, $Val extends NotesEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of NotesEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -112,6 +115,9 @@ class __$$NotesInitialEventImplCopyWithImpl<$Res>
   __$$NotesInitialEventImplCopyWithImpl(_$NotesInitialEventImpl _value,
       $Res Function(_$NotesInitialEventImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of NotesEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -241,6 +247,8 @@ class __$$NotesAddNoteEventImplCopyWithImpl<$Res>
       $Res Function(_$NotesAddNoteEventImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NotesEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -279,7 +287,9 @@ class _$NotesAddNoteEventImpl implements NotesAddNoteEvent {
   @override
   int get hashCode => Object.hash(runtimeType, note);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotesEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotesAddNoteEventImplCopyWith<_$NotesAddNoteEventImpl> get copyWith =>
@@ -378,7 +388,10 @@ abstract class NotesAddNoteEvent implements NotesEvent {
       _$NotesAddNoteEventImpl;
 
   NoteModel get note;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotesEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotesAddNoteEventImplCopyWith<_$NotesAddNoteEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -400,6 +413,8 @@ class __$$NotesEditNoteEventImplCopyWithImpl<$Res>
       $Res Function(_$NotesEditNoteEventImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NotesEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -446,7 +461,9 @@ class _$NotesEditNoteEventImpl implements NotesEditNoteEvent {
   @override
   int get hashCode => Object.hash(runtimeType, index, note);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotesEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotesEditNoteEventImplCopyWith<_$NotesEditNoteEventImpl> get copyWith =>
@@ -546,7 +563,10 @@ abstract class NotesEditNoteEvent implements NotesEvent {
 
   int get index;
   NoteModel get note;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotesEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotesEditNoteEventImplCopyWith<_$NotesEditNoteEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -568,6 +588,8 @@ class __$$NotesDeleteNoteEventImplCopyWithImpl<$Res>
       $Res Function(_$NotesDeleteNoteEventImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NotesEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -606,7 +628,9 @@ class _$NotesDeleteNoteEventImpl implements NotesDeleteNoteEvent {
   @override
   int get hashCode => Object.hash(runtimeType, index);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotesEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotesDeleteNoteEventImplCopyWith<_$NotesDeleteNoteEventImpl>
@@ -706,7 +730,10 @@ abstract class NotesDeleteNoteEvent implements NotesEvent {
       _$NotesDeleteNoteEventImpl;
 
   int get index;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotesEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotesDeleteNoteEventImplCopyWith<_$NotesDeleteNoteEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -728,6 +755,8 @@ class __$$NotesAddVerseEventImplCopyWithImpl<$Res>
       $Res Function(_$NotesAddVerseEventImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NotesEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -774,7 +803,9 @@ class _$NotesAddVerseEventImpl implements NotesAddVerseEvent {
   @override
   int get hashCode => Object.hash(runtimeType, index, verse);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotesEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotesAddVerseEventImplCopyWith<_$NotesAddVerseEventImpl> get copyWith =>
@@ -874,7 +905,10 @@ abstract class NotesAddVerseEvent implements NotesEvent {
 
   int get index;
   VerseModel get verse;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotesEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotesAddVerseEventImplCopyWith<_$NotesAddVerseEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -897,6 +931,8 @@ class __$$NotesRemoveVerseEventImplCopyWithImpl<$Res>
       $Res Function(_$NotesRemoveVerseEventImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NotesEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -944,7 +980,9 @@ class _$NotesRemoveVerseEventImpl implements NotesRemoveVerseEvent {
   @override
   int get hashCode => Object.hash(runtimeType, index, verseIndex);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotesEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotesRemoveVerseEventImplCopyWith<_$NotesRemoveVerseEventImpl>
@@ -1044,7 +1082,10 @@ abstract class NotesRemoveVerseEvent implements NotesEvent {
 
   int get index;
   int get verseIndex;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotesEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotesRemoveVerseEventImplCopyWith<_$NotesRemoveVerseEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -84,6 +84,9 @@ class _$NotesStateCopyWithImpl<$Res, $Val extends NotesState>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of NotesState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -100,6 +103,9 @@ class __$$NotesInitialImplCopyWithImpl<$Res>
   __$$NotesInitialImplCopyWithImpl(
       _$NotesInitialImpl _value, $Res Function(_$NotesInitialImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of NotesState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -214,6 +220,9 @@ class __$$NotesLoadingImplCopyWithImpl<$Res>
   __$$NotesLoadingImplCopyWithImpl(
       _$NotesLoadingImpl _value, $Res Function(_$NotesLoadingImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of NotesState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -331,6 +340,8 @@ class __$$NotesLoadedImplCopyWithImpl<$Res>
       _$NotesLoadedImpl _value, $Res Function(_$NotesLoadedImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NotesState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -375,7 +386,9 @@ class _$NotesLoadedImpl implements NotesLoaded {
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(_notes));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotesState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotesLoadedImplCopyWith<_$NotesLoadedImpl> get copyWith =>
@@ -460,7 +473,10 @@ abstract class NotesLoaded implements NotesState {
   const factory NotesLoaded(final List<NoteModel> notes) = _$NotesLoadedImpl;
 
   List<NoteModel> get notes;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotesState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotesLoadedImplCopyWith<_$NotesLoadedImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -479,6 +495,9 @@ class __$$NotesFailureImplCopyWithImpl<$Res>
   __$$NotesFailureImplCopyWithImpl(
       _$NotesFailureImpl _value, $Res Function(_$NotesFailureImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of NotesState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc

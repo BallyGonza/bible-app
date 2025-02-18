@@ -31,10 +31,9 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         children: [
-          BibleScreen(
-            user: widget.user,
-          ),
+          BibleScreen(user: widget.user),
           const NoteBookScreen(),
+          SearchScreen(bible: widget.user.bible),
         ],
       ),
       bottomNavigationBar: NavigationBar(
@@ -43,11 +42,15 @@ class _HomeScreenState extends State<HomeScreen> {
         destinations: const [
           NavigationDestination(
             icon: FaIcon(FontAwesomeIcons.book),
-            label: 'Bible',
+            label: 'Biblia',
           ),
           NavigationDestination(
             icon: FaIcon(FontAwesomeIcons.noteSticky),
-            label: 'Notebook',
+            label: 'Notas',
+          ),
+          NavigationDestination(
+            icon: FaIcon(FontAwesomeIcons.magnifyingGlass),
+            label: 'Buscar',
           ),
         ],
         onDestinationSelected: (index) {

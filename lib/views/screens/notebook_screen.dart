@@ -28,19 +28,18 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            backgroundColor: appColorDarker,
             expandedHeight: 150,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
-                color: appColor,
+                color: appColorDarker,
               ),
               titlePadding: const EdgeInsets.only(
                 left: 16,
                 bottom: 16,
               ),
               title: const Text(
-                'Notebook',
+                'Notas',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -61,7 +60,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                       ? const SliverFillRemaining(
                           child: Center(
                             child: Text(
-                              'No notes yet',
+                              'Aún no hay notas',
                               style: TextStyle(color: Colors.grey),
                             ),
                           ),

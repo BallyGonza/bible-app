@@ -31,19 +31,22 @@ class _BibleScreenState extends State<BibleScreen> {
             expandedHeight: 150,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                padding: const EdgeInsets.only(top: 60, left: 16),
-                color: appColor,
-                child: const Text(
-                  'Bible',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
-                  ),
+              background: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 10),
+                  _buildSearchBar(),
+                  SizedBox(height: MediaQuery.of(context).padding.top),
+                ],
+              ),
+              titlePadding: EdgeInsets.only(left: 16, bottom: 16),
+              title: Text(
+                'Biblia',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30,
                 ),
               ),
-              titlePadding: const EdgeInsets.only(left: 16, bottom: 16),
-              title: _buildSearchBar(),
             ),
           ),
           _buildBookList(),
@@ -54,26 +57,19 @@ class _BibleScreenState extends State<BibleScreen> {
 
   Widget _buildSearchBar() {
     return Container(
-      padding: const EdgeInsets.only(right: 16),
-      height: 30,
-      width: double.infinity,
+      margin: EdgeInsets.symmetric(horizontal: 8),
       child: SearchBar(
-        elevation: WidgetStateProperty.all(0),
-        textCapitalization: TextCapitalization.words,
-        textStyle: WidgetStateProperty.all(
-          const TextStyle(color: Colors.white, fontSize: 12),
+        padding: WidgetStateProperty.all(
+          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         ),
-        backgroundColor: WidgetStateProperty.all(appColorDarker),
+        textCapitalization: TextCapitalization.words,
         leading: FaIcon(
-          size: 9,
+          size: 20,
           FontAwesomeIcons.magnifyingGlass,
           color: Colors.grey[600],
         ),
-        hintText: 'Search...',
+        hintText: 'Buscar...',
         onTapOutside: (event) => FocusScope.of(context).unfocus(),
-        hintStyle: WidgetStateProperty.all(
-          TextStyle(color: Colors.grey[600], fontSize: 12),
-        ),
         onChanged: (value) {
           context.read<SearchBarBookBloc>().add(
                 SearchBarBookEvent.search(

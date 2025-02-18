@@ -30,6 +30,9 @@ class Main extends StatelessWidget {
         BlocProvider(
           create: (context) => SearchBarBookBloc(),
         ),
+        BlocProvider(
+          create: (context) => SearchVersesBloc(),
+        ),
       ],
       child: const App(),
     );

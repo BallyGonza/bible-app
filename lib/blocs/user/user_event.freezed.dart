@@ -71,6 +71,9 @@ class _$UserEventCopyWithImpl<$Res, $Val extends UserEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of UserEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -87,6 +90,9 @@ class __$$UserInitialEventImplCopyWithImpl<$Res>
   __$$UserInitialEventImplCopyWithImpl(_$UserInitialEventImpl _value,
       $Res Function(_$UserInitialEventImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of UserEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -192,6 +198,8 @@ class __$$UserSaveEventImplCopyWithImpl<$Res>
       _$UserSaveEventImpl _value, $Res Function(_$UserSaveEventImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of UserEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -230,7 +238,9 @@ class _$UserSaveEventImpl implements UserSaveEvent {
   @override
   int get hashCode => Object.hash(runtimeType, verse);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of UserEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UserSaveEventImplCopyWith<_$UserSaveEventImpl> get copyWith =>
@@ -304,7 +314,10 @@ abstract class UserSaveEvent implements UserEvent {
       _$UserSaveEventImpl;
 
   VerseModel get verse;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of UserEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UserSaveEventImplCopyWith<_$UserSaveEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

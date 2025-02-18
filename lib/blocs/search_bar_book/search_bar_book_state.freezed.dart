@@ -84,6 +84,9 @@ class _$SearchBarBookStateCopyWithImpl<$Res, $Val extends SearchBarBookState>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of SearchBarBookState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -100,6 +103,9 @@ class __$$SearchBarBookInitialImplCopyWithImpl<$Res>
   __$$SearchBarBookInitialImplCopyWithImpl(_$SearchBarBookInitialImpl _value,
       $Res Function(_$SearchBarBookInitialImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of SearchBarBookState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -215,6 +221,9 @@ class __$$SearchBarBookLoadingImplCopyWithImpl<$Res>
   __$$SearchBarBookLoadingImplCopyWithImpl(_$SearchBarBookLoadingImpl _value,
       $Res Function(_$SearchBarBookLoadingImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of SearchBarBookState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -333,6 +342,8 @@ class __$$SearchBarBookLoadedImplCopyWithImpl<$Res>
       $Res Function(_$SearchBarBookLoadedImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of SearchBarBookState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -378,7 +389,9 @@ class _$SearchBarBookLoadedImpl implements SearchBarBookLoaded {
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(_books));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SearchBarBookState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SearchBarBookLoadedImplCopyWith<_$SearchBarBookLoadedImpl> get copyWith =>
@@ -465,7 +478,10 @@ abstract class SearchBarBookLoaded implements SearchBarBookState {
       _$SearchBarBookLoadedImpl;
 
   List<BookModel> get books;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of SearchBarBookState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SearchBarBookLoadedImplCopyWith<_$SearchBarBookLoadedImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -487,6 +503,8 @@ class __$$SearchBarBookErrorImplCopyWithImpl<$Res>
       $Res Function(_$SearchBarBookErrorImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of SearchBarBookState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -525,7 +543,9 @@ class _$SearchBarBookErrorImpl implements SearchBarBookError {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SearchBarBookState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SearchBarBookErrorImplCopyWith<_$SearchBarBookErrorImpl> get copyWith =>
@@ -612,7 +632,10 @@ abstract class SearchBarBookError implements SearchBarBookState {
       _$SearchBarBookErrorImpl;
 
   String get message;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of SearchBarBookState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SearchBarBookErrorImplCopyWith<_$SearchBarBookErrorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

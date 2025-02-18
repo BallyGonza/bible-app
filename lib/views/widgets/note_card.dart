@@ -35,9 +35,10 @@ class NoteCard extends StatelessWidget {
                   context: context,
                   builder: (context) {
                     return CustomAlertDialog.red(
-                      title: 'Delete Note',
-                      description: 'Are you sure you want to delete this note?',
-                      rightButtonText: 'Delete',
+                      title: 'Eliminar Nota',
+                      description:
+                          '¿Estás seguro de que deseas eliminar esta nota?',
+                      rightButtonText: 'Eliminar',
                       onRightButtonPressed: () {
                         context
                             .read<NotesBloc>()
@@ -45,7 +46,7 @@ class NoteCard extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(
-                              'Note deleted',
+                              'Nota eliminada.',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,

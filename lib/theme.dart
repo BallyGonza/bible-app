@@ -11,6 +11,19 @@ ThemeData theme = ThemeData(
     secondary: appColorDarker,
     surfaceTint: appColorDarker,
   ),
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor: Colors.white,
+  ),
+  searchBarTheme: SearchBarThemeData(
+    backgroundColor: WidgetStateProperty.all(appColor),
+    elevation: WidgetStateProperty.all(0),
+    textStyle: WidgetStateProperty.all(
+      const TextStyle(color: Colors.white, fontSize: 16),
+    ),
+    hintStyle: WidgetStateProperty.all(
+      TextStyle(color: Colors.grey[600], fontSize: 16),
+    ),
+  ),
   primaryColor: Colors.white,
   fontFamily: 'DM Sans',
   textTheme: GoogleFonts.dmSansTextTheme(
@@ -63,5 +76,11 @@ ThemeData theme = ThemeData(
   dividerTheme: const DividerThemeData(
     color: Colors.transparent,
     thickness: 1,
+  ),
+  pageTransitionsTheme: const PageTransitionsTheme(
+    builders: <TargetPlatform, PageTransitionsBuilder>{
+      TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+    },
   ),
 );

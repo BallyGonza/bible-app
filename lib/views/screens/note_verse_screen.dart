@@ -40,7 +40,7 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
     Navigator.of(context).pop();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Note saved.'),
+        content: Text('Nota guardada.'),
         duration: Duration(seconds: 2),
       ),
     );
@@ -53,7 +53,7 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
     Navigator.of(context).pop();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Note deleted.'),
+        content: Text('Nota eliminada.'),
         duration: Duration(seconds: 2),
       ),
     );
@@ -68,9 +68,9 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
             onPressed: () => showDialog<void>(
               context: context,
               builder: (context) => CustomAlertDialog.red(
-                title: 'Delete note',
-                description: 'Are you sure you want to delete this note?',
-                rightButtonText: 'Delete',
+                title: 'Eliminar Nota',
+                description: '¿Estás seguro de que quieres eliminar esta nota?',
+                rightButtonText: 'Eliminar',
                 onRightButtonPressed: _deleteNote,
               ),
             ),

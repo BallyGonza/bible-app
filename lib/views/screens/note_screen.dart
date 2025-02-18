@@ -91,7 +91,7 @@ class NotePageState extends State<NoteScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
-          'Note created',
+          'Nota guardada',
           style: TextStyle(
             color: Colors.white,
             fontSize: 16,
@@ -121,7 +121,7 @@ class NotePageState extends State<NoteScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
-          'Note updated',
+          'Nota actualizada',
           style: TextStyle(
             color: Colors.white,
             fontSize: 16,
@@ -169,12 +169,12 @@ class NotePageState extends State<NoteScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width * (1 / 20),
+          horizontal: 16,
         ),
         child: Column(
           children: [
-            SizedBox(
-              height: 80,
+            Container(
+              height: 40,
               child: TextField(
                 enabled: _isEditing,
                 controller: _titleController,
@@ -194,13 +194,14 @@ class NotePageState extends State<NoteScreen> {
                 textInputAction: TextInputAction.done,
               ),
             ),
+            const SizedBox(height: 5),
             SizedBox(
               height: 20,
               child: TextField(
                 enabled: _isEditing,
                 controller: _authorController,
                 decoration: InputDecoration(
-                  hintText: 'by Author...',
+                  hintText: 'Autor de la predica/nota...',
                   hintStyle: TextStyle(color: _fontColor.withOpacity(0.6)),
                   border: InputBorder.none,
                 ),
@@ -215,7 +216,6 @@ class NotePageState extends State<NoteScreen> {
                 textCapitalization: TextCapitalization.sentences,
               ),
             ),
-            const SizedBox(height: 10),
             Expanded(
               child: PageView(
                 controller: _pageController,
@@ -276,10 +276,10 @@ class NotePageState extends State<NoteScreen> {
                                               context: context,
                                               builder: (context) {
                                                 return CustomAlertDialog.red(
-                                                  title: 'Delete Verse',
+                                                  title: 'Eliminar versículo',
                                                   description:
-                                                      'Are you sure you want to delete this verse?',
-                                                  rightButtonText: 'Delete',
+                                                      '¿Estás seguro de que quieres eliminar este versículo?',
+                                                  rightButtonText: 'Eliminar',
                                                   onRightButtonPressed: () {
                                                     context
                                                         .read<NotesBloc>()
@@ -337,7 +337,7 @@ class NotePageState extends State<NoteScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Edited: ${widget.note?.date ?? date.format(DateTime.now())}',
+                'Editado: ${widget.note?.date ?? date.format(DateTime.now())}',
                 style: TextStyle(color: _fontColor.withOpacity(0.6)),
               ),
               Row(

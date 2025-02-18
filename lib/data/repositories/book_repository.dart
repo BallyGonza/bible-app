@@ -8,7 +8,7 @@ class BookRepository {
 
 BookModel genesis = BookModel(
   id: 1,
-  name: 'Genesis',
+  name: 'Génesis',
   chapters: [
     genesis1,
     genesis2,

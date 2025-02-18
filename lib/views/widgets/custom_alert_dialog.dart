@@ -42,7 +42,7 @@ class CustomAlertDialog extends StatelessWidget {
             Navigator.pop(context);
           },
           child: const Text(
-            'Cancel',
+            'Cancelar',
             style: TextStyle(color: Colors.white),
           ),
         ),

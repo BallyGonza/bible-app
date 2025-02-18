@@ -3,6 +3,8 @@
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ReadingScreen extends StatefulWidget {
   const ReadingScreen({
@@ -17,7 +19,28 @@ class ReadingScreen extends StatefulWidget {
 }
 
 class _ReadingScreenState extends State<ReadingScreen> {
+  List<VerseModel> _verses = [];
   final _sc = ScrollController();
+  void _shareSelectedVerses() {
+    if (_verses.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No verses selected'),
+        ),
+      );
+      return;
+    }
+
+    final versesText =
+        _verses.map((verse) => '[${verse.number}] ${verse.text}').join(' ');
+    final formattedText = '''
+$versesText
+${widget.chapter.verses[0].book} ${widget.chapter.number}:${_verses.first.number}-${_verses.last.number} RVR1960
+''';
+
+    Clipboard.setData(ClipboardData(text: formattedText)).then((_) {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,8 +52,17 @@ class _ReadingScreenState extends State<ReadingScreen> {
             backgroundColor: appColorDarker,
             expandedHeight: 150,
             pinned: true,
+            actions: [
+              IconButton(
+                onPressed: _verses.isEmpty ? null : _shareSelectedVerses,
+                icon: FaIcon(
+                  FontAwesomeIcons.share,
+                  color: _verses.isEmpty ? Colors.grey : Colors.white,
+                  size: 20,
+                ),
+              ),
+            ],
             flexibleSpace: FlexibleSpaceBar(
-              // color gray as background
               background: Container(
                 color: appColor,
               ),
@@ -51,7 +83,21 @@ class _ReadingScreenState extends State<ReadingScreen> {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 final verse = widget.chapter.verses[index];
-                return ReadingVerseCard(verse: verse);
+                return ReadingVerseCard(
+                  verse: verse,
+                  onSelect: (verse) {
+                    setState(() {
+                      final verseIndex =
+                          _verses.indexWhere((v) => v.number == verse.number);
+                      if (verseIndex != -1) {
+                        _verses.removeAt(verseIndex);
+                      } else {
+                        _verses.add(verse);
+                        _verses.sort((a, b) => a.number.compareTo(b.number));
+                      }
+                    });
+                  },
+                );
               },
               childCount: widget.chapter.verses.length,
             ),

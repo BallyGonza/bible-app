@@ -136,29 +136,19 @@ class _SearchScreenState extends State<SearchScreen> {
                             delegate: SliverChildBuilderDelegate(
                               (context, index) {
                                 final verse = verses[index];
-                                // return Padding(
-                                //   padding: const EdgeInsets.only(bottom: 8),
-                                //   child: Card(
-                                //     color: Colors.white.withOpacity(0.05),
-                                //     child: ListTile(
-                                //       title: Text(
-                                //         verse.text,
-                                //         style: const TextStyle(
-                                //           color: Colors.white,
-                                //           fontSize: 16,
-                                //         ),
-                                //       ),
-                                //       subtitle: Text(
-                                //         '${verse.book} ${verse.chapter}:${verse.number}',
-                                //         style: TextStyle(
-                                //           color: Colors.grey[400],
-                                //           fontSize: 14,
-                                //         ),
-                                //       ),
-                                //     ),
-                                //   ),
-                                // );
-                                return VerseCard.onSearch(verse: verse);
+
+                                return VerseCard.onSearch(
+                                  verse: verse,
+                                  // onSelect: (verse) {
+                                  //   Navigator.of(context).push(
+                                  //     MaterialPageRoute(
+                                  //       builder: (context) => ReadingScreen(
+                                  //         chapter: verse.chapter,
+                                  //       ),
+                                  //     ),
+                                  //   );
+                                  // },
+                                );
                               },
                               childCount: verses.length,
                             ),

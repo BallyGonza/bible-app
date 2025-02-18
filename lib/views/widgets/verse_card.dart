@@ -7,20 +7,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+enum VerseCardType { bible, search }
+
 class VerseCard extends StatefulWidget {
   const VerseCard.onBible({
     required this.verse,
     this.onSelect,
     super.key,
-  });
+  }) : type = VerseCardType.bible;
 
   const VerseCard.onSearch({
     required this.verse,
+    this.onSelect,
     super.key,
-  }) : onSelect = null;
+  }) : type = VerseCardType.search;
 
   final VerseModel verse;
   final Function(VerseModel)? onSelect;
+  final VerseCardType type;
 
   @override
   State<VerseCard> createState() => _VerseCardState();
@@ -32,6 +36,7 @@ class _VerseCardState extends State<VerseCard>
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   Color _color = Colors.white;
+  bool _hasNote = false;
 
   @override
   void initState() {
@@ -44,6 +49,7 @@ class _VerseCardState extends State<VerseCard>
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.02).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
+    _hasNote = widget.verse.note != null;
   }
 
   @override
@@ -101,7 +107,9 @@ class _VerseCardState extends State<VerseCard>
                   MaterialPageRoute<NoteVerseScreen>(
                     builder: (context) => NoteVerseScreen(verse: widget.verse),
                   ),
-                ),
+                ).then((value) => setState(() {
+                      _hasNote = true;
+                    })),
                 backgroundColor: Colors.deepPurple.shade200,
                 foregroundColor: Colors.white,
                 borderRadius:
@@ -118,7 +126,11 @@ class _VerseCardState extends State<VerseCard>
                   elevation: _isFocused ? 4 : 0,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
-                  color: _isFocused ? Colors.grey[900] : Colors.transparent,
+                  color: _isFocused
+                      ? Colors.grey[900]
+                      : widget.type == VerseCardType.bible
+                          ? Colors.transparent
+                          : appColorDarker,
                   child: GestureDetector(
                     onLongPress: () {
                       Clipboard.setData(
@@ -157,7 +169,10 @@ class _VerseCardState extends State<VerseCard>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _buildVerseText(),
-                            if (widget.verse.note != null) ...[
+                            if (widget.type == VerseCardType.search) ...[
+                              _buildChapterAndNumber(),
+                            ],
+                            if (_hasNote) ...[
                               const SizedBox(height: 8),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
@@ -190,9 +205,28 @@ class _VerseCardState extends State<VerseCard>
     return Text.rich(
       TextSpan(
         children: [
-          TextSpan(text: '${widget.verse.number} ', style: _numberStyle()),
-          TextSpan(text: widget.verse.text, style: _textStyle()),
+          TextSpan(
+              text: widget.type == VerseCardType.bible
+                  ? '${widget.verse.number} '
+                  : '',
+              style: _numberStyle()),
+          TextSpan(
+              text: widget.type == VerseCardType.bible
+                  ? widget.verse.text
+                  : '${widget.verse.text[0].toUpperCase()}${widget.verse.text.substring(1)}',
+              style: _textStyle()),
         ],
+      ),
+    );
+  }
+
+  Widget _buildChapterAndNumber() {
+    return Text(
+      '${widget.verse.book} ${widget.verse.chapter}:${widget.verse.number}',
+      style: TextStyle(
+        fontSize: 14,
+        color: _getColor(),
+        fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
       ),
     );
   }

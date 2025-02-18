@@ -48,6 +48,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 10),
                     Padding(
@@ -81,13 +82,38 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
               titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
-              title: const Text(
-                'Buscar',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
+              title: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Buscar',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  BlocBuilder<SearchVersesBloc, SearchVersesState>(
+                    builder: (context, state) {
+                      return state.maybeWhen(
+                        loaded: (verses) => verses.isNotEmpty
+                            ? Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: Text(
+                                  '${verses.length} versiculos',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 8,
+                                  ),
+                                ),
+                              )
+                            : const SizedBox.shrink(),
+                        orElse: () => const SizedBox.shrink(),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
           ),

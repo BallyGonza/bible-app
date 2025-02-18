@@ -24,6 +24,10 @@ class SearchVersesBloc extends Bloc<SearchVersesEvent, SearchVersesState> {
     emit(const SearchVersesState.loading());
 
     try {
+      if (event.query.isEmpty) {
+        emit(const SearchVersesState.loaded(verses: []));
+        return;
+      }
       final verses = event.bible.books.expand((book) {
         return book.chapters.expand((chapter) {
           return chapter.verses.where((verse) {

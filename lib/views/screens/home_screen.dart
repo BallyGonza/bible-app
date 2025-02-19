@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           BibleScreen(user: widget.user),
           const NoteBookScreen(),
-          SearchScreen(bible: widget.user.bible),
+          SearchScreen(user: widget.user),
         ],
       ),
       bottomNavigationBar: NavigationBar(

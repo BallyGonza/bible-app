@@ -3,10 +3,10 @@ import 'package:bible_app/data/data.dart';
 class BibleRepository {
   BibleRepository();
 
-  Future<ChapterModel> getChapterOfVerse({
+  ChapterModel getChapterOfVerse({
     required BibleModel bible,
     required VerseModel verse,
-  }) async {
+  }) {
     final chapterNumber = bible.books
         .firstWhere((book) => book.name == verse.book)
         .chapters

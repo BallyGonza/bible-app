@@ -8,13 +8,17 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class NoteVerseScreen extends StatefulWidget {
   const NoteVerseScreen({
     required this.verse,
+    required this.onClose,
     super.key,
   });
   final VerseModel verse;
+  final StringCallback onClose;
 
   @override
   State<NoteVerseScreen> createState() => _NoteVerseScreenState();
 }
+
+typedef StringCallback = void Function(String);
 
 class _NoteVerseScreenState extends State<NoteVerseScreen> {
   final _contentController = TextEditingController();
@@ -32,12 +36,10 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
   }
 
   void _saveNote() {
-    final updatedVerse = widget.verse.copyWith(
-      note: VerseNoteModel(content: _contentController.text),
-    );
-    context.read<UserBloc>().add(UserEvent.saveVerse(verse: updatedVerse));
+    // Save note logic here
 
     Navigator.of(context).pop();
+    widget.onClose(_contentController.text);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Nota guardada.'),
@@ -51,6 +53,7 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
     context.read<UserBloc>().add(UserEvent.saveVerse(verse: widget.verse));
 
     Navigator.of(context).pop();
+    widget.onClose('');
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Nota eliminada.'),
@@ -62,103 +65,119 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () => showDialog<void>(
-              context: context,
-              builder: (context) => CustomAlertDialog.red(
-                title: 'Eliminar Nota',
-                description: '¿Estás seguro de que quieres eliminar esta nota?',
-                rightButtonText: 'Eliminar',
-                onRightButtonPressed: _deleteNote,
-              ),
-            ),
-            icon: const FaIcon(
-              FontAwesomeIcons.trashCan,
-              color: Colors.white,
-              size: 18,
-            ),
-          ),
-        ],
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: const FaIcon(FontAwesomeIcons.arrowLeft, color: Colors.white),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _saveNote,
+          backgroundColor: accentColor,
+          child: const FaIcon(FontAwesomeIcons.floppyDisk, color: Colors.black),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _saveNote,
-        backgroundColor: accentColor,
-        child: const FaIcon(FontAwesomeIcons.floppyDisk, color: Colors.black),
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width * (1 / 20),
-        ),
-        child: Column(
-          children: [
-            Card(
-              color: Colors.black.withOpacity(0.1),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              expandedHeight: 150,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                titlePadding: const EdgeInsets.only(
+                  left: 50,
+                  bottom: 13,
+                ),
+                background: Container(
+                  color: appColor,
+                ),
+                title: Text(
+                  '${widget.verse.book} ${widget.verse.chapter}:${widget.verse.number}',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    color: Colors.white,
+                  ),
+                ),
               ),
+              actions: [
+                IconButton(
+                  onPressed: () => showDialog<void>(
+                    context: context,
+                    builder: (context) => CustomAlertDialog.red(
+                      title: 'Eliminar Nota',
+                      description:
+                          '¿Estás seguro de que quieres eliminar esta nota?',
+                      rightButtonText: 'Eliminar',
+                      onRightButtonPressed: _deleteNote,
+                    ),
+                  ),
+                  icon: const FaIcon(
+                    FontAwesomeIcons.trashCan,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ),
+              ],
+            ),
+            SliverFillRemaining(
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * (1 / 20),
+                ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '${widget.verse.book} ${widget.verse.chapter}:${widget.verse.number}',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Card(
+                        color: Colors.black.withOpacity(0.1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.verse.text,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                    Text(
-                      widget.verse.text,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.normal,
-                        fontStyle: FontStyle.italic,
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: TextField(
+                          controller: _contentController,
+                          decoration: const InputDecoration(
+                            hintText: 'Agrega una nota...',
+                            hintStyle: TextStyle(
+                              color: Colors.grey,
+                              fontStyle: FontStyle.italic,
+                            ),
+                            border: InputBorder.none,
+                          ),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          keyboardType: TextInputType.multiline,
+                          textAlign: TextAlign.left,
+                          cursorColor: Colors.white,
+                          textCapitalization: TextCapitalization.sentences,
+                          maxLines: null,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: SingleChildScrollView(
-                child: TextField(
-                  controller: _contentController,
-                  decoration: const InputDecoration(
-                    hintText: 'Descripción...',
-                    hintStyle: TextStyle(
-                      color: Colors.grey,
-                      fontStyle: FontStyle.italic,
-                    ),
-                    border: InputBorder.none,
-                  ),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.normal,
-                  ),
-                  keyboardType: TextInputType.multiline,
-                  textAlign: TextAlign.left,
-                  cursorColor: Colors.white,
-                  textCapitalization: TextCapitalization.sentences,
-                  maxLines: null,
-                ),
-              ),
-            ),
           ],
-        ),
-      ),
-    );
+        ));
   }
 }

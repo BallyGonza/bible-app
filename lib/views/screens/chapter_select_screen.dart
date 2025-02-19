@@ -35,15 +35,22 @@ class ChapterSelectScreen extends StatelessWidget {
               ),
             ),
           ),
-          SliverGrid(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 5,
+          SliverPadding(
+            padding: const EdgeInsets.only(
+              bottom: 20,
+              left: 10,
+              right: 10,
             ),
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return ChapterCard(book: book, index: index);
-              },
-              childCount: book.chapters.length,
+            sliver: SliverGrid(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 5,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return ChapterCard(book: book, index: index);
+                },
+                childCount: book.chapters.length,
+              ),
             ),
           ),
         ],

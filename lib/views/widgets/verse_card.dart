@@ -71,6 +71,14 @@ class _VerseCardState extends State<VerseCard>
     });
   }
 
+  void _onNoteAdded(String note) {
+    context.read<UserBloc>().add(UserEvent.saveVerse(
+        verse: widget.verse.copyWith(note: VerseNoteModel(content: note))));
+    setState(() {
+      _hasNote = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -108,11 +116,10 @@ class _VerseCardState extends State<VerseCard>
                 onPressed: (_) => Navigator.push(
                   context,
                   MaterialPageRoute<NoteVerseScreen>(
-                    builder: (context) => NoteVerseScreen(verse: widget.verse),
+                    builder: (context) => NoteVerseScreen(
+                        verse: widget.verse, onClose: _onNoteAdded),
                   ),
-                ).then((value) => setState(() {
-                      _hasNote = true;
-                    })),
+                ),
                 backgroundColor: Colors.deepPurple.shade200,
                 foregroundColor: Colors.white,
                 borderRadius:
@@ -123,82 +130,78 @@ class _VerseCardState extends State<VerseCard>
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: BlocBuilder<UserBloc, UserState>(
-              builder: (context, state) {
-                return Card(
-                  elevation: _isFocused ? 4 : 0,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  color: _isFocused
-                      ? Colors.grey[900]
-                      : widget.type == VerseCardType.bible
-                          ? Colors.transparent
-                          : appColorDarker,
-                  child: GestureDetector(
-                    onLongPress: () {
-                      Clipboard.setData(
-                        ClipboardData(
-                            text:
-                                "\"${widget.verse.text}\"\n${widget.verse.book} ${widget.verse.chapter}:${widget.verse.number} RVR1960"),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Versiculo copiado',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    onTap: () {
-                      if (widget.onSelect != null) {
-                        widget.onSelect!(widget.verse);
-                      }
-                      if (widget.type == VerseCardType.bible) {
-                        setState(() => _isFocused = !_isFocused);
-                        if (_isFocused) {
-                          _animationController.forward();
-                        } else {
-                          _animationController.reverse();
-                        }
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildVerseText(),
-                            if (widget.type == VerseCardType.search) ...[
-                              _buildChapterAndNumber(),
-                            ],
-                            if (_hasNote) ...[
-                              const SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  FaIcon(
-                                    FontAwesomeIcons.noteSticky,
-                                    size: 14,
-                                    color: Color(widget.verse.color ??
-                                            Colors.white.value)
-                                        .withOpacity(0.6),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ],
+            child: Card(
+              elevation: _isFocused ? 4 : 0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              color: _isFocused
+                  ? Colors.grey[900]
+                  : widget.type == VerseCardType.bible
+                      ? Colors.transparent
+                      : appColorDarker,
+              child: GestureDetector(
+                onLongPress: () {
+                  Clipboard.setData(
+                    ClipboardData(
+                        text:
+                            "\"${widget.verse.text}\"\n${widget.verse.book} ${widget.verse.chapter}:${widget.verse.number} RVR1960"),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Versiculo copiado',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
                         ),
                       ),
                     ),
+                  );
+                },
+                onTap: () {
+                  if (widget.onSelect != null) {
+                    widget.onSelect!(widget.verse);
+                  }
+                  if (widget.type == VerseCardType.bible) {
+                    setState(() => _isFocused = !_isFocused);
+                    if (_isFocused) {
+                      _animationController.forward();
+                    } else {
+                      _animationController.reverse();
+                    }
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildVerseText(),
+                        if (widget.type == VerseCardType.search) ...[
+                          _buildChapterAndNumber(),
+                        ],
+                        if (_hasNote) ...[
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              FaIcon(
+                                FontAwesomeIcons.noteSticky,
+                                size: 14,
+                                color: Color(widget.verse.color ??
+                                        Colors.white.value)
+                                    .withOpacity(0.6),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ],
+                    ),
                   ),
-                );
-              },
+                ),
+              ),
             ),
           ),
         ),
@@ -306,20 +309,16 @@ class _VerseCardState extends State<VerseCard>
                       ],
                     ),
                     if (notes.isEmpty)
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'No tienes notas',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge!
-                                .copyWith(
-                                  color: Colors.white,
-                                ),
-                          ),
-                        ],
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: Text(
+                          'No tienes notas',
+                          style:
+                              Theme.of(context).textTheme.titleLarge!.copyWith(
+                                    color: Colors.white,
+                                  ),
+                        ),
                       )
                     else
                       Expanded(

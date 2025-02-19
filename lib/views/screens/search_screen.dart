@@ -6,9 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({required this.bible, super.key});
+  const SearchScreen({required this.user, super.key});
 
-  final BibleModel bible;
+  final UserModel user;
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -16,6 +16,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final _searchController = TextEditingController();
+  final _searchFocusNode = FocusNode();
   final bibleRepository = BibleRepository();
 
   @override
@@ -56,8 +57,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: SearchBar(
                         onTapOutside: (_) {
-                          FocusScope.of(context).unfocus();
+                          _searchFocusNode.unfocus();
                         },
+                        autoFocus: false,
                         padding: const MaterialStatePropertyAll(
                           EdgeInsets.symmetric(horizontal: 16),
                         ),
@@ -73,7 +75,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         onChanged: (query) {
                           context.read<SearchVersesBloc>().add(
-                                SearchVersesEvent.search(widget.bible, query),
+                                SearchVersesEvent.search(
+                                    widget.user.bible, query),
                               );
                         },
                       ),
@@ -83,38 +86,13 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
               titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
-              title: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Buscar',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  BlocBuilder<SearchVersesBloc, SearchVersesState>(
-                    builder: (context, state) {
-                      return state.maybeWhen(
-                        loaded: (verses) => verses.isNotEmpty
-                            ? Padding(
-                                padding: const EdgeInsets.only(right: 8.0),
-                                child: Text(
-                                  '${verses.length} versiculos',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 8,
-                                  ),
-                                ),
-                              )
-                            : const SizedBox.shrink(),
-                        orElse: () => const SizedBox.shrink(),
-                      );
-                    },
-                  ),
-                ],
+              title: const Text(
+                'Buscar',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -163,16 +141,16 @@ class _SearchScreenState extends State<SearchScreen> {
                             delegate: SliverChildBuilderDelegate(
                               (context, index) {
                                 final verse = verses[index];
+                                final chapter =
+                                    bibleRepository.getChapterOfVerse(
+                                  bible: widget.user.bible,
+                                  verse: verse,
+                                );
 
                                 return VerseCard.onSearch(
                                   verse: verse,
                                   onSelect: (verse) async {
-                                    final chapter =
-                                        await bibleRepository.getChapterOfVerse(
-                                      bible: rvr1960,
-                                      verse: verse,
-                                    );
-
+                                    _searchFocusNode.unfocus();
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) => ReadingScreen(

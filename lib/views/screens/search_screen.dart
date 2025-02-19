@@ -33,7 +33,7 @@ class _SearchScreenState extends State<SearchScreen> {
         slivers: [
           SliverAppBar(
             backgroundColor: appColorDarker,
-            expandedHeight: 180,
+            expandedHeight: 150,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
@@ -177,6 +177,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                       MaterialPageRoute(
                                         builder: (context) => ReadingScreen(
                                           chapter: chapter,
+                                          verse: verse,
                                         ),
                                       ),
                                     );

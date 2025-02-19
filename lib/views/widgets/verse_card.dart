@@ -12,6 +12,7 @@ enum VerseCardType { bible, search }
 class VerseCard extends StatefulWidget {
   const VerseCard.onBible({
     required this.verse,
+    this.isFocused = false,
     this.onSelect,
     super.key,
   }) : type = VerseCardType.bible;
@@ -19,12 +20,14 @@ class VerseCard extends StatefulWidget {
   const VerseCard.onSearch({
     required this.verse,
     this.onSelect,
+    this.isFocused = false,
     super.key,
   }) : type = VerseCardType.search;
 
   final VerseModel verse;
   final Function(VerseModel)? onSelect;
   final VerseCardType type;
+  final bool isFocused;
 
   @override
   State<VerseCard> createState() => _VerseCardState();
@@ -32,7 +35,7 @@ class VerseCard extends StatefulWidget {
 
 class _VerseCardState extends State<VerseCard>
     with SingleTickerProviderStateMixin {
-  bool _isFocused = false;
+  late bool _isFocused;
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   Color _color = Colors.white;
@@ -41,7 +44,7 @@ class _VerseCardState extends State<VerseCard>
   @override
   void initState() {
     super.initState();
-    _isFocused = false;
+    _isFocused = widget.isFocused;
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: this,

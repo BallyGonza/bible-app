@@ -93,11 +93,25 @@ class _VerseCardState extends State<VerseCard>
             children: [
               CustomSlidableAction(
                 onPressed: (_) => _showAddToNoteModal(context),
-                backgroundColor: Colors.blue.shade200,
+                backgroundColor: appColor,
                 foregroundColor: Colors.white,
                 borderRadius:
                     const BorderRadius.horizontal(left: Radius.circular(12)),
-                child: FaIcon(FontAwesomeIcons.floppyDisk, size: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FaIcon(FontAwesomeIcons.bookmark,
+                        size: 20, color: accentColor),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Agregar a',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -108,9 +122,22 @@ class _VerseCardState extends State<VerseCard>
               CustomSlidableAction(
                 onPressed: (_) => CustomModalBottomSheet.colorPicker(
                     context, _onColorChanged),
-                backgroundColor: Colors.green.shade200,
+                backgroundColor: appColor,
                 foregroundColor: Colors.white,
-                child: FaIcon(FontAwesomeIcons.palette, size: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FaIcon(FontAwesomeIcons.palette, size: 20, color: _color),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Resaltar',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               CustomSlidableAction(
                 onPressed: (_) => Navigator.push(
@@ -120,11 +147,25 @@ class _VerseCardState extends State<VerseCard>
                         verse: widget.verse, onClose: _onNoteAdded),
                   ),
                 ),
-                backgroundColor: Colors.deepPurple.shade200,
+                backgroundColor: appColor,
                 foregroundColor: Colors.white,
                 borderRadius:
                     const BorderRadius.horizontal(right: Radius.circular(12)),
-                child: FaIcon(FontAwesomeIcons.noteSticky, size: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FaIcon(FontAwesomeIcons.noteSticky,
+                        size: 20, color: accentColor),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Nota',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -260,31 +301,31 @@ class _VerseCardState extends State<VerseCard>
   }
 
   void _showAddToNoteModal(BuildContext context) {
-    showModalBottomSheet<Container>(
+    showModalBottomSheet(
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       context: context,
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: appColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 10,
-              offset: const Offset(0, -5),
-            ),
-          ],
-        ),
-        height: MediaQuery.of(context).size.height * 0.6,
-        child: BlocBuilder<NotesBloc, NotesState>(
-          builder: (context, state) {
-            return state.maybeWhen(
-              orElse: () {
-                return const CircularProgressIndicator();
-              },
-              loaded: (notes) {
+      builder: (context) => DraggableScrollableSheet(
+        expand: false,
+        builder: (context, scrollController) => Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: appColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 10,
+                offset: const Offset(0, -5),
+              ),
+            ],
+          ),
+          child: BlocBuilder<NotesBloc, NotesState>(
+            builder: (context, state) {
+              if (state is NotesLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is NotesLoaded) {
+                final notes = state.notes;
                 return Column(
                   children: [
                     Row(
@@ -309,20 +350,35 @@ class _VerseCardState extends State<VerseCard>
                       ],
                     ),
                     if (notes.isEmpty)
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: Text(
-                          'No tienes notas',
-                          style:
-                              Theme.of(context).textTheme.titleLarge!.copyWith(
-                                    color: Colors.white,
-                                  ),
+                      Expanded(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              FaIcon(
+                                FontAwesomeIcons.solidStickyNote,
+                                size: 40,
+                                color: Colors.white.withOpacity(0.7),
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'No tienes predicas / notas guardadas',
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge!
+                                    .copyWith(
+                                      color: Colors.white,
+                                    ),
+                              ),
+                            ],
+                          ),
                         ),
                       )
                     else
                       Expanded(
                         child: ListView.builder(
+                          controller: scrollController,
                           physics: const BouncingScrollPhysics(),
                           itemCount: notes.length,
                           itemBuilder: (context, index) {
@@ -393,9 +449,11 @@ class _VerseCardState extends State<VerseCard>
                       ),
                   ],
                 );
-              },
-            );
-          },
+              } else {
+                return const Center(child: Text('Error loading notes'));
+              }
+            },
+          ),
         ),
       ),
     );

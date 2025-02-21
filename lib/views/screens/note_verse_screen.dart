@@ -36,8 +36,6 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
   }
 
   void _saveNote() {
-    // Save note logic here
-
     Navigator.of(context).pop();
     widget.onClose(_contentController.text);
     ScaffoldMessenger.of(context).showSnackBar(
@@ -133,7 +131,8 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  widget.verse.text,
+                                  widget.verse.text[0].toUpperCase() +
+                                      widget.verse.text.substring(1),
                                   style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.white,

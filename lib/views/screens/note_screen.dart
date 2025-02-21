@@ -1,5 +1,6 @@
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:bible_app/blocs/blocs.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
@@ -175,49 +176,66 @@ class NotePageState extends State<NoteScreen> {
         ),
         child: Column(
           children: [
-            Container(
-              height: 40,
-              child: TextField(
-                enabled: _isEditing,
-                controller: _titleController,
-                decoration: InputDecoration(
-                  hintText: 'Titulo',
-                  hintStyle: TextStyle(color: _fontColor.withOpacity(0.6)),
-                  border: InputBorder.none,
-                ),
-                style: TextStyle(
-                  fontSize: 34,
-                  fontWeight: FontWeight.bold,
-                  color: _fontColor,
-                ),
-                textAlign: TextAlign.left,
-                cursorColor: _fontColor,
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.done,
+            AutoSizeTextField(
+              enabled: _isEditing,
+              controller: _titleController,
+              decoration: InputDecoration(
+                hintText: 'Titulo de la predica/nota...',
+                hintStyle:
+                    TextStyle(color: _fontColor.withOpacity(0.6), fontSize: 30),
+                border: InputBorder.none,
               ),
-            ),
-            const SizedBox(height: 5),
-            SizedBox(
-              height: 20,
-              child: TextField(
-                enabled: _isEditing,
-                controller: _authorController,
-                decoration: InputDecoration(
-                  hintText: 'Autor de la predica/nota...',
-                  hintStyle: TextStyle(color: _fontColor.withOpacity(0.6)),
-                  border: InputBorder.none,
-                ),
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  fontStyle: FontStyle.italic,
-                  color: _fontColor,
-                ),
-                textAlign: TextAlign.left,
-                cursorColor: _fontColor,
-                textCapitalization: TextCapitalization.sentences,
+              style: TextStyle(
+                fontSize: 34,
+                fontWeight: FontWeight.bold,
+                color: _fontColor,
               ),
+              maxLines: 1,
+              textAlign: TextAlign.left,
+              cursorColor: _fontColor,
+              textCapitalization: TextCapitalization.words,
+              textInputAction: TextInputAction.done,
+              minFontSize: 18,
+              stepGranularity: 2,
+              fullwidth: true,
             ),
+            Row(
+              children: [
+                Text(
+                  "Autor:",
+                  style: TextStyle(
+                    color: _fontColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: AutoSizeTextField(
+                    enabled: _isEditing,
+                    controller: _authorController,
+                    decoration: InputDecoration(
+                      hintText: 'De la predica/nota... (Opcional)',
+                      hintStyle: TextStyle(color: _fontColor.withOpacity(0.6)),
+                      border: InputBorder.none,
+                    ),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontStyle: FontStyle.italic,
+                      color: _fontColor,
+                    ),
+                    textAlign: TextAlign.left,
+                    cursorColor: _fontColor,
+                    textCapitalization: TextCapitalization.sentences,
+                    maxLines: 1,
+                    stepGranularity: 2,
+                    fullwidth: true,
+                  ),
+                ),
+              ],
+            ),
+            Divider(color: _fontColor.withOpacity(0.5)),
             Expanded(
               child: PageView(
                 controller: _pageController,

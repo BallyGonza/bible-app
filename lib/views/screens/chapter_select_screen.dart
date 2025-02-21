@@ -9,6 +9,7 @@ class ChapterSelectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     return Scaffold(
       backgroundColor: appColor,
       body: CustomScrollView(
@@ -36,8 +37,8 @@ class ChapterSelectScreen extends StatelessWidget {
             ),
           ),
           SliverPadding(
-            padding: const EdgeInsets.only(
-              bottom: 20,
+            padding: EdgeInsets.only(
+              bottom: mediaQuery.padding.bottom + 10,
               left: 10,
               right: 10,
             ),

@@ -81,6 +81,7 @@ ${widget.chapter.verses[0].book} ${widget.chapter.number}:${_versesToCopy.first.
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     return Scaffold(
       backgroundColor: appColor,
       body: CustomScrollView(
@@ -121,7 +122,7 @@ ${widget.chapter.verses[0].book} ${widget.chapter.number}:${_versesToCopy.first.
             ),
           ),
           SliverPadding(
-            padding: const EdgeInsets.only(bottom: 24.0),
+            padding: EdgeInsets.only(bottom: mediaQuery.padding.bottom),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {

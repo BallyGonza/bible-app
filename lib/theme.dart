@@ -13,6 +13,8 @@ ThemeData theme = ThemeData(
   ),
   textSelectionTheme: TextSelectionThemeData(
     cursorColor: Colors.white,
+    selectionColor: accentColor.withOpacity(0.3),
+    selectionHandleColor: accentColor,
   ),
   searchBarTheme: SearchBarThemeData(
     backgroundColor: WidgetStateProperty.all(appColor),

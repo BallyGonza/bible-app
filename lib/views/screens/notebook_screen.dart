@@ -42,7 +42,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                 'Notas',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: 30,
                 ),
               ),
             ),

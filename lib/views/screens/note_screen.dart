@@ -49,7 +49,7 @@ class NotePageState extends State<NoteScreen> {
     _titleController.text = widget.note?.title ?? '';
     _authorController.text = widget.note?.author ?? '';
     _contentController.text = widget.note?.content ?? '';
-    _currentColor = Color(widget.note?.color ?? appColor.value);
+    _currentColor = Color(widget.note?.color ?? accentColor.value);
     _iconColor =
         _currentColor.computeLuminance() > 0.47 ? Colors.black : Colors.white;
     _fontColor =
@@ -69,9 +69,9 @@ class NotePageState extends State<NoteScreen> {
     setState(() {
       _currentColor = color;
       _iconColor =
-          _currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+          _currentColor.computeLuminance() > 0.20 ? Colors.black : Colors.white;
       _fontColor =
-          _currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+          _currentColor.computeLuminance() > 0.20 ? Colors.black : Colors.white;
     });
   }
 
@@ -140,7 +140,7 @@ class NotePageState extends State<NoteScreen> {
       backgroundColor: _currentColor,
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarIconBrightness: _currentColor.computeLuminance() > 0.5
+          statusBarIconBrightness: _currentColor.computeLuminance() > 0.20
               ? Brightness.dark
               : Brightness.light,
         ),
@@ -180,9 +180,8 @@ class NotePageState extends State<NoteScreen> {
               enabled: _isEditing,
               controller: _titleController,
               decoration: InputDecoration(
-                hintText: 'Titulo de la predica/nota...',
-                hintStyle:
-                    TextStyle(color: _fontColor.withOpacity(0.6), fontSize: 30),
+                hintText: 'Titulo...',
+                hintStyle: TextStyle(color: _fontColor.withOpacity(0.6)),
                 border: InputBorder.none,
               ),
               style: TextStyle(
@@ -193,7 +192,6 @@ class NotePageState extends State<NoteScreen> {
               maxLines: 1,
               textAlign: TextAlign.left,
               cursorColor: _fontColor,
-              textCapitalization: TextCapitalization.words,
               textInputAction: TextInputAction.done,
               minFontSize: 18,
               stepGranularity: 2,
@@ -201,21 +199,22 @@ class NotePageState extends State<NoteScreen> {
             ),
             Row(
               children: [
-                Text(
-                  "Autor:",
-                  style: TextStyle(
-                    color: _fontColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
+                if (_authorController.text.isNotEmpty)
+                  Text(
+                    "Autor:",
+                    style: TextStyle(
+                      color: _fontColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: AutoSizeTextField(
                     enabled: _isEditing,
                     controller: _authorController,
                     decoration: InputDecoration(
-                      hintText: 'De la predica/nota... (Opcional)',
+                      hintText: 'Autor (Opcional)',
                       hintStyle: TextStyle(color: _fontColor.withOpacity(0.6)),
                       border: InputBorder.none,
                     ),

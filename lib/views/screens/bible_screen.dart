@@ -68,7 +68,7 @@ class _BibleScreenState extends State<BibleScreen> {
           FontAwesomeIcons.magnifyingGlass,
           color: Colors.grey[600],
         ),
-        hintText: 'Buscar...',
+        hintText: 'Buscar libro...',
         onTapOutside: (event) => FocusScope.of(context).unfocus(),
         onChanged: (value) {
           context.read<SearchBarBookBloc>().add(

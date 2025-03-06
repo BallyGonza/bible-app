@@ -1,5 +1,5 @@
 import 'package:bible_app/blocs/blocs.dart';
-import 'package:diacritic/diacritic.dart';
+import 'package:bible_app/data/data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchVersesBloc extends Bloc<SearchVersesEvent, SearchVersesState> {
@@ -9,6 +9,8 @@ class SearchVersesBloc extends Bloc<SearchVersesEvent, SearchVersesState> {
 
     add(const SearchVersesInitialEvent());
   }
+
+  final versesRepository = VerseRepository();
 
   Future<void> _onInit(
     SearchVersesInitialEvent event,
@@ -28,18 +30,7 @@ class SearchVersesBloc extends Bloc<SearchVersesEvent, SearchVersesState> {
         emit(const SearchVersesState.loaded(verses: []));
         return;
       }
-      final verses = event.bible.books.expand((book) {
-        return book.chapters.expand((chapter) {
-          return chapter.verses.where((verse) {
-            final verseText = removeDiacritics(verse.text.toLowerCase());
-            final searchQuery = removeDiacritics(event.query.toLowerCase());
-            return verseText.contains(searchQuery);
-          }).map((verse) => verse.copyWith(
-                book: book.name,
-                chapter: chapter.number,
-              ));
-        });
-      }).toList();
+      final verses = versesRepository.SearchVerses(event.bible, event.query);
       await Future.delayed(const Duration(milliseconds: 100));
 
       emit(SearchVersesState.loaded(verses: verses));

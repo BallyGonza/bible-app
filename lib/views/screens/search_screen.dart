@@ -112,7 +112,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Escribe parte del versiculo para buscar',
+                              'Escribe el parte del versiculo para buscar. \nO Intenta buscando el versiculo asi: "Salmos 23:6"',
                               style: TextStyle(color: Colors.white54),
                             ),
                           ],

@@ -77,14 +77,18 @@ class _VerseNumberCardState extends State<VerseNumberCard>
         child: Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Color(verseColor),
+            color: Color(verseColor == Colors.white.value
+                ? appColorDarker.value
+                : verseColor),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Center(
             child: Text(
               widget.verse.number.toString(),
               style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                    color: Color(verseTextColor),
+                    color: Color(verseColor == Colors.white.value
+                        ? Colors.white.value
+                        : verseTextColor),
                     fontWeight: FontWeight.bold,
                   ),
             ),

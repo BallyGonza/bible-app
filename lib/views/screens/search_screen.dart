@@ -3,7 +3,6 @@ import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({required this.user, super.key});
@@ -55,30 +54,16 @@ class _SearchScreenState extends State<SearchScreen> {
                     SizedBox(height: 10),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: SearchBar(
-                        onTapOutside: (_) {
-                          _searchFocusNode.unfocus();
-                        },
-                        autoFocus: false,
-                        padding: const MaterialStatePropertyAll(
-                          EdgeInsets.symmetric(horizontal: 16),
-                        ),
-                        controller: _searchController,
-                        hintText: 'Buscar versiculos...',
-                        hintStyle: MaterialStateProperty.all(
-                          TextStyle(color: Colors.grey[600]),
-                        ),
-                        leading: FaIcon(
-                          FontAwesomeIcons.magnifyingGlass,
-                          size: 20,
-                          color: Colors.grey[600],
-                        ),
+                      child: CustomSearchBar(
+                        hintText: 'Buscar versículos...',
                         onChanged: (query) {
                           context.read<SearchVersesBloc>().add(
                                 SearchVersesEvent.search(
                                     widget.user.bible, query),
                               );
                         },
+                        controller: _searchController,
+                        focusNode: _searchFocusNode,
                       ),
                     ),
                     SizedBox(height: MediaQuery.of(context).padding.top),

@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class VerseSelectScreen extends StatelessWidget {
-  const VerseSelectScreen({required this.chapterNumber, super.key});
+  const VerseSelectScreen({required this.chapter, super.key});
 
-  final int chapterNumber;
+  final ChapterModel chapter;
 
   // Layout constants
   static const double _appBarExpandedHeight = 150.0;
@@ -23,16 +23,6 @@ class VerseSelectScreen extends StatelessWidget {
         return userState.maybeWhen(
           orElse: () => const _LoadingState(),
           loaded: (user) {
-            final chapter = user.bible.books
-                .firstWhere(
-                  (book) => book.chapters.any(
-                    (chapter) => chapter.number == chapterNumber,
-                  ),
-                )
-                .chapters
-                .firstWhere(
-                  (chapter) => chapter.number == chapterNumber,
-                );
             return _VerseSelectContent(
               chapter: chapter,
               appBarExpandedHeight: _appBarExpandedHeight,

@@ -15,11 +15,7 @@ class BibleScreen extends StatefulWidget {
 
 class _BibleScreenState extends State<BibleScreen> {
   // Constants for better maintainability
-  static const double _appBarExpandedHeight = 200.0;
-  static const double _titleFontSize = 24.0;
-  static const EdgeInsets _titlePadding = EdgeInsets.only(left: 16, bottom: 16);
-  static const EdgeInsets _searchBarMargin =
-      EdgeInsets.symmetric(horizontal: 20);
+  static const double _appBarExpandedHeight = 150.0;
 
   @override
   void initState() {
@@ -47,9 +43,7 @@ class _BibleScreenState extends State<BibleScreen> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          _BibleAppBar(
-            onSearchChanged: _onSearchChanged,
-          ),
+          _BibleAppBar(onSearchChanged: _onSearchChanged),
           _BibleBookList(),
         ],
       ),
@@ -58,9 +52,7 @@ class _BibleScreenState extends State<BibleScreen> {
 }
 
 class _BibleAppBar extends StatelessWidget {
-  const _BibleAppBar({
-    required this.onSearchChanged,
-  });
+  const _BibleAppBar({required this.onSearchChanged});
 
   final ValueChanged<String> onSearchChanged;
 
@@ -72,17 +64,22 @@ class _BibleAppBar extends StatelessWidget {
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
         background: _AppBarBackground(onSearchChanged: onSearchChanged),
-        titlePadding: _BibleScreenState._titlePadding,
-        title: const _AppBarTitle(),
+        titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
+        title: const Text(
+          'Biblia',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }
 }
 
 class _AppBarBackground extends StatelessWidget {
-  const _AppBarBackground({
-    required this.onSearchChanged,
-  });
+  const _AppBarBackground({required this.onSearchChanged});
 
   final ValueChanged<String> onSearchChanged;
 
@@ -91,25 +88,8 @@ class _AppBarBackground extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(height: 10),
         _BibleSearchBar(onChanged: onSearchChanged),
-        SizedBox(height: MediaQuery.of(context).padding.top),
       ],
-    );
-  }
-}
-
-class _AppBarTitle extends StatelessWidget {
-  const _AppBarTitle();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Text(
-      'Biblia',
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: _BibleScreenState._titleFontSize,
-      ),
     );
   }
 }
@@ -125,9 +105,11 @@ class _BibleSearchBar extends StatefulWidget {
 
 class _BibleSearchBarState extends State<_BibleSearchBar> {
   final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void dispose() {
+    _focusNode.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -135,36 +117,32 @@ class _BibleSearchBarState extends State<_BibleSearchBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: _BibleScreenState._searchBarMargin,
-      child: TextField(
-        controller: _controller,
-        onTapOutside: (event) => FocusScope.of(context).unfocus(),
-        onChanged: widget.onChanged,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 16,
-          fontFamily: 'DM Sans',
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            appColorDarker,
+            appColorDarker.withOpacity(0.8),
+          ],
         ),
-        decoration: InputDecoration(
-          hintStyle: const TextStyle(color: Colors.grey),
-          hintText: 'Search books...',
-          prefixIcon: const Icon(Icons.search),
-          suffixIcon: _controller.text.isNotEmpty
-              ? IconButton(
-                  icon: const Icon(Icons.clear, color: Colors.grey),
-                  onPressed: () {
-                    _controller.clear();
-                    widget.onChanged('');
-                  },
-                )
-              : null,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25),
-            borderSide: BorderSide.none,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: CustomSearchBar(
+              hintText: 'Buscar libros...',
+              onChanged: widget.onChanged,
+              controller: _controller,
+              focusNode: _focusNode,
+            ),
           ),
-          filled: true,
-          fillColor: Colors.white,
-        ),
+          SizedBox(height: MediaQuery.of(context).padding.top),
+        ],
       ),
     );
   }
@@ -213,11 +191,17 @@ class _LoadedState extends StatelessWidget {
         return BookCard(
           book: book,
           onChapterSelected: (chapter) {
+            // Find the chapter in the current book to ensure we have the correct reference
+            final selectedChapter = book.chapters.firstWhere(
+              (c) => c.number == chapter.number,
+              orElse: () => chapter,
+            );
+
             Navigator.push(
               context,
               MaterialPageRoute<VerseSelectScreen>(
                 builder: (context) =>
-                    VerseSelectScreen(chapterNumber: chapter.number),
+                    VerseSelectScreen(chapter: selectedChapter),
               ),
             );
           },

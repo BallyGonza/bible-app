@@ -1,14 +1,18 @@
 import 'package:bible_app/data/data.dart';
-import 'package:bible_app/views/screens/verse_select_screen.dart';
 import 'package:flutter/material.dart';
+
+/// Callback type for chapter selection
+typedef OnChapterSelected = void Function(ChapterModel chapter);
 
 class BookCard extends StatefulWidget {
   const BookCard({
     required this.book,
+    required this.onChapterSelected,
     super.key,
   });
 
   final BookModel book;
+  final OnChapterSelected onChapterSelected;
 
   @override
   State<BookCard> createState() => _BookCardState();
@@ -16,6 +20,20 @@ class BookCard extends StatefulWidget {
 
 class _BookCardState extends State<BookCard>
     with SingleTickerProviderStateMixin {
+  // Animation constants
+  static const Duration _animationDuration = Duration(milliseconds: 200);
+  static const Curve _animationCurve = Curves.easeIn;
+  
+  // Layout constants
+  static const EdgeInsets _cardMargin = EdgeInsets.symmetric(horizontal: 16, vertical: 8);
+  static const EdgeInsets _cardPadding = EdgeInsets.all(8.0);
+  static const EdgeInsets _headerPadding = EdgeInsets.symmetric(horizontal: 16, vertical: 16);
+  static const EdgeInsets _gridPadding = EdgeInsets.symmetric(horizontal: 16, vertical: 16);
+  static const double _cardBorderRadius = 12.0;
+  static const double _chapterButtonBorderRadius = 8.0;
+  static const int _gridCrossAxisCount = 5;
+  static const double _gridSpacing = 8.0;
+  
   late AnimationController _controller;
   late Animation<double> _heightFactor;
   bool _isExpanded = false;
@@ -24,10 +42,10 @@ class _BookCardState extends State<BookCard>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 200),
+      duration: _animationDuration,
       vsync: this,
     );
-    _heightFactor = _controller.drive(CurveTween(curve: Curves.easeIn));
+    _heightFactor = _controller.drive(CurveTween(curve: _animationCurve));
   }
 
   @override
@@ -39,99 +57,49 @@ class _BookCardState extends State<BookCard>
   void _handleTap() {
     setState(() {
       _isExpanded = !_isExpanded;
-      if (_isExpanded) {
-        _controller.forward();
-      } else {
-        _controller.reverse();
-      }
     });
+    
+    if (_isExpanded) {
+      _controller.forward();
+    } else {
+      _controller.reverse();
+    }
+  }
+  
+  void _handleChapterTap(ChapterModel chapter) {
+    widget.onChapterSelected(chapter);
+    if (_isExpanded) {
+      _controller.reverse();
+      setState(() {
+        _isExpanded = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: _cardMargin,
       color: Theme.of(context).colorScheme.secondary,
       elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(_cardBorderRadius),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: _cardPadding,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Header
-            GestureDetector(
+            _BookCardHeader(
+              bookName: widget.book.name,
+              isExpanded: _isExpanded,
               onTap: _handleTap,
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        widget.book.name,
-                        style: Theme.of(context).textTheme.displayMedium,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ),
-
-            // Expandable content
-            ClipRect(
-              child: AnimatedBuilder(
-                animation: _controller,
-                builder: (context, child) {
-                  return Align(
-                    alignment: Alignment.topCenter,
-                    heightFactor: _heightFactor.value,
-                    child: child,
-                  );
-                },
-                child: GridView.builder(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 5,
-                    crossAxisSpacing: 8,
-                    mainAxisSpacing: 8,
-                  ),
-                  itemCount: widget.book.chapters.length,
-                  itemBuilder: (context, index) {
-                    final chapter = widget.book.chapters[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute<VerseSelectScreen>(
-                            builder: (context) =>
-                                VerseSelectScreen(chapter: chapter),
-                          ),
-                        );
-                        _controller.reverse();
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primary,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          chapter.number.toString(),
-                          style:
-                              Theme.of(context).textTheme.titleMedium!.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+            _ExpandableChapterGrid(
+              chapters: widget.book.chapters,
+              controller: _controller,
+              heightFactor: _heightFactor,
+              onChapterTap: _handleChapterTap,
             ),
           ],
         ),
@@ -139,3 +107,180 @@ class _BookCardState extends State<BookCard>
     );
   }
 }
+
+/// Header widget for the book card
+class _BookCardHeader extends StatelessWidget {
+  const _BookCardHeader({
+    required this.bookName,
+    required this.isExpanded,
+    required this.onTap,
+  });
+
+  final String bookName;
+  final bool isExpanded;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      hint: isExpanded ? 'Collapse chapters' : 'Expand to see chapters',
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(_BookCardState._cardBorderRadius),
+        child: Padding(
+          padding: _BookCardState._headerPadding,
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  bookName,
+                  style: Theme.of(context).textTheme.displayMedium,
+                ),
+              ),
+              AnimatedRotation(
+                turns: isExpanded ? 0.5 : 0.0,
+                duration: _BookCardState._animationDuration,
+                child: Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Theme.of(context).colorScheme.onSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Expandable grid widget for chapters
+class _ExpandableChapterGrid extends StatelessWidget {
+  const _ExpandableChapterGrid({
+    required this.chapters,
+    required this.controller,
+    required this.heightFactor,
+    required this.onChapterTap,
+  });
+
+  final List<ChapterModel> chapters;
+  final AnimationController controller;
+  final Animation<double> heightFactor;
+  final void Function(ChapterModel) onChapterTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRect(
+      child: AnimatedBuilder(
+        animation: controller,
+        builder: (context, child) {
+          return Align(
+            alignment: Alignment.topCenter,
+            heightFactor: heightFactor.value,
+            child: child,
+          );
+        },
+        child: _ChapterGrid(
+          chapters: chapters,
+          onChapterTap: onChapterTap,
+        ),
+      ),
+    );
+  }
+}
+
+/// Grid widget for displaying chapters
+class _ChapterGrid extends StatelessWidget {
+  const _ChapterGrid({
+    required this.chapters,
+    required this.onChapterTap,
+  });
+
+  final List<ChapterModel> chapters;
+  final void Function(ChapterModel) onChapterTap;
+
+  @override
+  Widget build(BuildContext context) {
+    // Use Wrap for better performance with fewer items
+    if (chapters.length <= 20) {
+      return Padding(
+        padding: _BookCardState._gridPadding,
+        child: Wrap(
+          spacing: _BookCardState._gridSpacing,
+          runSpacing: _BookCardState._gridSpacing,
+          children: chapters.map((chapter) => 
+            _ChapterButton(
+              chapter: chapter,
+              onTap: () => onChapterTap(chapter),
+            ),
+          ).toList(),
+        ),
+      );
+    }
+    
+    // Use GridView for many chapters
+    return GridView.builder(
+      padding: _BookCardState._gridPadding,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: _BookCardState._gridCrossAxisCount,
+        crossAxisSpacing: _BookCardState._gridSpacing,
+        mainAxisSpacing: _BookCardState._gridSpacing,
+      ),
+      itemCount: chapters.length,
+      itemBuilder: (context, index) {
+        final chapter = chapters[index];
+        return _ChapterButton(
+          chapter: chapter,
+          onTap: () => onChapterTap(chapter),
+        );
+      },
+    );
+  }
+}
+
+/// Individual chapter button widget
+class _ChapterButton extends StatelessWidget {
+  const _ChapterButton({
+    required this.chapter,
+    required this.onTap,
+  });
+
+  final ChapterModel chapter;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: 'Chapter ${chapter.number}',
+      child: SizedBox(
+        width: 48,
+        height: 48,
+        child: Material(
+          color: Theme.of(context).colorScheme.primary,
+          borderRadius: BorderRadius.circular(
+            _BookCardState._chapterButtonBorderRadius,
+          ),
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(
+              _BookCardState._chapterButtonBorderRadius,
+            ),
+            child: Center(
+              child: Text(
+                chapter.number.toString(),
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+

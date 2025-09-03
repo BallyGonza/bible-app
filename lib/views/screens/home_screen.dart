@@ -16,8 +16,64 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final PageController _pageController = PageController();
+  late final PageController _pageController;
   int _selectedIndex = 0;
+
+  // Constants for better maintainability
+  static const Duration _animationDuration = Duration(milliseconds: 300);
+  static const Curve _animationCurve = Curves.easeInOut;
+
+  // Navigation configuration
+  static const List<NavigationConfig> _navigationItems = [
+    NavigationConfig(
+      icon: FontAwesomeIcons.book,
+      label: 'Biblia',
+    ),
+    NavigationConfig(
+      icon: FontAwesomeIcons.noteSticky,
+      label: 'Notas',
+    ),
+    NavigationConfig(
+      icon: FontAwesomeIcons.magnifyingGlass,
+      label: 'Buscar',
+    ),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _onPageChanged(int index) {
+    if (_selectedIndex != index) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+  }
+
+  void _onDestinationSelected(int index) {
+    if (_selectedIndex == index) return;
+
+    _pageController.animateToPage(
+      index,
+      duration: _animationDuration,
+      curve: _animationCurve,
+    );
+  }
+
+  List<Widget> get _pages => [
+        BibleScreen(user: widget.user),
+        const NoteBookScreen(),
+        SearchScreen(user: widget.user),
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -25,41 +81,13 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: appColor,
       body: PageView(
         controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        children: [
-          BibleScreen(user: widget.user),
-          const NoteBookScreen(),
-          SearchScreen(user: widget.user),
-        ],
+        onPageChanged: _onPageChanged,
+        children: _pages,
       ),
-      bottomNavigationBar: NavigationBar(
+      bottomNavigationBar: HomeNavigationBar(
         selectedIndex: _selectedIndex,
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-        destinations: const [
-          NavigationDestination(
-            icon: FaIcon(FontAwesomeIcons.book),
-            label: 'Biblia',
-          ),
-          NavigationDestination(
-            icon: FaIcon(FontAwesomeIcons.noteSticky),
-            label: 'Notas',
-          ),
-          NavigationDestination(
-            icon: FaIcon(FontAwesomeIcons.magnifyingGlass),
-            label: 'Buscar',
-          ),
-        ],
-        onDestinationSelected: (index) {
-          _pageController.animateToPage(
-            index,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-        },
+        onDestinationSelected: _onDestinationSelected,
+        navigationItems: _navigationItems,
       ),
     );
   }

@@ -14,7 +14,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   final UserRepository _userRepository;
-  late UserModel _user;
+  UserModel? _user;
 
   /// [_onInit] is triggered when a [UserInitialEvent] is added to the bloc.
   /// It fetches the user from the repository and emits a new state.
@@ -25,7 +25,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     emit(const UserState.loading());
     try {
       _user = await _userRepository.getUser();
-      emit(UserState.loaded(_user));
+      emit(UserState.loaded(_user!));
     } catch (e) {
       emit(UserState.error(e.toString()));
     }
@@ -35,23 +35,58 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     UserSaveEvent event,
     Emitter<UserState> emit,
   ) async {
-    // emit(const UserState.loading());
+    emit(const UserState.loading());
     try {
-      for (final book in _user.bible.books) {
-        for (final chapter in book.chapters) {
-          for (final verse in chapter.verses) {
-            if (verse.text == event.verse.text) {
-              verse
-                ..color = event.verse.color
-                ..note = event.verse.note;
-            }
-          }
-        }
+      final updatedVerse = _findAndUpdateVerse(_user!, event.verse);
+
+      if (updatedVerse != null) {
+        await _userRepository.saveUser(_user!);
+        emit(UserState.loaded(_user!));
+      } else {
+        emit(const UserState.error('Verse not found'));
       }
-      await _userRepository.saveUser(_user);
-      emit(UserState.loaded(_user));
     } catch (e) {
       emit(UserState.error(e.toString()));
+    }
+  }
+
+  /// Finds and updates a verse using efficient lookup by book, chapter, and number
+  /// Returns the updated verse if found, null otherwise
+  VerseModel? _findAndUpdateVerse(UserModel user, VerseModel targetVerse) {
+    // Direct lookup using book name - O(n) instead of O(n³)
+    final targetBook = user.bible.books
+        .where((book) => book.name == targetVerse.book)
+        .firstOrNull;
+
+    if (targetBook == null) return null;
+
+    // Direct lookup using chapter number
+    final targetChapter = targetBook.chapters
+        .where((chapter) => chapter.number == targetVerse.chapter)
+        .firstOrNull;
+
+    if (targetChapter == null) return null;
+
+    // Direct lookup using verse number - more reliable than text comparison
+    final verseToUpdate = targetChapter.verses
+        .where((verse) => verse.number == targetVerse.number)
+        .firstOrNull;
+
+    if (verseToUpdate != null) {
+      _updateVerseProperties(verseToUpdate, targetVerse);
+      return verseToUpdate;
+    }
+
+    return null;
+  }
+
+  /// Updates verse properties following immutability principles
+  void _updateVerseProperties(VerseModel target, VerseModel source) {
+    if (source.color != null) {
+      target.color = source.color;
+    }
+    if (source.note != null) {
+      target.note = source.note;
     }
   }
 }

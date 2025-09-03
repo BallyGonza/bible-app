@@ -216,7 +216,8 @@ class _LoadedState extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute<VerseSelectScreen>(
-                builder: (context) => VerseSelectScreen(chapter: chapter),
+                builder: (context) =>
+                    VerseSelectScreen(chapterNumber: chapter.number),
               ),
             );
           },

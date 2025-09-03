@@ -1,10 +1,7 @@
-// ignore_for_file: lines_longer_than_80_chars
-
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ReadingScreen extends StatefulWidget {
   const ReadingScreen({
@@ -21,134 +18,266 @@ class ReadingScreen extends StatefulWidget {
 }
 
 class _ReadingScreenState extends State<ReadingScreen> {
-  List<VerseModel> _versesToCopy = [];
+  // Constants
+  static const double _appBarExpandedHeight = 150.0;
+  static const EdgeInsets _titlePadding = EdgeInsets.only(left: 50, bottom: 13);
+  static const double _titleFontSize = 24.0;
+  static const double _estimatedVerseHeight = 120.0;
+  static const Duration _scrollAnimationDuration = Duration(milliseconds: 500);
+  static const int _maxScrollRetries = 2;
+
+  // State
+  final List<VerseModel> _selectedVerses = [];
   late final List<GlobalKey> _verseKeys;
-  final ScrollController _sc = ScrollController();
+  late final ScrollController _scrollController;
+  late final _VerseSelectionManager _selectionManager;
+  late final _ScrollManager _scrollManager;
 
   @override
   void initState() {
     super.initState();
 
+    _scrollController = ScrollController();
     _verseKeys = List.generate(
       widget.chapter.verses.length,
       (index) => GlobalKey(),
     );
 
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _scrollToInitialVerse());
+    _selectionManager = _VerseSelectionManager(
+      onSelectionChanged: (verses) {
+        setState(() {
+          _selectedVerses.clear();
+          _selectedVerses.addAll(verses);
+        });
+      },
+    );
+
+    _scrollManager = _ScrollManager(
+      scrollController: _scrollController,
+      verseKeys: _verseKeys,
+    );
+
+    if (widget.verse != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollManager.scrollToVerse(widget.verse!, widget.chapter.verses);
+      });
+    }
   }
 
-  void _scrollToInitialVerse([int retry = 0]) {
-    if (widget.verse == null || retry > 2) return;
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _selectionManager.dispose();
+    super.dispose();
+  }
 
-    final verseIndex = widget.chapter.verses
-        .indexWhere((v) => v.number == widget.verse!.number);
+  void _handleVerseSelection(VerseModel verse) {
+    _selectionManager.toggleVerse(verse);
+  }
 
+  void _handleShare() {
+    _VerseShareService.shareVerses(
+      _selectedVerses,
+      widget.chapter,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          _ReadingAppBar(
+            chapter: widget.chapter,
+            hasSelectedVerses: _selectedVerses.isNotEmpty,
+            onShare: _handleShare,
+            expandedHeight: _appBarExpandedHeight,
+            titlePadding: _titlePadding,
+            titleFontSize: _titleFontSize,
+          ),
+          _VersesList(
+            chapter: widget.chapter,
+            verseKeys: _verseKeys,
+            onVerseSelect: _handleVerseSelection,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Manages verse selection state and logic
+class _VerseSelectionManager {
+  _VerseSelectionManager({required this.onSelectionChanged});
+
+  final void Function(List<VerseModel>) onSelectionChanged;
+  final List<VerseModel> _selectedVerses = [];
+
+  List<VerseModel> get selectedVerses => List.unmodifiable(_selectedVerses);
+
+  void toggleVerse(VerseModel verse) {
+    if (_selectedVerses.contains(verse)) {
+      _selectedVerses.remove(verse);
+    } else {
+      _selectedVerses.add(verse);
+      _selectedVerses.sort((a, b) => a.number.compareTo(b.number));
+    }
+    onSelectionChanged(_selectedVerses);
+  }
+
+  void dispose() {
+    _selectedVerses.clear();
+  }
+}
+
+/// Manages scroll behavior and verse navigation
+class _ScrollManager {
+  _ScrollManager({
+    required this.scrollController,
+    required this.verseKeys,
+  });
+
+  final ScrollController scrollController;
+  final List<GlobalKey> verseKeys;
+
+  void scrollToVerse(VerseModel verse, List<VerseModel> verses,
+      [int retry = 0]) {
+    if (retry > _ReadingScreenState._maxScrollRetries) return;
+
+    final verseIndex = verses.indexWhere((v) => v.number == verse.number);
     if (verseIndex == -1) return;
 
-    final context = _verseKeys[verseIndex].currentContext;
+    final context = verseKeys[verseIndex].currentContext;
 
     if (context != null) {
       Scrollable.ensureVisible(
         context,
-        duration: const Duration(milliseconds: 500),
+        duration: _ReadingScreenState._scrollAnimationDuration,
         curve: Curves.easeInOut,
         alignment: 0.5,
       );
     } else {
       // Jump to estimated position to force widget creation
-      final estimatedOffset = verseIndex * 120.0;
-      _sc.jumpTo(estimatedOffset.clamp(0.0, _sc.position.maxScrollExtent));
+      final estimatedOffset =
+          verseIndex * _ReadingScreenState._estimatedVerseHeight;
+      scrollController.jumpTo(
+        estimatedOffset.clamp(0.0, scrollController.position.maxScrollExtent),
+      );
 
       // Retry after layout update
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _scrollToInitialVerse(retry + 1);
+        scrollToVerse(verse, verses, retry + 1);
       });
     }
   }
+}
 
-  void _shareSelectedVerses() {
-    final versesText = _versesToCopy
-        .map((verse) => '[${verse.number}] ${verse.text}')
-        .join(' ');
-    final formattedText = '''
-$versesText
-${widget.chapter.verses[0].book} ${widget.chapter.number}:${_versesToCopy.first.number}-${_versesToCopy.last.number} RVR1960
-''';
+/// Service for sharing verses
+class _VerseShareService {
+  static void shareVerses(List<VerseModel> verses, ChapterModel chapter) {
+    if (verses.isEmpty) return;
 
-    Clipboard.setData(ClipboardData(text: formattedText)).then((_) {});
+    final versesText =
+        verses.map((verse) => '[${verse.number}] ${verse.text}').join(' ');
+
+    final reference = verses.length == 1
+        ? '${chapter.verses.first.book} ${chapter.number}:${verses.first.number}'
+        : '${chapter.verses.first.book} ${chapter.number}:${verses.first.number}-${verses.last.number}';
+
+    final formattedText = '$versesText\n$reference RVR1960';
+
+    Clipboard.setData(ClipboardData(text: formattedText));
+  }
+}
+
+/// App bar for reading screen
+class _ReadingAppBar extends StatelessWidget {
+  const _ReadingAppBar({
+    required this.chapter,
+    required this.hasSelectedVerses,
+    required this.onShare,
+    required this.expandedHeight,
+    required this.titlePadding,
+    required this.titleFontSize,
+  });
+
+  final ChapterModel chapter;
+  final bool hasSelectedVerses;
+  final VoidCallback onShare;
+  final double expandedHeight;
+  final EdgeInsets titlePadding;
+  final double titleFontSize;
+
+  String get _chapterTitle {
+    if (chapter.verses.isEmpty) return 'Chapter ${chapter.number}';
+    return '${chapter.verses.first.book} ${chapter.number}';
   }
 
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    return Scaffold(
-      backgroundColor: appColor,
-      body: CustomScrollView(
-        controller: _sc,
-        slivers: [
-          SliverAppBar(
-            backgroundColor: appColorDarker,
-            expandedHeight: 150,
-            pinned: true,
-            actions: [
-              _versesToCopy.isEmpty
-                  ? const SizedBox.shrink()
-                  : IconButton(
-                      onPressed: _shareSelectedVerses,
-                      icon: FaIcon(
-                        FontAwesomeIcons.share,
-                        color:
-                            _versesToCopy.isEmpty ? Colors.grey : Colors.white,
-                        size: 20,
-                      ),
-                    ),
-            ],
-            flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                color: appColor,
-              ),
-              titlePadding: const EdgeInsets.only(
-                left: 50,
-                bottom: 13,
-              ),
-              title: Text(
-                '${widget.chapter.verses[0].book} ${widget.chapter.number}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-          ),
-          SliverPadding(
-            padding: EdgeInsets.only(bottom: mediaQuery.padding.bottom),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final verse = widget.chapter.verses[index];
+    final theme = Theme.of(context);
 
-                  return VerseCard.onBible(
-                    key: _verseKeys[index],
-                    verse: verse,
-                    onSelect: (verse) {
-                      setState(() {
-                        if (_versesToCopy.contains(verse)) {
-                          _versesToCopy.remove(verse);
-                        } else {
-                          _versesToCopy.add(verse);
-                          _versesToCopy
-                              .sort((a, b) => a.number.compareTo(b.number));
-                        }
-                      });
-                    },
-                  );
-                },
-                childCount: widget.chapter.verses.length,
-              ),
-            ),
+    return SliverAppBar(
+      backgroundColor: theme.appBarTheme.backgroundColor,
+      expandedHeight: expandedHeight,
+      pinned: true,
+      actions: [
+        if (hasSelectedVerses)
+          IconButton(
+            onPressed: onShare,
+            icon: const Icon(Icons.share),
+            tooltip: 'Share selected verses',
           ),
-        ],
+      ],
+      flexibleSpace: FlexibleSpaceBar(
+        background: Container(
+          color: theme.scaffoldBackgroundColor,
+        ),
+        titlePadding: titlePadding,
+        title: Text(
+          _chapterTitle,
+          style: theme.appBarTheme.titleTextStyle?.copyWith(
+            fontSize: titleFontSize,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// List of verses widget
+class _VersesList extends StatelessWidget {
+  const _VersesList({
+    required this.chapter,
+    required this.verseKeys,
+    required this.onVerseSelect,
+  });
+
+  final ChapterModel chapter;
+  final List<GlobalKey> verseKeys;
+  final void Function(VerseModel) onVerseSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+
+    return SliverPadding(
+      padding: EdgeInsets.only(bottom: mediaQuery.padding.bottom),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            final verse = chapter.verses[index];
+
+            return VerseCard.onBible(
+              key: verseKeys[index],
+              verse: verse,
+              onSelect: onVerseSelect,
+            );
+          },
+          childCount: chapter.verses.length,
+        ),
       ),
     );
   }

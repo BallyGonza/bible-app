@@ -6,33 +6,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 Future<void> main() async {
-  await HiveService.initializeHive();
-  await SystemChromeService.setSystemChrome();
+  WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(const Main());
+  // Initialize services
+  await HiveService.initializeHive();
+
+  runApp(const BibleApp());
 }
 
-class Main extends StatelessWidget {
-  const Main({super.key});
+class BibleApp extends StatelessWidget {
+  const BibleApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => UserBloc(
-            userRepository: UserRepository(),
-          ),
+        BlocProvider<UserBloc>(
+          create: (_) => UserBloc(userRepository: UserRepository()),
         ),
-        BlocProvider(
-          create: (context) => NotesBloc(),
-        ),
-        BlocProvider(
-          create: (context) => SearchBarBookBloc(),
-        ),
-        BlocProvider(
-          create: (context) => SearchVersesBloc(),
-        ),
+        BlocProvider<NotesBloc>(create: (_) => NotesBloc()),
+        BlocProvider<SearchBarBookBloc>(create: (_) => SearchBarBookBloc()),
+        BlocProvider<SearchVersesBloc>(create: (_) => SearchVersesBloc()),
       ],
       child: const App(),
     );

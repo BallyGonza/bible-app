@@ -153,6 +153,7 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
                           controller: _contentController,
                           decoration: const InputDecoration(
                             hintText: 'Agrega una nota...',
+                            filled: false,
                             hintStyle: TextStyle(
                               color: Colors.grey,
                               fontStyle: FontStyle.italic,

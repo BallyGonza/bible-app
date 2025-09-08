@@ -59,20 +59,22 @@ class _BibleAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+      surfaceTintColor: Theme.of(context).colorScheme.surfaceTint,
       expandedHeight: _BibleScreenState._appBarExpandedHeight,
       pinned: true,
+      elevation: 0,
+      shadowColor: Theme.of(context).colorScheme.shadow.withOpacity(0.1),
       flexibleSpace: FlexibleSpaceBar(
         background: _AppBarBackground(onSearchChanged: onSearchChanged),
         titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
         centerTitle: false,
-        title: const Text(
+        title: Text(
           'Biblia',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
         ),
       ),
     );
@@ -117,34 +119,11 @@ class _BibleSearchBarState extends State<_BibleSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Theme.of(context).colorScheme.primary,
-            Theme.of(context).colorScheme.primary.withOpacity(0.8),
-          ],
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: CustomSearchBar(
-              hintText: 'Buscar libros...',
-              onChanged: widget.onChanged,
-              controller: _controller,
-              focusNode: _focusNode,
-            ),
-          ),
-          SizedBox(height: MediaQuery.of(context).padding.top),
-        ],
-      ),
+    return CustomSearchBar(
+      hintText: 'Buscar libros...',
+      onChanged: widget.onChanged,
+      controller: _controller,
+      focusNode: _focusNode,
     );
   }
 }

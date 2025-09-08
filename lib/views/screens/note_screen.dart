@@ -298,12 +298,14 @@ class NotePageState extends State<NoteScreen> {
                                             showDialog<AlertDialog>(
                                               context: context,
                                               builder: (context) {
-                                                return CustomAlertDialog.red(
+                                                return CustomAlertDialog(
                                                   title: 'Eliminar versículo',
-                                                  description:
-                                                      '¿Estás seguro de que quieres eliminar este versículo?',
-                                                  rightButtonText: 'Eliminar',
-                                                  onRightButtonPressed: () {
+                                                  content: Text(
+                                                    '¿Estás seguro de que quieres eliminar este versículo?',
+                                                  ),
+                                                  primaryActionTitle:
+                                                      'Eliminar',
+                                                  onPrimaryPressed: (_) {
                                                     context
                                                         .read<NotesBloc>()
                                                         .add(

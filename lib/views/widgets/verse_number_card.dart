@@ -18,20 +18,15 @@ class VerseNumberCard extends StatefulWidget {
 
 class _VerseNumberCardState extends State<VerseNumberCard>
     with SingleTickerProviderStateMixin {
-  late int verseColor;
-  late int verseTextColor;
+  late Color _verseColor;
+  late Color _verseTextColor;
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+  bool _colorsInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    verseColor =
-        widget.verse.color ?? Theme.of(context).colorScheme.primary.value;
-    verseTextColor = Color(verseColor).computeLuminance() > 0.5
-        ? Colors.black.value
-        : Colors.white.value;
-
     _controller = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: this,
@@ -43,6 +38,28 @@ class _VerseNumberCardState extends State<VerseNumberCard>
         curve: Curves.easeInOut,
       ),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_colorsInitialized) {
+      _initializeColors();
+      _colorsInitialized = true;
+    }
+  }
+
+  void _initializeColors() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    _verseColor = widget.verse.color != null
+        ? Color(widget.verse.color!)
+        : colorScheme.secondaryContainer;
+
+    _verseTextColor = _verseColor.computeLuminance() > 0.5
+        ? colorScheme.onSecondaryContainer
+        : colorScheme.onSecondaryContainer;
   }
 
   @override
@@ -78,18 +95,21 @@ class _VerseNumberCardState extends State<VerseNumberCard>
         child: Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Color(verseColor == Colors.white.value
-                ? Theme.of(context).colorScheme.primary.value
-                : verseColor),
+            color: _verseColor,
             borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).colorScheme.shadow.withOpacity(0.1),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
           child: Center(
             child: Text(
               widget.verse.number.toString(),
-              style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                    color: Color(verseColor == Colors.white.value
-                        ? Colors.white.value
-                        : verseTextColor),
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    color: _verseTextColor,
                     fontWeight: FontWeight.bold,
                   ),
             ),

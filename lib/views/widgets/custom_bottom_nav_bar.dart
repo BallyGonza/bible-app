@@ -1,48 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class CustomBottomNavBar extends StatefulWidget {
+/// Configuration class for navigation items
+class NavigationConfig {
+  const NavigationConfig({
+    required this.icon,
+    required this.label,
+  });
+
+  final IconData icon;
+  final String label;
+}
+
+/// Custom bottom navigation bar with Material 3 design
+class CustomBottomNavBar extends StatelessWidget {
   const CustomBottomNavBar({
     required this.onTap,
     required this.currentIndex,
+    required this.navigationItems,
     super.key,
   });
 
   final void Function(int) onTap;
   final int currentIndex;
+  final List<NavigationConfig> navigationItems;
 
-  @override
-  State<CustomBottomNavBar> createState() => _CustomBottomNavBarState();
-}
-
-class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return NavigationBar(
-      selectedIndex: widget.currentIndex,
-      onDestinationSelected: (index) {
-        setState(() {
-          widget.onTap(index);
-        });
-      },
+      selectedIndex: currentIndex,
+      onDestinationSelected: onTap,
       labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-      destinations: const [
-        NavigationDestination(
+      backgroundColor: colorScheme.surface,
+      elevation: 0,
+      shadowColor: colorScheme.shadow.withOpacity(0.1),
+      surfaceTintColor: colorScheme.surfaceTint,
+      indicatorColor: colorScheme.secondaryContainer,
+      destinations: navigationItems.asMap().entries.map((entry) {
+        final index = entry.key;
+        final item = entry.value;
+        final isSelected = index == currentIndex;
+
+        return NavigationDestination(
           icon: FaIcon(
-            FontAwesomeIcons.book,
+            item.icon,
             size: 20,
+            color: isSelected
+                ? colorScheme.onSecondaryContainer
+                : colorScheme.onSurfaceVariant,
           ),
-          label: 'Bible',
-        ),
-        NavigationDestination(
-          icon: FaIcon(FontAwesomeIcons.bookOpen, size: 20),
-          label: 'Notebook',
-        ),
-        NavigationDestination(
-          icon: FaIcon(FontAwesomeIcons.magnifyingGlass, size: 20),
-          label: 'Search',
-        ),
-      ],
+          label: item.label,
+        );
+      }).toList(),
     );
   }
 }

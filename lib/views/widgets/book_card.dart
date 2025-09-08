@@ -23,17 +23,20 @@ class _BookCardState extends State<BookCard>
   // Animation constants
   static const Duration _animationDuration = Duration(milliseconds: 200);
   static const Curve _animationCurve = Curves.easeIn;
-  
+
   // Layout constants
-  static const EdgeInsets _cardMargin = EdgeInsets.symmetric(horizontal: 16, vertical: 8);
+  static const EdgeInsets _cardMargin =
+      EdgeInsets.symmetric(horizontal: 16, vertical: 8);
   static const EdgeInsets _cardPadding = EdgeInsets.all(8.0);
-  static const EdgeInsets _headerPadding = EdgeInsets.symmetric(horizontal: 16, vertical: 16);
-  static const EdgeInsets _gridPadding = EdgeInsets.symmetric(horizontal: 16, vertical: 16);
+  static const EdgeInsets _headerPadding =
+      EdgeInsets.symmetric(horizontal: 16, vertical: 16);
+  static const EdgeInsets _gridPadding =
+      EdgeInsets.symmetric(horizontal: 16, vertical: 16);
   static const double _cardBorderRadius = 12.0;
   static const double _chapterButtonBorderRadius = 8.0;
   static const int _gridCrossAxisCount = 5;
   static const double _gridSpacing = 8.0;
-  
+
   late AnimationController _controller;
   late Animation<double> _heightFactor;
   bool _isExpanded = false;
@@ -58,14 +61,14 @@ class _BookCardState extends State<BookCard>
     setState(() {
       _isExpanded = !_isExpanded;
     });
-    
+
     if (_isExpanded) {
       _controller.forward();
     } else {
       _controller.reverse();
     }
   }
-  
+
   void _handleChapterTap(ChapterModel chapter) {
     widget.onChapterSelected(chapter);
     if (_isExpanded) {
@@ -80,8 +83,9 @@ class _BookCardState extends State<BookCard>
   Widget build(BuildContext context) {
     return Card(
       margin: _cardMargin,
-      color: Theme.of(context).colorScheme.secondary,
-      elevation: 2,
+      color: Theme.of(context).colorScheme.surfaceContainer,
+      elevation: 1,
+      shadowColor: Theme.of(context).colorScheme.shadow.withOpacity(0.2),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(_cardBorderRadius),
       ),
@@ -135,7 +139,10 @@ class _BookCardHeader extends StatelessWidget {
               Expanded(
                 child: Text(
                   bookName,
-                  style: Theme.of(context).textTheme.displayMedium,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                 ),
               ),
               AnimatedRotation(
@@ -143,7 +150,7 @@ class _BookCardHeader extends StatelessWidget {
                 duration: _BookCardState._animationDuration,
                 child: Icon(
                   Icons.keyboard_arrow_down,
-                  color: Theme.of(context).colorScheme.onSecondary,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
@@ -208,16 +215,19 @@ class _ChapterGrid extends StatelessWidget {
         child: Wrap(
           spacing: _BookCardState._gridSpacing,
           runSpacing: _BookCardState._gridSpacing,
-          children: chapters.map((chapter) => 
-            _ChapterButton(
-              chapter: chapter,
-              onTap: () => onChapterTap(chapter),
-            ),
-          ).toList(),
+          children: chapters
+              .map(
+                (chapter) => _ChapterButton(
+                  key: ValueKey(chapter.number), // Use chapter number for key
+                  chapter: chapter,
+                  onTap: () => onChapterTap(chapter),
+                ),
+              )
+              .toList(),
         ),
       );
     }
-    
+
     // Use GridView for many chapters
     return GridView.builder(
       padding: _BookCardState._gridPadding,
@@ -232,6 +242,7 @@ class _ChapterGrid extends StatelessWidget {
       itemBuilder: (context, index) {
         final chapter = chapters[index];
         return _ChapterButton(
+          key: ValueKey(chapter.number), // Use chapter number for key
           chapter: chapter,
           onTap: () => onChapterTap(chapter),
         );
@@ -243,6 +254,7 @@ class _ChapterGrid extends StatelessWidget {
 /// Individual chapter button widget
 class _ChapterButton extends StatelessWidget {
   const _ChapterButton({
+    super.key, // Add key parameter
     required this.chapter,
     required this.onTap,
   });
@@ -259,7 +271,7 @@ class _ChapterButton extends StatelessWidget {
         width: 48,
         height: 48,
         child: Material(
-          color: Theme.of(context).colorScheme.primary,
+          color: Theme.of(context).colorScheme.primaryContainer,
           borderRadius: BorderRadius.circular(
             _BookCardState._chapterButtonBorderRadius,
           ),
@@ -271,10 +283,10 @@ class _ChapterButton extends StatelessWidget {
             child: Center(
               child: Text(
                 chapter.number.toString(),
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
               ),
             ),
           ),
@@ -283,4 +295,3 @@ class _ChapterButton extends StatelessWidget {
     );
   }
 }
-

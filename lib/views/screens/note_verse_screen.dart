@@ -95,12 +95,13 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
                 IconButton(
                   onPressed: () => showDialog<void>(
                     context: context,
-                    builder: (context) => CustomAlertDialog.red(
+                    builder: (context) => CustomAlertDialog(
                       title: 'Eliminar Nota',
-                      description:
-                          '¿Estás seguro de que quieres eliminar esta nota?',
-                      rightButtonText: 'Eliminar',
-                      onRightButtonPressed: _deleteNote,
+                      content: Text(
+                        '¿Estás seguro de que quieres eliminar esta nota?',
+                      ),
+                      primaryActionTitle: 'Eliminar',
+                      onPrimaryPressed: (_) => _deleteNote(),
                     ),
                   ),
                   icon: const FaIcon(

@@ -17,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final PageController _pageController;
+  late final List<Widget> _pages;
   int _selectedIndex = 0;
 
   // Constants for better maintainability
@@ -43,6 +44,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    _pages = [
+      BibleScreen(user: widget.user),
+      const NoteBookScreen(),
+      SearchScreen(user: widget.user),
+    ];
   }
 
   @override
@@ -69,24 +75,18 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  List<Widget> get _pages => [
-        BibleScreen(user: widget.user),
-        const NoteBookScreen(),
-        SearchScreen(user: widget.user),
-      ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: PageView(
         controller: _pageController,
         onPageChanged: _onPageChanged,
         children: _pages,
       ),
-      bottomNavigationBar: HomeNavigationBar(
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: _onDestinationSelected,
+      bottomNavigationBar: CustomBottomNavBar(
+        currentIndex: _selectedIndex,
+        onTap: _onDestinationSelected,
         navigationItems: _navigationItems,
       ),
     );

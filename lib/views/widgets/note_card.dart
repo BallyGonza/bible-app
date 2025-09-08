@@ -41,12 +41,13 @@ class NoteCard extends StatelessWidget {
                 showDialog<AlertDialog>(
                   context: context,
                   builder: (context) {
-                    return CustomAlertDialog.red(
+                    return CustomAlertDialog(
                       title: 'Eliminar Nota',
-                      description:
-                          '¿Estás seguro de que deseas eliminar esta nota?',
-                      rightButtonText: 'Eliminar',
-                      onRightButtonPressed: () {
+                      content: Text(
+                        '¿Estás seguro de que deseas eliminar esta nota?',
+                      ),
+                      primaryActionTitle: 'Eliminar',
+                      onPrimaryPressed: (_) {
                         context
                             .read<NotesBloc>()
                             .add(NotesEvent.deleteNote(index));

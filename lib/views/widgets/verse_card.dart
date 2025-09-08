@@ -1,4 +1,5 @@
 import 'package:bible_app/blocs/blocs.dart';
+import 'package:bible_app/core/core.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +94,7 @@ class _VerseCardState extends State<VerseCard>
             children: [
               CustomSlidableAction(
                 onPressed: (_) => _showAddToNoteModal(context),
-                backgroundColor: appColor,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 foregroundColor: Colors.white,
                 borderRadius:
                     const BorderRadius.horizontal(left: Radius.circular(12)),
@@ -122,7 +123,7 @@ class _VerseCardState extends State<VerseCard>
               CustomSlidableAction(
                 onPressed: (_) => CustomModalBottomSheet.colorPicker(
                     context, _onColorChanged),
-                backgroundColor: appColor,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 foregroundColor: Colors.white,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -147,7 +148,7 @@ class _VerseCardState extends State<VerseCard>
                         verse: widget.verse, onClose: _onNoteAdded),
                   ),
                 ),
-                backgroundColor: appColor,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 foregroundColor: Colors.white,
                 borderRadius:
                     const BorderRadius.horizontal(right: Radius.circular(12)),
@@ -179,7 +180,7 @@ class _VerseCardState extends State<VerseCard>
                   ? Colors.grey[900]
                   : widget.type == VerseCardType.bible
                       ? Colors.transparent
-                      : appColorDarker,
+                      : Theme.of(context).colorScheme.primary,
               child: GestureDetector(
                 onLongPress: () {
                   Clipboard.setData(
@@ -310,7 +311,7 @@ class _VerseCardState extends State<VerseCard>
         builder: (context, scrollController) => Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: appColor,
+            color: Theme.of(context).colorScheme.primary,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
             boxShadow: [
               BoxShadow(

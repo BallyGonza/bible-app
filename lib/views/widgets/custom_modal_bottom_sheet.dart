@@ -1,4 +1,4 @@
-import 'package:bible_app/data/data.dart';
+import 'package:bible_app/core/core.dart';
 import 'package:flutter/material.dart';
 
 class CustomModalBottomSheet {
@@ -7,7 +7,7 @@ class CustomModalBottomSheet {
     void Function(Color) onSelect,
   ) {
     showModalBottomSheet<Container>(
-      backgroundColor: appColor,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       context: context,
       builder: (BuildContext context) {
         return Container(

@@ -11,17 +11,17 @@ class ChapterSelectScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
-      backgroundColor: appColor,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            backgroundColor: appColorDarker,
+            backgroundColor: Theme.of(context).colorScheme.primary,
             expandedHeight: 150,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               // color gray as background
               background: Container(
-                color: appColor,
+                color: Theme.of(context).colorScheme.primary,
               ),
               titlePadding: const EdgeInsets.only(
                 left: 50,

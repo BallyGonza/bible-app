@@ -1,4 +1,4 @@
-import 'package:bible_app/data/constants/colors.dart';
+import 'package:bible_app/core/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,6 +12,15 @@ class AppTheme {
   static const double _titleLargeFontSize = 24.0;
   static const double _displayMediumFontSize = 20.0;
   static const double _displaySmallFontSize = 16.0;
+  static const double _displayLargeFontSize = 32.0;
+  static const double _headlineLargeFontSize = 28.0;
+  static const double _headlineSmallFontSize = 20.0;
+  static const double _titleMediumFontSize = 18.0;
+  static const double _bodyMediumFontSize = 14.0;
+  static const double _bodySmallFontSize = 12.0;
+  static const double _labelLargeFontSize = 14.0;
+  static const double _labelMediumFontSize = 12.0;
+  static const double _labelSmallFontSize = 10.0;
   static const double _searchBarFontSize = 16.0;
 
   /// Spacing and sizing constants
@@ -62,8 +71,8 @@ class AppTheme {
         const TextTheme(
           displayLarge: TextStyle(
             color: Colors.white,
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
+            fontSize: _displayLargeFontSize,
+            fontWeight: FontWeight.w700,
           ),
           displayMedium: TextStyle(
             color: Colors.white,
@@ -77,27 +86,27 @@ class AppTheme {
           ),
           headlineLarge: TextStyle(
             color: Colors.white,
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
+            fontSize: _headlineLargeFontSize,
+            fontWeight: FontWeight.w700,
           ),
           headlineMedium: TextStyle(
             color: Colors.white,
             fontSize: _titleLargeFontSize,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
           ),
           headlineSmall: TextStyle(
             color: Colors.white,
-            fontSize: 20,
+            fontSize: _headlineSmallFontSize,
             fontWeight: FontWeight.w600,
           ),
           titleLarge: TextStyle(
             color: Colors.white,
             fontSize: _titleLargeFontSize,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
           ),
           titleMedium: TextStyle(
             color: Colors.white,
-            fontSize: 18,
+            fontSize: _titleMediumFontSize,
             fontWeight: FontWeight.w600,
           ),
           titleSmall: TextStyle(
@@ -111,25 +120,25 @@ class AppTheme {
           ),
           bodyMedium: TextStyle(
             color: Colors.white,
-            fontSize: 14,
+            fontSize: _bodyMediumFontSize,
           ),
           bodySmall: TextStyle(
             color: Colors.white70,
-            fontSize: 12,
+            fontSize: _bodySmallFontSize,
           ),
           labelLarge: TextStyle(
             color: Colors.white,
-            fontSize: 14,
+            fontSize: _labelLargeFontSize,
             fontWeight: FontWeight.w500,
           ),
           labelMedium: TextStyle(
             color: Colors.white,
-            fontSize: 12,
+            fontSize: _labelMediumFontSize,
             fontWeight: FontWeight.w500,
           ),
           labelSmall: TextStyle(
             color: Colors.white70,
-            fontSize: 10,
+            fontSize: _labelSmallFontSize,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -305,7 +314,7 @@ class AppTheme {
   /// Input decoration theme
   static InputDecorationTheme get _inputDecorationTheme => InputDecorationTheme(
         filled: true,
-        fillColor: Colors.white,
+        fillColor: appColorDarker,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         border: OutlineInputBorder(

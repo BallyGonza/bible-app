@@ -1,4 +1,5 @@
 import 'package:bible_app/blocs/blocs.dart';
+import 'package:bible_app/core/core.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +81,7 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
                   bottom: 13,
                 ),
                 background: Container(
-                  color: appColor,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 title: Text(
                   '${widget.verse.book} ${widget.verse.chapter}:${widget.verse.number}',

@@ -1,4 +1,3 @@
-import 'package:bible_app/data/data.dart';
 import 'package:flutter/material.dart';
 
 class CustomAlertDialog extends StatelessWidget {
@@ -27,7 +26,7 @@ class CustomAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: appColorDarker,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       title: Text(
         title,
         style: const TextStyle(color: Colors.white),

@@ -2,6 +2,7 @@
 
 import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:bible_app/blocs/blocs.dart';
+import 'package:bible_app/core/core.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';

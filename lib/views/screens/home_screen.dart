@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: appColor,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       body: PageView(
         controller: _pageController,
         onPageChanged: _onPageChanged,

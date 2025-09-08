@@ -26,7 +26,8 @@ class _VerseNumberCardState extends State<VerseNumberCard>
   @override
   void initState() {
     super.initState();
-    verseColor = widget.verse.color ?? appColorDarker.value;
+    verseColor =
+        widget.verse.color ?? Theme.of(context).colorScheme.primary.value;
     verseTextColor = Color(verseColor).computeLuminance() > 0.5
         ? Colors.black.value
         : Colors.white.value;
@@ -78,7 +79,7 @@ class _VerseNumberCardState extends State<VerseNumberCard>
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: Color(verseColor == Colors.white.value
-                ? appColorDarker.value
+                ? Theme.of(context).colorScheme.primary.value
                 : verseColor),
             borderRadius: BorderRadius.circular(12),
           ),

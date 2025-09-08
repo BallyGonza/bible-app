@@ -1,5 +1,4 @@
 import 'package:bible_app/blocs/blocs.dart';
-import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +32,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: false,
               background: Container(
-                color: appColorDarker,
+                color: Theme.of(context).colorScheme.primary,
               ),
               titlePadding: const EdgeInsets.only(
                 left: 16,

@@ -27,12 +27,12 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: appColor,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
-            backgroundColor: appColorDarker,
+            backgroundColor: Theme.of(context).colorScheme.primary,
             expandedHeight: 150,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
@@ -42,8 +42,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      appColorDarker,
-                      appColorDarker.withOpacity(0.8),
+                      Theme.of(context).colorScheme.primary,
+                      Theme.of(context).colorScheme.primary.withOpacity(0.8),
                     ],
                   ),
                 ),

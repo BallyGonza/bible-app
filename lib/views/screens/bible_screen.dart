@@ -59,7 +59,7 @@ class _BibleAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      backgroundColor: appColorDarker,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       expandedHeight: _BibleScreenState._appBarExpandedHeight,
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
@@ -123,8 +123,8 @@ class _BibleSearchBarState extends State<_BibleSearchBar> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            appColorDarker,
-            appColorDarker.withOpacity(0.8),
+            Theme.of(context).colorScheme.primary,
+            Theme.of(context).colorScheme.primary.withOpacity(0.8),
           ],
         ),
       ),

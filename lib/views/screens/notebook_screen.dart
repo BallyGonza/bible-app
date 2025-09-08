@@ -31,6 +31,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
             expandedHeight: 150,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
+              centerTitle: false,
               background: Container(
                 color: appColorDarker,
               ),

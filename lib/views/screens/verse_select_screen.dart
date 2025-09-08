@@ -167,6 +167,7 @@ class _VerseSelectAppBar extends StatelessWidget {
       expandedHeight: expandedHeight,
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
+        centerTitle: false,
         background: Container(
           color: theme.scaffoldBackgroundColor,
         ),

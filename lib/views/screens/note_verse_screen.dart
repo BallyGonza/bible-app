@@ -74,6 +74,7 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
               expandedHeight: 150,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
+                centerTitle: false,
                 titlePadding: const EdgeInsets.only(
                   left: 50,
                   bottom: 13,

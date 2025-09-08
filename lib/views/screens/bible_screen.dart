@@ -65,6 +65,7 @@ class _BibleAppBar extends StatelessWidget {
       flexibleSpace: FlexibleSpaceBar(
         background: _AppBarBackground(onSearchChanged: onSearchChanged),
         titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
+        centerTitle: false,
         title: const Text(
           'Biblia',
           style: TextStyle(

@@ -232,6 +232,7 @@ class _ReadingAppBar extends StatelessWidget {
           ),
       ],
       flexibleSpace: FlexibleSpaceBar(
+        centerTitle: false,
         background: Container(
           color: theme.scaffoldBackgroundColor,
         ),

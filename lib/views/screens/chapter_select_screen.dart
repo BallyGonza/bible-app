@@ -27,6 +27,7 @@ class ChapterSelectScreen extends StatelessWidget {
                 left: 50,
                 bottom: 13,
               ),
+              centerTitle: false,
               title: Text(
                 book.name,
                 style: const TextStyle(

@@ -71,6 +71,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
               titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
+              centerTitle: false,
               title: const Text(
                 'Buscar',
                 style: TextStyle(

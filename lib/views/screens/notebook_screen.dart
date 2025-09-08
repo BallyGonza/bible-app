@@ -14,6 +14,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
@@ -27,23 +28,27 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+            surfaceTintColor: Theme.of(context).colorScheme.surfaceTint,
             expandedHeight: 150,
             pinned: true,
+            elevation: 0,
+            shadowColor: Theme.of(context).colorScheme.shadow.withOpacity(0.1),
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: false,
               background: Container(
-                color: Theme.of(context).colorScheme.primary,
+                color: Theme.of(context).colorScheme.surfaceContainer,
               ),
               titlePadding: const EdgeInsets.only(
                 left: 16,
                 bottom: 16,
               ),
-              title: const Text(
+              title: Text(
                 'Notas',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                ),
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
               ),
             ),
           ),
@@ -57,11 +62,18 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                 ),
                 loaded: (notes) {
                   return notes.isEmpty
-                      ? const SliverFillRemaining(
+                      ? SliverFillRemaining(
                           child: Center(
                             child: Text(
                               'Aún no hay notas',
-                              style: TextStyle(color: Colors.grey),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
+                                  ),
                             ),
                           ),
                         )

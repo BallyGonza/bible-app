@@ -76,24 +76,11 @@ class _SearchScreenState extends State<SearchScreen> {
                 loaded: (verses) {
                   if (_searchController.text.isEmpty) {
                     return SliverFillRemaining(
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Escribe el parte del versiculo para buscar. \nO Intenta buscando el versiculo asi: "Salmos 23:6"',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
-                                  ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
+                      child: EmptyState(
+                        icon: Icons.search,
+                        title: 'Buscar versículos',
+                        subtitle:
+                            'Escribe el parte del versiculo para buscar. \nO Intenta buscando el versiculo asi: "Salmos 23:6"',
                       ),
                     );
                   }

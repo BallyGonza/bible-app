@@ -1,4 +1,5 @@
 import 'package:bible_app/data/data.dart';
+import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
 
 /// Callback type for chapter selection
@@ -24,17 +25,12 @@ class _BookCardState extends State<BookCard>
   static const Duration _animationDuration = Duration(milliseconds: 200);
   static const Curve _animationCurve = Curves.easeIn;
 
-  // Layout constants
-  static const EdgeInsets _cardMargin =
-      EdgeInsets.symmetric(horizontal: 16, vertical: 8);
-  static const EdgeInsets _cardPadding = EdgeInsets.all(8.0);
   static const EdgeInsets _headerPadding =
       EdgeInsets.symmetric(horizontal: 16, vertical: 16);
   static const EdgeInsets _gridPadding =
       EdgeInsets.symmetric(horizontal: 16, vertical: 16);
   static const double _cardBorderRadius = 12.0;
-  static const double _chapterButtonBorderRadius = 8.0;
-  static const int _gridCrossAxisCount = 5;
+  static const int _gridCrossAxisCount = 7;
   static const double _gridSpacing = 8.0;
 
   late AnimationController _controller;
@@ -81,16 +77,9 @@ class _BookCardState extends State<BookCard>
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: _cardMargin,
-      color: Theme.of(context).colorScheme.surfaceContainer,
-      elevation: 1,
-      shadowColor: Theme.of(context).colorScheme.shadow.withOpacity(0.2),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(_cardBorderRadius),
-      ),
-      child: Padding(
-        padding: _cardPadding,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+      child: Card(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -210,21 +199,18 @@ class _ChapterGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     // Use Wrap for better performance with fewer items
     if (chapters.length <= 20) {
-      return Padding(
-        padding: _BookCardState._gridPadding,
-        child: Wrap(
-          spacing: _BookCardState._gridSpacing,
-          runSpacing: _BookCardState._gridSpacing,
-          children: chapters
-              .map(
-                (chapter) => _ChapterButton(
-                  key: ValueKey(chapter.number), // Use chapter number for key
-                  chapter: chapter,
-                  onTap: () => onChapterTap(chapter),
-                ),
-              )
-              .toList(),
-        ),
+      return Wrap(
+        spacing: _BookCardState._gridSpacing,
+        runSpacing: _BookCardState._gridSpacing,
+        children: chapters
+            .map(
+              (chapter) => _ChapterButton(
+                key: ValueKey(chapter.number), // Use chapter number for key
+                chapter: chapter,
+                onTap: (chapter) => onChapterTap(chapter),
+              ),
+            )
+            .toList(),
       );
     }
 
@@ -244,7 +230,7 @@ class _ChapterGrid extends StatelessWidget {
         return _ChapterButton(
           key: ValueKey(chapter.number), // Use chapter number for key
           chapter: chapter,
-          onTap: () => onChapterTap(chapter),
+          onTap: (chapter) => onChapterTap(chapter),
         );
       },
     );
@@ -260,38 +246,13 @@ class _ChapterButton extends StatelessWidget {
   });
 
   final ChapterModel chapter;
-  final VoidCallback onTap;
+  final void Function(ChapterModel) onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: 'Chapter ${chapter.number}',
-      child: SizedBox(
-        width: 48,
-        height: 48,
-        child: Material(
-          color: Theme.of(context).colorScheme.primaryContainer,
-          borderRadius: BorderRadius.circular(
-            _BookCardState._chapterButtonBorderRadius,
-          ),
-          child: InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(
-              _BookCardState._chapterButtonBorderRadius,
-            ),
-            child: Center(
-              child: Text(
-                chapter.number.toString(),
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-              ),
-            ),
-          ),
-        ),
-      ),
+    return NumberButton(
+      number: chapter.number,
+      onTap: () => onTap(chapter),
     );
   }
 }

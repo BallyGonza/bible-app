@@ -15,7 +15,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute<NoteScreen>(
@@ -23,7 +23,8 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
             ),
           );
         },
-        child: const Icon(Icons.add),
+        label: const Text('Nueva nota'),
+        icon: const Icon(Icons.add),
       ),
       body: CustomScrollView(
         slivers: [
@@ -63,18 +64,17 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                 loaded: (notes) {
                   return notes.isEmpty
                       ? SliverFillRemaining(
-                          child: Center(
-                            child: Text(
-                              'Aún no hay notas',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
-                                  ),
-                            ),
+                          child: EmptyState(
+                            icon: Icons.note,
+                            title: 'Aún no hay notas',
+                            subtitle: 'Presiona el botón + para crear una nota',
+                            iconSize: 64,
+                            titleStyle:
+                                Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant,
+                                    ),
                           ),
                         )
                       : SliverList(

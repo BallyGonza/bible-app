@@ -182,6 +182,7 @@ class NotePageState extends State<NoteScreen> {
               decoration: InputDecoration(
                 hintText: 'Titulo...',
                 hintStyle: TextStyle(color: _fontColor.withOpacity(0.6)),
+                filled: false,
                 border: InputBorder.none,
               ),
               style: TextStyle(
@@ -214,6 +215,7 @@ class NotePageState extends State<NoteScreen> {
                     enabled: _isEditing,
                     controller: _authorController,
                     decoration: InputDecoration(
+                      filled: false,
                       hintText: 'Autor (Opcional)',
                       hintStyle: TextStyle(color: _fontColor.withOpacity(0.6)),
                       border: InputBorder.none,
@@ -245,6 +247,7 @@ class NotePageState extends State<NoteScreen> {
                       controller: _contentController,
                       decoration: InputDecoration(
                         hintText: 'Descripción...',
+                        filled: false,
                         hintStyle: TextStyle(
                           color: _fontColor.withOpacity(0.6),
                           fontStyle: FontStyle.italic,

@@ -1,6 +1,5 @@
 import 'package:bible_app/data/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// App theme configuration with improved organization and consistency
@@ -284,7 +283,7 @@ class AppTheme {
       );
 
   /// Card theme
-  static CardTheme get _cardTheme => CardTheme(
+  static CardThemeData get _cardTheme => CardThemeData(
         color: appColorDarker,
         elevation: 2,
         shadowColor: Colors.black26,

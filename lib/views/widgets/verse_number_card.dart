@@ -18,48 +18,32 @@ class VerseNumberCard extends StatefulWidget {
 
 class _VerseNumberCardState extends State<VerseNumberCard>
     with SingleTickerProviderStateMixin {
-  late Color _verseColor;
-  late Color _verseTextColor;
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
-  bool _colorsInitialized = false;
+  late Animation<double> _elevationAnimation;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 150),
       vsync: this,
     );
 
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.92).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Curves.easeInOut,
+        curve: Curves.easeOut,
+        reverseCurve: Curves.easeIn,
       ),
     );
-  }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_colorsInitialized) {
-      _initializeColors();
-      _colorsInitialized = true;
-    }
-  }
-
-  void _initializeColors() {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    _verseColor = widget.verse.color != null
-        ? Color(widget.verse.color!)
-        : colorScheme.surfaceContainer;
-
-    // Calculate proper contrast color based on background luminance
-    final luminance = _verseColor.computeLuminance();
-    _verseTextColor = luminance > 0.5 ? Colors.black87 : Colors.white;
+    _elevationAnimation = Tween<double>(begin: 0.0, end: 8.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOut,
+      ),
+    );
   }
 
   @override
@@ -68,8 +52,25 @@ class _VerseNumberCardState extends State<VerseNumberCard>
     super.dispose();
   }
 
+  // Calculate colors on every build to ensure reactivity
+  (Color backgroundColor, Color textColor) _calculateColors(
+      BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    final backgroundColor = widget.verse.color != null
+        ? Color(widget.verse.color!)
+        : colorScheme.surfaceContainer;
+
+    // Calculate proper contrast color based on background luminance
+    final luminance = backgroundColor.computeLuminance();
+    final textColor = luminance > 0.5 ? Colors.black87 : Colors.white;
+
+    return (backgroundColor, textColor);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final (backgroundColor, textColor) = _calculateColors(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -93,21 +94,22 @@ class _VerseNumberCardState extends State<VerseNumberCard>
           return Transform.scale(
             scale: _scaleAnimation.value,
             child: Material(
-              color: _verseColor,
-              borderRadius: BorderRadius.circular(12),
-              elevation:
-                  _controller.value * 4, // Dynamic elevation based on press
-              shadowColor: colorScheme.shadow.withOpacity(0.2),
+              color: backgroundColor,
+              elevation: _elevationAnimation.value,
+              borderRadius: BorderRadius.circular(16),
+              shadowColor: colorScheme.shadow.withOpacity(0.3),
               child: Container(
-                margin: const EdgeInsets.all(8),
-                child: Center(
-                  child: Text(
-                    widget.verse.number.toString(),
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: _verseTextColor,
-                      fontWeight: FontWeight.w600,
-                    ),
+                width: 56,
+                height: 56,
+                alignment: Alignment.center,
+                child: Text(
+                  widget.verse.number.toString(),
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: textColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),

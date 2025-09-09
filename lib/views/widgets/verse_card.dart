@@ -128,7 +128,7 @@ class _VerseCardState extends State<VerseCard>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FaIcon(FontAwesomeIcons.palette,
-                        size: 20, color: _getColor()),
+                        size: 20, color: colorScheme.onSecondaryContainer),
                     const SizedBox(height: 4),
                     Text(
                       'Resaltar',
@@ -178,9 +178,7 @@ class _VerseCardState extends State<VerseCard>
                   borderRadius: BorderRadius.circular(12)),
               color: _isFocused
                   ? colorScheme.surfaceContainerHighest
-                  : widget.type == VerseCardType.bible
-                      ? Colors.transparent
-                      : colorScheme.primary,
+                  : Colors.transparent,
               child: GestureDetector(
                 onLongPress: () {
                   Clipboard.setData(

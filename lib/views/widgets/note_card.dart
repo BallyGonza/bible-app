@@ -82,32 +82,30 @@ class NoteCard extends StatelessWidget {
     if (note.author == null || note.author!.isEmpty)
       return const SizedBox.shrink();
 
-    return Expanded(
-      child: Text.rich(
-        TextSpan(
-          children: [
-            TextSpan(
-              text: 'Autor: ',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: _getTextColor(note.color).withOpacity(0.7),
-                    height: _metadataTextHeight,
-                    fontSize: 10, // Smaller font for grid
-                  ),
-            ),
-            TextSpan(
-              text: note.author,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: _getTextColor(note.color),
-                    fontWeight: FontWeight.w600,
-                    height: _metadataTextHeight,
-                    fontSize: 10, // Smaller font for grid
-                  ),
-            ),
-          ],
-        ),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: 'Autor: ',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: _getTextColor(note.color).withOpacity(0.7),
+                  height: _metadataTextHeight,
+                  fontSize: 10, // Smaller font for grid
+                ),
+          ),
+          TextSpan(
+            text: note.author,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: _getTextColor(note.color),
+                  fontWeight: FontWeight.w600,
+                  height: _metadataTextHeight,
+                  fontSize: 10, // Smaller font for grid
+                ),
+          ),
+        ],
       ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 
@@ -156,14 +154,29 @@ class NoteCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildAuthor(context),
-                  Text(
-                    note.date,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: _getTextColor(note.color).withOpacity(0.7),
-                          height: _metadataTextHeight,
-                          fontSize: 10, // Smaller font for grid
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildAuthor(context),
+                        if (note.author != null && note.author!.isNotEmpty)
+                          const SizedBox(
+                              height: 2.0), // Small gap between author and date
+                        Text(
+                          note.date,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(
+                                color:
+                                    _getTextColor(note.color).withOpacity(0.7),
+                                height: _metadataTextHeight,
+                                fontSize: 10, // Smaller font for grid
+                              ),
                         ),
+                      ],
+                    ),
                   ),
                 ],
               ),

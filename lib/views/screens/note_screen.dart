@@ -42,6 +42,7 @@ class NotePageState extends State<NoteScreen> {
   late Color _iconColor;
   late bool _isEditing;
   late Color _fontColor;
+  late SystemUiOverlayStyle _systemOverlayStyle;
 
   @override
   void initState() {
@@ -54,6 +55,7 @@ class NotePageState extends State<NoteScreen> {
     _currentColor = Color(widget.note?.color ?? Colors.white.value);
     _iconColor = Colors.black;
     _fontColor = Colors.black;
+    _systemOverlayStyle = SystemUiOverlayStyle.dark;
   }
 
   @override
@@ -67,6 +69,10 @@ class NotePageState extends State<NoteScreen> {
     final luminance = _currentColor.computeLuminance();
     _iconColor = luminance > 0.5 ? Colors.black87 : Colors.white;
     _fontColor = luminance > 0.5 ? Colors.black87 : Colors.white;
+    // Update system overlay style based on background luminance
+    _systemOverlayStyle = luminance > 0.5
+        ? SystemUiOverlayStyle.dark
+        : SystemUiOverlayStyle.light;
   }
 
   @override
@@ -85,6 +91,10 @@ class NotePageState extends State<NoteScreen> {
       final luminance = _currentColor.computeLuminance();
       _iconColor = luminance > 0.5 ? Colors.black87 : Colors.white;
       _fontColor = luminance > 0.5 ? Colors.black87 : Colors.white;
+      // Update system overlay style based on background luminance
+      _systemOverlayStyle = luminance > 0.5
+          ? SystemUiOverlayStyle.dark
+          : SystemUiOverlayStyle.light;
     });
   }
 
@@ -133,12 +143,7 @@ class NotePageState extends State<NoteScreen> {
     return Scaffold(
       backgroundColor: _currentColor,
       appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarIconBrightness:
-              Theme.of(context).brightness == Brightness.light
-                  ? Brightness.dark
-                  : Brightness.light,
-        ),
+        systemOverlayStyle: _systemOverlayStyle,
         elevation: 0,
         backgroundColor: Colors.transparent,
         leading: IconButton(
@@ -313,6 +318,12 @@ class NotePageState extends State<NoteScreen> {
                                                             index,
                                                           ),
                                                         );
+                                                    Navigator.of(context).pop();
+                                                    CustomSnackBar.showSuccess(
+                                                      context,
+                                                      text:
+                                                          'Versiculo eliminado de la nota',
+                                                    );
                                                   },
                                                 );
                                               },

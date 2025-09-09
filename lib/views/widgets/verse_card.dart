@@ -406,30 +406,15 @@ class _VerseCardState extends State<VerseCard>
                                           widget.verse,
                                         ),
                                       );
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Versiculo agregado a la nota',
-                                        style: textTheme.bodyMedium?.copyWith(
-                                          color: colorScheme.onInverseSurface,
-                                        ),
-                                      ),
-                                      backgroundColor:
-                                          colorScheme.inverseSurface,
-                                    ),
+                                  CustomSnackBar.showSuccess(
+                                    context,
+                                    text: 'Versiculo agregado a la nota',
                                   );
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
+                                  CustomSnackBar.showError(
+                                    context,
+                                    text:
                                         'El versiculo ya se encuentra en la nota',
-                                        style: textTheme.bodyMedium?.copyWith(
-                                          color: colorScheme.onInverseSurface,
-                                        ),
-                                      ),
-                                      backgroundColor:
-                                          colorScheme.inverseSurface,
-                                    ),
                                   );
                                 }
                               },

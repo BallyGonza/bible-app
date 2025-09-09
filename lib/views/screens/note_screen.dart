@@ -170,257 +170,329 @@ class NotePageState extends State<NoteScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 16,
-        ),
-        child: Column(
-          children: [
-            AutoSizeTextField(
-              enabled: _isEditing,
-              controller: _titleController,
-              decoration: InputDecoration(
-                hintText: 'Titulo...',
-                hintStyle: TextStyle(color: _fontColor.withOpacity(0.6)),
-                filled: false,
-                border: InputBorder.none,
-              ),
-              style: TextStyle(
-                fontSize: 34,
-                fontWeight: FontWeight.bold,
-                color: _fontColor,
-                height: 1.2,
-              ),
-              maxLines: 1,
-              textAlign: TextAlign.left,
-              cursorColor: _fontColor,
-              textInputAction: TextInputAction.done,
-              minFontSize: 18,
-              stepGranularity: 2,
-              fullwidth: true,
+      body: Column(
+        children: [
+          // Title and Author Section
+          Container(
+            width: double.infinity,
+            margin: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(20.0),
+            decoration: BoxDecoration(
+              color: _currentColor,
+              borderRadius: BorderRadius.circular(16.0),
             ),
-            Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (_authorController.text.isNotEmpty)
-                  Text(
-                    "Autor:",
-                    style: TextStyle(
-                      color: _fontColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      height: 1.4,
-                    ),
+                AutoSizeTextField(
+                  enabled: _isEditing,
+                  controller: _titleController,
+                  decoration: InputDecoration(
+                    hintText: 'Titulo...',
+                    hintStyle:
+                        Theme.of(context).textTheme.headlineMedium?.copyWith(
+                              color: _fontColor.withOpacity(0.6),
+                              fontWeight: FontWeight.w600,
+                              fontStyle: FontStyle.italic,
+                              height: 1.2,
+                            ),
+                    filled: false,
+                    border: InputBorder.none,
                   ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: AutoSizeTextField(
-                    enabled: _isEditing,
-                    controller: _authorController,
-                    decoration: InputDecoration(
-                      filled: false,
-                      hintText: 'Autor (Opcional)',
-                      hintStyle: TextStyle(color: _fontColor.withOpacity(0.6)),
-                      border: InputBorder.none,
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        color: _fontColor,
+                        fontWeight: FontWeight.w600,
+                        height: 1.2,
+                      ),
+                  maxLines: 1,
+                  textAlign: TextAlign.left,
+                  cursorColor: _fontColor,
+                  textInputAction: TextInputAction.done,
+                  minFontSize: 18,
+                  stepGranularity: 2,
+                  fullwidth: true,
+                ),
+                Row(
+                  children: [
+                    if (_authorController.text.isNotEmpty)
+                      Text(
+                        "Autor:",
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              color: _fontColor,
+                              fontWeight: FontWeight.w600,
+                              height: 1.4,
+                            ),
+                      ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: AutoSizeTextField(
+                        enabled: _isEditing,
+                        controller: _authorController,
+                        decoration: InputDecoration(
+                          filled: false,
+                          hintText: 'Autor (Opcional)',
+                          hintStyle:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: _fontColor.withOpacity(0.6),
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                          border: InputBorder.none,
+                        ),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontStyle: FontStyle.italic,
+                              color: _fontColor,
+                              height: 1.4,
+                            ),
+                        textAlign: TextAlign.left,
+                        cursorColor: _fontColor,
+                        textCapitalization: TextCapitalization.sentences,
+                        maxLines: 1,
+                        stepGranularity: 2,
+                        fullwidth: true,
+                      ),
                     ),
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.italic,
-                      color: _fontColor,
-                      height: 1.4,
-                    ),
-                    textAlign: TextAlign.left,
-                    cursorColor: _fontColor,
-                    textCapitalization: TextCapitalization.sentences,
-                    maxLines: 1,
-                    stepGranularity: 2,
-                    fullwidth: true,
-                  ),
+                  ],
                 ),
               ],
             ),
-            Divider(color: _fontColor.withOpacity(0.5)),
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                children: [
-                  SingleChildScrollView(
-                    child: TextField(
-                      enabled: _isEditing,
-                      controller: _contentController,
-                      decoration: InputDecoration(
-                        hintText: 'Descripción...',
-                        filled: false,
-                        hintStyle: TextStyle(
-                          color: _fontColor.withOpacity(0.6),
-                          fontStyle: FontStyle.italic,
-                        ),
-                        border: InputBorder.none,
-                      ),
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: _fontColor,
-                        fontWeight: FontWeight.normal,
-                        height: 1.5,
-                      ),
-                      keyboardType: TextInputType.multiline,
-                      textAlign: TextAlign.left,
-                      cursorColor: _fontColor,
-                      textCapitalization: TextCapitalization.sentences,
-                      maxLines: null,
-                    ),
+          ),
+          // Content Section
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16.0),
+              decoration: BoxDecoration(
+                color: _currentColor,
+                borderRadius: BorderRadius.circular(16.0),
+                boxShadow: [
+                  BoxShadow(
+                    color:
+                        Theme.of(context).colorScheme.shadow.withOpacity(0.05),
+                    blurRadius: 8.0,
+                    offset: const Offset(0, 2),
                   ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.70,
-                    child: widget.note?.verses.isEmpty ?? true
-                        ? Center(
-                            child: Text(
-                              'No se han seleccionado versículos.',
-                              style:
-                                  TextStyle(color: _fontColor.withOpacity(0.6)),
-                            ),
-                          )
-                        : BlocBuilder<NotesBloc, NotesState>(
-                            builder: (context, state) {
-                              return ListView.builder(
-                                physics: const BouncingScrollPhysics(),
-                                itemCount: widget.note?.verses.length ?? 0,
-                                itemBuilder: (context, index) {
-                                  final verse = widget.note!.verses[index];
-                                  return Slidable(
-                                    key: ValueKey(index),
-                                    endActionPane: ActionPane(
-                                      extentRatio: 0.25,
-                                      dragDismissible: false,
-                                      motion: const ScrollMotion(),
-                                      children: [
-                                        SlidableAction(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          onPressed: (_) {
-                                            showDialog<AlertDialog>(
-                                              context: context,
-                                              builder: (context) {
-                                                return CustomAlertDialog(
-                                                  title: 'Eliminar versículo',
-                                                  content: Text(
-                                                    '¿Estás seguro de que quieres eliminar este versículo?',
-                                                  ),
-                                                  primaryActionTitle:
-                                                      'Eliminar',
-                                                  onPrimaryPressed: (_) {
-                                                    context
-                                                        .read<NotesBloc>()
-                                                        .add(
-                                                          NotesEvent
-                                                              .removeVerse(
-                                                            widget.index,
-                                                            index,
-                                                          ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16.0),
+                child: PageView(
+                  controller: _pageController,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: SingleChildScrollView(
+                        child: TextField(
+                          enabled: _isEditing,
+                          controller: _contentController,
+                          decoration: InputDecoration(
+                            hintText: 'Descripción...',
+                            filled: false,
+                            hintStyle:
+                                Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      color: _fontColor.withOpacity(0.6),
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                            border: InputBorder.none,
+                          ),
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: _fontColor,
+                                    height: 1.5,
+                                  ),
+                          keyboardType: TextInputType.multiline,
+                          textAlign: TextAlign.left,
+                          cursorColor: _fontColor,
+                          textCapitalization: TextCapitalization.sentences,
+                          maxLines: null,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.70,
+                        child: widget.note?.verses.isEmpty ?? true
+                            ? Center(
+                                child: Text(
+                                  'No se han seleccionado versículos.',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        color: _fontColor.withOpacity(0.6),
+                                      ),
+                                ),
+                              )
+                            : BlocBuilder<NotesBloc, NotesState>(
+                                builder: (context, state) {
+                                  return ListView.builder(
+                                    physics: const BouncingScrollPhysics(),
+                                    itemCount: widget.note?.verses.length ?? 0,
+                                    itemBuilder: (context, index) {
+                                      final verse = widget.note!.verses[index];
+                                      return Slidable(
+                                        key: ValueKey(index),
+                                        endActionPane: ActionPane(
+                                          extentRatio: 0.25,
+                                          dragDismissible: false,
+                                          motion: const ScrollMotion(),
+                                          children: [
+                                            SlidableAction(
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                              onPressed: (_) {
+                                                showDialog<AlertDialog>(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return CustomAlertDialog(
+                                                      title:
+                                                          'Eliminar versículo',
+                                                      content: Text(
+                                                        '¿Estás seguro de que quieres eliminar este versículo?',
+                                                      ),
+                                                      primaryActionTitle:
+                                                          'Eliminar',
+                                                      onPrimaryPressed: (_) {
+                                                        context
+                                                            .read<NotesBloc>()
+                                                            .add(
+                                                              NotesEvent
+                                                                  .removeVerse(
+                                                                widget.index,
+                                                                index,
+                                                              ),
+                                                            );
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        CustomSnackBar
+                                                            .showSuccess(
+                                                          context,
+                                                          text:
+                                                              'Versiculo eliminado de la nota',
                                                         );
-                                                    Navigator.of(context).pop();
-                                                    CustomSnackBar.showSuccess(
-                                                      context,
-                                                      text:
-                                                          'Versiculo eliminado de la nota',
+                                                      },
                                                     );
                                                   },
                                                 );
                                               },
-                                            );
-                                          },
-                                          icon: Icons.delete,
-                                          foregroundColor: Theme.of(context)
-                                              .colorScheme
-                                              .onError,
-                                          backgroundColor: Theme.of(context)
-                                              .colorScheme
-                                              .error,
+                                              icon: Icons.delete,
+                                              foregroundColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .onError,
+                                              backgroundColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .error,
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                    child: ListTile(
-                                      title: Text(
-                                        verse.text,
-                                        style: TextStyle(
-                                          color: _fontColor,
-                                          fontSize: 16,
-                                          height: 1.4,
+                                        child: ListTile(
+                                          title: Text(
+                                            verse.text,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge
+                                                ?.copyWith(
+                                                  color: _fontColor,
+                                                  height: 1.4,
+                                                ),
+                                          ),
+                                          subtitle: Text(
+                                            '${verse.book} ${verse.chapter}:${verse.number}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                  color: _fontColor
+                                                      .withOpacity(0.6),
+                                                  height: 1.4,
+                                                ),
+                                          ),
                                         ),
-                                      ),
-                                      subtitle: Text(
-                                        '${verse.book} ${verse.chapter}:${verse.number}',
-                                        style: TextStyle(
-                                          color: _fontColor.withOpacity(0.6),
-                                          fontSize: 14,
-                                          height: 1.4,
-                                        ),
-                                      ),
-                                    ),
+                                      );
+                                    },
                                   );
                                 },
-                              );
-                            },
-                          ),
-                  ),
-                ],
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
+            ),
+          ),
+          const SizedBox(height: 16.0),
+        ],
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).colorScheme.shadow.withOpacity(0.1),
+              blurRadius: 8.0,
+              offset: const Offset(0, -2),
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: _currentColor,
-        child: Padding(
-          padding: EdgeInsets.only(
-            left: 16,
-            right: 16,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 5.0,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Editado: ${widget.note?.date ?? date.format(DateTime.now())}',
-                style: TextStyle(
-                  color: _fontColor.withOpacity(0.6),
-                  fontSize: 14,
-                  height: 1.4,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Editado: ${widget.note?.date ?? date.format(DateTime.now())}',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        height: 1.4,
+                      ),
                 ),
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _currentIndex == 0
-                            ? _pageController.animateToPage(
-                                1,
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeInOut,
-                              )
-                            : _pageController.animateToPage(
-                                0,
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeInOut,
-                              );
-                        _currentIndex == 0
-                            ? _currentIndex = 1
-                            : _currentIndex = 0;
-                      });
-                    },
-                    icon: FaIcon(FontAwesomeIcons.book, color: _iconColor),
-                  ),
-                  IconButton(
-                    onPressed: () => CustomModalBottomSheet.colorPicker(
-                      context,
-                      _onColorChanged,
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _currentIndex == 0
+                              ? _pageController.animateToPage(
+                                  1,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                )
+                              : _pageController.animateToPage(
+                                  0,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                );
+                          _currentIndex == 0
+                              ? _currentIndex = 1
+                              : _currentIndex = 0;
+                        });
+                      },
+                      icon: FaIcon(
+                        FontAwesomeIcons.book,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                     ),
-                    icon: FaIcon(FontAwesomeIcons.palette, color: _iconColor),
-                  ),
-                ],
-              ),
-            ],
+                    IconButton(
+                      onPressed: () => CustomModalBottomSheet.colorPicker(
+                        context,
+                        _onColorChanged,
+                      ),
+                      icon: FaIcon(
+                        FontAwesomeIcons.palette,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

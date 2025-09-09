@@ -51,17 +51,9 @@ class NoteCard extends StatelessWidget {
                         context
                             .read<NotesBloc>()
                             .add(NotesEvent.deleteNote(index));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Nota eliminada.',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        );
+                        CustomSnackBar.showSuccess(context,
+                            text: 'Nota eliminada');
+                        Navigator.of(context).pop();
                       },
                     );
                   },

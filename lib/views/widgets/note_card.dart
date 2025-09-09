@@ -21,8 +21,6 @@ class NoteCard extends StatelessWidget {
   static const double _textHeight = 1.2;
   static const double _contentTextHeight = 1.3; // Slightly tighter
   static const double _metadataTextHeight = 1.2; // Tighter for grid
-  static const double _cardElevation = 1.0; // Reduced elevation for grid
-  static const double _shadowOpacity = 0.08; // Subtle shadow
   static const double _luminanceThreshold = 0.47;
   static const double _stateLayerOpacity =
       0.08; // Material 3 state layer opacity

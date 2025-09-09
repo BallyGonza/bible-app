@@ -19,8 +19,7 @@ class NoteCard extends StatelessWidget {
   static const double _cardBorderRadius = 12.0; // Slightly smaller for grid
   static const double _contentSpacing = 8.0; // Reduced spacing
   static const double _textHeight = 1.2;
-  static const double _contentTextHeight = 1.3; // Slightly tighter
-  static const double _metadataTextHeight = 1.2; // Tighter for grid
+
   static const double _luminanceThreshold = 0.47;
   static const double _stateLayerOpacity =
       0.08; // Material 3 state layer opacity
@@ -57,11 +56,10 @@ class NoteCard extends StatelessWidget {
       child: Text(
         note.content,
         overflow: TextOverflow.ellipsis,
-        maxLines: 11,
+        maxLines: 7, // Allow up to 50 lines to fill available space
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
               // Smaller content for grid
               color: _getTextColor(note.color).withOpacity(0.9),
-              height: _contentTextHeight,
             ),
       ),
     );
@@ -79,7 +77,6 @@ class NoteCard extends StatelessWidget {
             text: 'Autor: ',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: _getTextColor(note.color).withOpacity(0.7),
-                  height: _metadataTextHeight,
                   fontSize: 10, // Smaller font for grid
                 ),
           ),
@@ -88,7 +85,6 @@ class NoteCard extends StatelessWidget {
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: _getTextColor(note.color),
                   fontWeight: FontWeight.w600,
-                  height: _metadataTextHeight,
                   fontSize: 10, // Smaller font for grid
                 ),
           ),
@@ -136,12 +132,12 @@ class NoteCard extends StatelessWidget {
           height: _cardHeight,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildTitle(context),
               if (note.content.isNotEmpty)
                 const SizedBox(height: _contentSpacing),
               _buildContent(context),
-              const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -162,7 +158,7 @@ class NoteCard extends StatelessWidget {
                               ?.copyWith(
                                 color:
                                     _getTextColor(note.color).withOpacity(0.7),
-                                height: _metadataTextHeight,
+
                                 fontSize: 10, // Smaller font for grid
                               ),
                         ),

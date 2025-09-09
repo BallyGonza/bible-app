@@ -24,7 +24,6 @@ class NoteCard extends StatelessWidget {
   static const double _cardElevation = 1.0; // Reduced elevation for grid
   static const double _shadowOpacity = 0.08; // Subtle shadow
   static const double _luminanceThreshold = 0.47;
-  static const int _longContentThreshold = 80; // Lower threshold for grid
   static const double _stateLayerOpacity =
       0.08; // Material 3 state layer opacity
 
@@ -33,13 +32,6 @@ class NoteCard extends StatelessWidget {
     final color = Color(backgroundColor);
     final luminance = color.computeLuminance();
     return luminance > _luminanceThreshold ? Colors.black : Colors.white;
-  }
-
-  // Determine max lines for content based on length and newlines
-  int _getContentMaxLines(String content) {
-    final hasLongContent =
-        content.length > _longContentThreshold || content.contains('\n');
-    return hasLongContent ? 3 : 2;
   }
 
   // Build title widget if title exists
@@ -66,8 +58,8 @@ class NoteCard extends StatelessWidget {
     return Expanded(
       child: Text(
         note.content,
-        maxLines: _getContentMaxLines(note.content),
         overflow: TextOverflow.ellipsis,
+        maxLines: 11,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
               // Smaller content for grid
               color: _getTextColor(note.color).withOpacity(0.9),

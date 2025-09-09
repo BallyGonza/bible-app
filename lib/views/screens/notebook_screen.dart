@@ -14,7 +14,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
   // Constants for consistent spacing and sizing
   static const double _appBarExpandedHeight = 150.0;
   static const double _gridMainAxisSpacing = 16.0;
-  static const double _gridChildAspectRatio = 0.75;
+  static const double _gridChildAspectRatio = 1;
   static const double _emptyStateIconSize = 64.0;
   static const double _appBarTitleLeftPadding = 16.0;
   static const double _appBarTitleBottomPadding = 16.0;
@@ -116,10 +116,12 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                               final note = notes[index];
                               return Semantics(
                                 key: ValueKey('note_${notes[index].id}_$index'),
-                                label: 'Nota ${index + 1}: ${note.title.isNotEmpty ? note.title : 'Sin título'}',
+                                label:
+                                    'Nota ${index + 1}: ${note.title.isNotEmpty ? note.title : 'Sin título'}',
                                 hint: 'Toca para abrir la nota',
                                 child: NoteCard(
-                                  key: ValueKey('note_card_${notes[index].id}_$index'),
+                                  key: ValueKey(
+                                      'note_card_${notes[index].id}_$index'),
                                   index: index,
                                   onTap: () => Navigator.of(context).push(
                                     MaterialPageRoute<NoteScreen>(

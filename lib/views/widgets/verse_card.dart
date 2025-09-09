@@ -121,7 +121,11 @@ class _VerseCardState extends State<VerseCard>
             children: [
               CustomSlidableAction(
                 onPressed: (_) => CustomModalBottomSheet.colorPicker(
-                    context, _onColorChanged),
+                    context,
+                    _onColorChanged,
+                    widget.verse.color != null
+                        ? Color(widget.verse.color!)
+                        : Colors.white),
                 backgroundColor: colorScheme.secondaryContainer,
                 foregroundColor: colorScheme.onSecondaryContainer,
                 child: Column(

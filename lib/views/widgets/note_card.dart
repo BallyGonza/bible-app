@@ -125,12 +125,13 @@ class NoteCard extends StatelessWidget {
         },
       ),
       child: Card(
-        elevation: _cardElevation,
-        shadowColor:
-            Theme.of(context).colorScheme.shadow.withOpacity(_shadowOpacity),
         color: Color(note.color),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(_cardBorderRadius),
+          side: BorderSide(
+            color: _getTextColor(note.color).withOpacity(0.12),
+            width: 1.0,
+          ),
         ),
         child: Container(
           padding: const EdgeInsets.all(_cardPadding),

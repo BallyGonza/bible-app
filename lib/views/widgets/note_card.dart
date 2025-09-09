@@ -1,9 +1,5 @@
-import 'package:bible_app/blocs/blocs.dart';
 import 'package:bible_app/data/data.dart';
-import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 class NoteCard extends StatelessWidget {
   const NoteCard({
@@ -19,77 +15,61 @@ class NoteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-// Calculate text color based on background color luminance
+    // Calculate text color based on background color luminance
     Color getTextColor(int backgroundColor) {
       final color = Color(backgroundColor);
       final luminance = color.computeLuminance();
       return luminance > 0.47 ? Colors.black : Colors.white;
     }
 
+    // Calculate appropriate height based on content characteristics
+    double _calculateCardHeight(NoteModel note) {
+      const double baseHeight = 140.0;
+      const double compactHeight = 100.0;
+      const double mediumHeight = 120.0;
+      const double expandedHeight = 160.0;
+
+      // Check if content is long or contains newlines
+      final hasLongContent =
+          note.content.length > 100 || note.content.contains('\n');
+      final hasMediumContent =
+          note.content.length > 50 || note.content.contains('\n');
+      final hasShortContent =
+          note.content.length > 25 || note.content.contains('\n');
+
+      // Determine if card has minimal content (empty or just title)
+      final hasMinimalContent = note.content.isEmpty || note.title.isEmpty;
+
+      if (hasLongContent) {
+        return expandedHeight;
+      } else if (hasMinimalContent) {
+        if (hasMediumContent) {
+          return mediumHeight;
+        } else if (hasShortContent) {
+          return mediumHeight;
+        } else {
+          return compactHeight;
+        }
+      } else {
+        return baseHeight;
+      }
+    }
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      child: Slidable(
-        key: ValueKey(index),
-        endActionPane: ActionPane(
-          extentRatio: 0.25,
-          dragDismissible: false,
-          motion: const ScrollMotion(),
-          children: [
-            SlidableAction(
-              borderRadius: BorderRadius.circular(8),
-              onPressed: (_) {
-                showDialog<AlertDialog>(
-                  context: context,
-                  builder: (context) {
-                    return CustomAlertDialog(
-                      title: 'Eliminar Nota',
-                      content: Text(
-                        '¿Estás seguro de que deseas eliminar esta nota?',
-                      ),
-                      primaryActionTitle: 'Eliminar',
-                      onPrimaryPressed: (_) {
-                        context
-                            .read<NotesBloc>()
-                            .add(NotesEvent.deleteNote(index));
-                        CustomSnackBar.showSuccess(context,
-                            text: 'Nota eliminada');
-                        Navigator.of(context).pop();
-                      },
-                    );
-                  },
-                );
-              },
-              icon: Icons.delete,
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.red,
-            ),
-          ],
-        ),
-        child: InkWell(
-          onTap: onTap,
+      padding: const EdgeInsets.all(8.0),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16.0),
+        child: Card(
+          elevation: 2.0,
+          shadowColor: Theme.of(context).colorScheme.shadow.withOpacity(0.1),
+          color: Color(note.color),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
           child: Container(
-            padding: const EdgeInsets.all(16),
-            height: note.content.length > 100 || note.content.contains('\n')
-                ? 150
-                : note.content.isEmpty || note.title.isEmpty
-                    ? note.content.length > 50 || note.content.contains('\n')
-                        ? 120
-                        : note.content.length > 25 ||
-                                note.content.contains('\n')
-                            ? 110
-                            : 90
-                    : 130,
-            decoration: BoxDecoration(
-              color: Color(note.color),
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.12),
-                  blurRadius: 2,
-                  offset: const Offset(0, 1),
-                ),
-              ],
-            ),
+            padding: const EdgeInsets.all(20.0),
+            height: _calculateCardHeight(note),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -98,26 +78,31 @@ class NoteCard extends StatelessWidget {
                     note.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: getTextColor(note.color),
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: getTextColor(note.color),
+                          fontWeight: FontWeight.w600,
+                          height: 1.2,
+                        ),
                   )
                 else
                   const SizedBox.shrink(),
                 if (note.content.isNotEmpty)
-                  const SizedBox(height: 8)
+                  const SizedBox(height: 12.0)
                 else
                   const SizedBox.shrink(),
                 if (note.content.isNotEmpty)
-                  Text(
-                    note.content,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: getTextColor(note.color),
-                      fontSize: 16,
+                  Expanded(
+                    child: Text(
+                      note.content,
+                      maxLines: note.content.length > 100 ||
+                              note.content.contains('\n')
+                          ? 3
+                          : 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: getTextColor(note.color),
+                            height: 1.4,
+                          ),
                     ),
                   )
                 else
@@ -127,35 +112,46 @@ class NoteCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     if (note.author != null && note.author!.isNotEmpty)
-                      Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'Autor: ',
-                              style: TextStyle(
-                                color: getTextColor(note.color),
-                                fontSize: 14,
+                      Expanded(
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'Autor: ',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                      color: getTextColor(note.color)
+                                          .withOpacity(0.7),
+                                      height: 1.3,
+                                    ),
                               ),
-                            ),
-                            TextSpan(
-                              text: note.author,
-                              style: TextStyle(
-                                color: getTextColor(note.color),
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
+                              TextSpan(
+                                text: note.author,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                      color: getTextColor(note.color),
+                                      fontWeight: FontWeight.w600,
+                                      height: 1.3,
+                                    ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       )
                     else
                       const SizedBox.shrink(),
                     Text(
                       note.date,
-                      style: TextStyle(
-                        color: getTextColor(note.color),
-                        fontSize: 14,
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: getTextColor(note.color).withOpacity(0.7),
+                            height: 1.3,
+                          ),
                     ),
                   ],
                 ),

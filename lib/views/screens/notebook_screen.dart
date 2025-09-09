@@ -77,7 +77,13 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                                     ),
                           ),
                         )
-                      : SliverList(
+                      : SliverGrid(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 16.0,
+                            childAspectRatio: 0.75,
+                          ),
                           delegate: SliverChildBuilderDelegate(
                             (context, index) {
                               final note = notes[index];

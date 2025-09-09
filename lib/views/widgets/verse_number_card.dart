@@ -55,11 +55,11 @@ class _VerseNumberCardState extends State<VerseNumberCard>
 
     _verseColor = widget.verse.color != null
         ? Color(widget.verse.color!)
-        : colorScheme.secondaryContainer;
+        : colorScheme.surfaceContainer;
 
-    _verseTextColor = _verseColor.computeLuminance() > 0.5
-        ? colorScheme.onSecondaryContainer
-        : colorScheme.onSecondaryContainer;
+    // Calculate proper contrast color based on background luminance
+    final luminance = _verseColor.computeLuminance();
+    _verseTextColor = luminance > 0.5 ? Colors.black87 : Colors.white;
   }
 
   @override
@@ -70,6 +70,9 @@ class _VerseNumberCardState extends State<VerseNumberCard>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
@@ -89,32 +92,27 @@ class _VerseNumberCardState extends State<VerseNumberCard>
         builder: (context, child) {
           return Transform.scale(
             scale: _scaleAnimation.value,
-            child: child,
+            child: Material(
+              color: _verseColor,
+              borderRadius: BorderRadius.circular(12),
+              elevation:
+                  _controller.value * 4, // Dynamic elevation based on press
+              shadowColor: colorScheme.shadow.withOpacity(0.2),
+              child: Container(
+                margin: const EdgeInsets.all(8),
+                child: Center(
+                  child: Text(
+                    widget.verse.number.toString(),
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: _verseTextColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           );
         },
-        child: Container(
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: _verseColor,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).colorScheme.shadow.withOpacity(0.1),
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Center(
-            child: Text(
-              widget.verse.number.toString(),
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: _verseTextColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ),
-        ),
       ),
     );
   }

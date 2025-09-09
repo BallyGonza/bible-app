@@ -315,130 +315,165 @@ class _VerseCardState extends State<VerseCard>
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
-    showModalBottomSheet(
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
+    showModalBottomSheet<void>(
       context: context,
-      builder: (context) => DraggableScrollableSheet(
-        expand: false,
-        builder: (context, scrollController) => Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerLow,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-            boxShadow: [
-              BoxShadow(
-                color: colorScheme.shadow.withOpacity(0.2),
-                blurRadius: 10,
-                offset: const Offset(0, -5),
-              ),
-            ],
-          ),
+      isScrollControlled: true,
+      showDragHandle: true, // Material 3 bottom sheet handle
+      backgroundColor: colorScheme.surfaceContainerLow,
+      builder: (context) => Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.8,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: 24, vertical: 16), // Material 3 spacing
           child: BlocBuilder<NotesBloc, NotesState>(
             builder: (context, state) {
               if (state is NotesLoading) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    color: colorScheme.primary,
+                return SizedBox(
+                  height: 200,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: colorScheme.primary,
+                    ),
                   ),
                 );
               } else if (state is NotesLoaded) {
                 final notes = state.notes;
                 return Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Header with Material 3 styling
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Agregar a:',
-                          style: textTheme.titleLarge?.copyWith(
+                          'Agregar a nota',
+                          style: textTheme.headlineSmall?.copyWith(
                             color: colorScheme.onSurface,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: FaIcon(
-                            FontAwesomeIcons.xmark,
+                          onPressed: () => Navigator.of(context).pop(),
+                          icon: Icon(
+                            Icons.close,
                             color: colorScheme.onSurfaceVariant,
+                          ),
+                          style: IconButton.styleFrom(
+                            backgroundColor:
+                                colorScheme.surfaceContainerHighest,
                           ),
                         ),
                       ],
                     ),
+                    const SizedBox(height: 16), // Material 3 spacing
                     if (notes.isEmpty)
-                      Expanded(
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              FaIcon(
-                                FontAwesomeIcons.solidStickyNote,
-                                size: 40,
-                                color: colorScheme.onSurfaceVariant,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 32),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.note_alt_outlined,
+                              size: 48,
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'No tienes notas guardadas',
+                              textAlign: TextAlign.center,
+                              style: textTheme.bodyLarge?.copyWith(
+                                color: colorScheme.onSurface,
                               ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'No tienes predicas / notas guardadas',
-                                textAlign: TextAlign.center,
-                                style: textTheme.titleMedium?.copyWith(
-                                  color: colorScheme.onSurface,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       )
                     else
-                      Expanded(
-                        child: ListView.builder(
-                          controller: scrollController,
-                          physics: const BouncingScrollPhysics(),
+                      Flexible(
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          physics: const ClampingScrollPhysics(),
                           itemCount: notes.length,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 4), // Material 3 spacing
                           itemBuilder: (context, index) {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.pop(context);
+                            final note = notes[index];
+                            final isSelected =
+                                note.verses.contains(widget.verse);
 
-                                if (!notes[index]
-                                    .verses
-                                    .contains(widget.verse)) {
-                                  context.read<NotesBloc>().add(
-                                        NotesEvent.addVerse(
-                                          index,
-                                          widget.verse,
+                            return Card(
+                              elevation: 0,
+                              color: Color(note.color),
+                              margin: EdgeInsets.zero,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).pop();
+
+                                  if (!isSelected) {
+                                    context.read<NotesBloc>().add(
+                                          NotesEvent.addVerse(
+                                            index,
+                                            widget.verse,
+                                          ),
+                                        );
+                                    CustomSnackBar.showSuccess(
+                                      context,
+                                      text: 'Versículo agregado a la nota',
+                                    );
+                                  } else {
+                                    CustomSnackBar.showError(
+                                      context,
+                                      text: 'El versículo ya está en la nota',
+                                    );
+                                  }
+                                },
+                                borderRadius: BorderRadius.circular(12),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(
+                                      16), // Material 3 spacing
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              note.title,
+                                              style: textTheme.titleMedium
+                                                  ?.copyWith(
+                                                color: _calculateNoteTextColor(
+                                                    Color(note.color)),
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            if (note.author != null &&
+                                                note.author!.isNotEmpty) ...[
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                'Por ${note.author}',
+                                                style: textTheme.bodySmall
+                                                    ?.copyWith(
+                                                  color:
+                                                      _calculateNoteTextColor(
+                                                              Color(note.color))
+                                                          .withOpacity(0.7),
+                                                ),
+                                              ),
+                                            ],
+                                          ],
                                         ),
-                                      );
-                                  CustomSnackBar.showSuccess(
-                                    context,
-                                    text: 'Versiculo agregado a la nota',
-                                  );
-                                } else {
-                                  CustomSnackBar.showError(
-                                    context,
-                                    text:
-                                        'El versiculo ya se encuentra en la nota',
-                                  );
-                                }
-                              },
-                              child: Card(
-                                color: Color(notes[index].color),
-                                margin: const EdgeInsets.symmetric(vertical: 4),
-                                child: ListTile(
-                                  title: Text(
-                                    notes[index].title,
-                                    style: textTheme.titleMedium?.copyWith(
-                                      color: _calculateNoteTextColor(
-                                          Color(notes[index].color)),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  trailing: Icon(
-                                    notes[index].verses.contains(widget.verse)
-                                        ? Icons.check_circle
-                                        : null,
-                                    color: colorScheme.primary,
+                                      ),
+                                      if (isSelected) ...[
+                                        const SizedBox(width: 12),
+                                        Icon(
+                                          Icons.check_circle_rounded,
+                                          color: colorScheme.primary,
+                                          size: 24,
+                                        ),
+                                      ],
+                                    ],
                                   ),
                                 ),
                               ),
@@ -449,11 +484,25 @@ class _VerseCardState extends State<VerseCard>
                   ],
                 );
               } else {
-                return Center(
-                  child: Text(
-                    'Error loading notes',
-                    style: textTheme.bodyLarge?.copyWith(
-                      color: colorScheme.error,
+                return SizedBox(
+                  height: 200,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          color: colorScheme.error,
+                          size: 48,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Error al cargar notas',
+                          style: textTheme.bodyLarge?.copyWith(
+                            color: colorScheme.error,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 );

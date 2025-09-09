@@ -60,7 +60,7 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: _saveNote,
-          backgroundColor: colorScheme.primaryContainer,
+          backgroundColor: colorScheme.secondaryContainer,
           foregroundColor: colorScheme.onPrimaryContainer,
           child: FaIcon(
             FontAwesomeIcons.floppyDisk,

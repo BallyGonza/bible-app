@@ -8,6 +8,7 @@ import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class NoteScreen extends StatefulWidget {
@@ -374,77 +375,179 @@ class NotePageState extends State<NoteScreen> with TickerProviderStateMixin {
                 ),
                 const SizedBox(height: 24.0),
 
-                // Verses Section
-                if (widget.note?.verses.isNotEmpty ?? false) ...[
-                  Text(
-                    'Versículos',
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
-                  const SizedBox(height: 12.0),
-                  Card(
-                    elevation: 1.0,
-                    shadowColor:
-                        Theme.of(context).colorScheme.shadow.withOpacity(0.05),
-                    surfaceTintColor: Theme.of(context).colorScheme.surfaceTint,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.0),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: widget.note!.verses.map((verse) {
-                          return Container(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .outline
-                                      .withOpacity(0.1),
-                                  width: 1.0,
-                                ),
+                Text(
+                  'Versículos',
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+                const SizedBox(height: 12.0),
+
+                BlocBuilder<NotesBloc, NotesState>(
+                  builder: (context, state) {
+                    return state.maybeWhen(
+                      orElse: () => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      loaded: (notes) {
+                        final note = notes
+                            .where((note) => note.id == widget.note!.id)
+                            .first;
+                        return Column(
+                          children: [
+                            Card(
+                              elevation: 1.0,
+                              shadowColor: Theme.of(context)
+                                  .colorScheme
+                                  .shadow
+                                  .withOpacity(0.05),
+                              surfaceTintColor:
+                                  Theme.of(context).colorScheme.surfaceTint,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: note.verses.isEmpty
+                                    ? const Center(
+                                        child:
+                                            Text('No hay versículos agregados'),
+                                      )
+                                    : Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: note.verses.map((verse) {
+                                          return Slidable(
+                                            endActionPane: ActionPane(
+                                              extentRatio: 0.25,
+                                              motion: const ScrollMotion(),
+                                              children: [
+                                                CustomSlidableAction(
+                                                  onPressed: (context) {
+                                                    note.verses.remove(verse);
+                                                    context
+                                                        .read<NotesBloc>()
+                                                        .add(
+                                                          NotesEvent.editNote(
+                                                            widget.index,
+                                                            note.copyWith(
+                                                              verses:
+                                                                  note.verses,
+                                                            ),
+                                                          ),
+                                                        );
+
+                                                    CustomSnackBar.showSuccess(
+                                                        context,
+                                                        text:
+                                                            'Versículo eliminado');
+                                                  },
+                                                  backgroundColor:
+                                                      Theme.of(context)
+                                                          .colorScheme
+                                                          .error,
+                                                  foregroundColor:
+                                                      Theme.of(context)
+                                                          .colorScheme
+                                                          .onError,
+                                                  borderRadius:
+                                                      const BorderRadius
+                                                          .horizontal(
+                                                          right:
+                                                              Radius.circular(
+                                                                  12)),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      FaIcon(
+                                                          FontAwesomeIcons
+                                                              .trashCan,
+                                                          size: 20,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .onError),
+                                                      const SizedBox(height: 4),
+                                                      Text(
+                                                        'Eliminar',
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .labelSmall
+                                                            ?.copyWith(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .colorScheme
+                                                                  .onError,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              decoration: BoxDecoration(
+                                                border: Border(
+                                                  bottom: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .outline
+                                                        .withOpacity(0.1),
+                                                    width: 1.0,
+                                                  ),
+                                                ),
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    '${verse.book} ${verse.chapter}:${verse.number}',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .labelMedium
+                                                        ?.copyWith(
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .primary,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                  ),
+                                                  const SizedBox(height: 4.0),
+                                                  Text(
+                                                    verse.text,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium
+                                                        ?.copyWith(
+                                                          color: _textColor,
+                                                          height: 1.4,
+                                                        ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
                               ),
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${verse.book} ${verse.chapter}:${verse.number}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelMedium
-                                      ?.copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                ),
-                                const SizedBox(height: 4.0),
-                                Text(
-                                  verse.text,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                        color: _textColor,
-                                        height: 1.4,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                ],
-
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
                 const SizedBox(height: 100.0), // Space for FAB
               ],
             ),

@@ -85,7 +85,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
@@ -218,11 +218,11 @@ class _ReadingAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
-    return SliverAppBar(
-      backgroundColor: theme.appBarTheme.backgroundColor,
-      expandedHeight: expandedHeight,
-      pinned: true,
+    return CustomSliverAppBar(
+      backgroundColor: colorScheme.surfaceContainer,
+      title: _chapterTitle,
       actions: [
         if (hasSelectedVerses)
           IconButton(
@@ -231,19 +231,6 @@ class _ReadingAppBar extends StatelessWidget {
             tooltip: 'Share selected verses',
           ),
       ],
-      flexibleSpace: FlexibleSpaceBar(
-        centerTitle: false,
-        background: Container(
-          color: theme.scaffoldBackgroundColor,
-        ),
-        titlePadding: titlePadding,
-        title: Text(
-          _chapterTitle,
-          style: theme.appBarTheme.titleTextStyle?.copyWith(
-            fontSize: titleFontSize,
-          ),
-        ),
-      ),
     );
   }
 }

@@ -50,11 +50,23 @@ class NotePageState extends State<NoteScreen> {
     _titleController.text = widget.note?.title ?? '';
     _authorController.text = widget.note?.author ?? '';
     _contentController.text = widget.note?.content ?? '';
-    _currentColor = Color(widget.note?.color ?? accentColor.value);
-    _iconColor =
-        _currentColor.computeLuminance() > 0.47 ? Colors.black : Colors.white;
-    _fontColor =
-        _currentColor.computeLuminance() > 0.47 ? Colors.black : Colors.white;
+    // Use safe defaults - will be updated in didChangeDependencies
+    _currentColor = Color(widget.note?.color ?? Colors.white.value);
+    _iconColor = Colors.black;
+    _fontColor = Colors.black;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Initialize theme-dependent colors here where context is available
+    if (widget.note?.color == null) {
+      _currentColor = Theme.of(context).colorScheme.surfaceContainer;
+    }
+    // Calculate appropriate text and icon colors based on current background color
+    final luminance = _currentColor.computeLuminance();
+    _iconColor = luminance > 0.5 ? Colors.black87 : Colors.white;
+    _fontColor = luminance > 0.5 ? Colors.black87 : Colors.white;
   }
 
   @override
@@ -69,10 +81,10 @@ class NotePageState extends State<NoteScreen> {
   void _onColorChanged(Color color) {
     setState(() {
       _currentColor = color;
-      _iconColor =
-          _currentColor.computeLuminance() > 0.20 ? Colors.black : Colors.white;
-      _fontColor =
-          _currentColor.computeLuminance() > 0.20 ? Colors.black : Colors.white;
+      // Calculate appropriate text and icon colors based on background luminance
+      final luminance = _currentColor.computeLuminance();
+      _iconColor = luminance > 0.5 ? Colors.black87 : Colors.white;
+      _fontColor = luminance > 0.5 ? Colors.black87 : Colors.white;
     });
   }
 
@@ -86,23 +98,14 @@ class NotePageState extends State<NoteScreen> {
               content: _contentController.text,
               verses: const [],
               date: date.format(DateTime.now()),
-              color: _currentColor.value == appColor.value
-                  ? accentColor.value
+              color: _currentColor.value ==
+                      Theme.of(context).colorScheme.surface.value
+                  ? Theme.of(context).colorScheme.surfaceContainer.value
                   : _currentColor.value,
             ),
           ),
         );
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Nota guardada',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-          ),
-        ),
-      ),
-    );
+    CustomSnackBar.showSuccess(context, text: 'Nota guardada');
   }
 
   void _updateNote(BuildContext context) {
@@ -122,17 +125,7 @@ class NotePageState extends State<NoteScreen> {
             ),
           ),
         );
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Nota actualizada',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-          ),
-        ),
-      ),
-    );
+    CustomSnackBar.showSuccess(context, text: 'Nota actualizada');
   }
 
   @override
@@ -141,9 +134,10 @@ class NotePageState extends State<NoteScreen> {
       backgroundColor: _currentColor,
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarIconBrightness: _currentColor.computeLuminance() > 0.20
-              ? Brightness.dark
-              : Brightness.light,
+          statusBarIconBrightness:
+              Theme.of(context).brightness == Brightness.light
+                  ? Brightness.dark
+                  : Brightness.light,
         ),
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -190,6 +184,7 @@ class NotePageState extends State<NoteScreen> {
                 fontSize: 34,
                 fontWeight: FontWeight.bold,
                 color: _fontColor,
+                height: 1.2,
               ),
               maxLines: 1,
               textAlign: TextAlign.left,
@@ -208,6 +203,7 @@ class NotePageState extends State<NoteScreen> {
                       color: _fontColor,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
+                      height: 1.4,
                     ),
                   ),
                 const SizedBox(width: 8),
@@ -226,6 +222,7 @@ class NotePageState extends State<NoteScreen> {
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.italic,
                       color: _fontColor,
+                      height: 1.4,
                     ),
                     textAlign: TextAlign.left,
                     cursorColor: _fontColor,
@@ -259,6 +256,7 @@ class NotePageState extends State<NoteScreen> {
                         fontSize: 18,
                         color: _fontColor,
                         fontWeight: FontWeight.normal,
+                        height: 1.5,
                       ),
                       keyboardType: TextInputType.multiline,
                       textAlign: TextAlign.left,
@@ -321,20 +319,30 @@ class NotePageState extends State<NoteScreen> {
                                             );
                                           },
                                           icon: Icons.delete,
-                                          foregroundColor: Colors.white,
-                                          backgroundColor: Colors.red,
+                                          foregroundColor: Theme.of(context)
+                                              .colorScheme
+                                              .onError,
+                                          backgroundColor: Theme.of(context)
+                                              .colorScheme
+                                              .error,
                                         ),
                                       ],
                                     ),
                                     child: ListTile(
                                       title: Text(
                                         verse.text,
-                                        style: TextStyle(color: _fontColor),
+                                        style: TextStyle(
+                                          color: _fontColor,
+                                          fontSize: 16,
+                                          height: 1.4,
+                                        ),
                                       ),
                                       subtitle: Text(
                                         '${verse.book} ${verse.chapter}:${verse.number}',
                                         style: TextStyle(
                                           color: _fontColor.withOpacity(0.6),
+                                          fontSize: 14,
+                                          height: 1.4,
                                         ),
                                       ),
                                     ),
@@ -363,7 +371,11 @@ class NotePageState extends State<NoteScreen> {
             children: [
               Text(
                 'Editado: ${widget.note?.date ?? date.format(DateTime.now())}',
-                style: TextStyle(color: _fontColor.withOpacity(0.6)),
+                style: TextStyle(
+                  color: _fontColor.withOpacity(0.6),
+                  fontSize: 14,
+                  height: 1.4,
+                ),
               ),
               Row(
                 children: [

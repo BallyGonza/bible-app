@@ -287,19 +287,23 @@ class _VerseCardState extends State<VerseCard>
   }
 
   Widget _buildVerseText() {
-    return Text.rich(
-      TextSpan(
+    return RichText(
+      text: TextSpan(
         children: [
+          WidgetSpan(
+            alignment: PlaceholderAlignment.middle,
+            child: VerseNumber(
+              number: _currentVerse.number,
+              style: _numberStyle(),
+              visible: widget.type == VerseCardType.bible,
+            ),
+          ),
           TextSpan(
-              text: widget.type == VerseCardType.bible
-                  ? '${_currentVerse.number} '
-                  : '',
-              style: _numberStyle()),
-          TextSpan(
-              text: widget.type == VerseCardType.bible
-                  ? _currentVerse.text
-                  : '${_currentVerse.text[0].toUpperCase()}${_currentVerse.text.substring(1)}',
-              style: _textStyle()),
+            text: widget.type == VerseCardType.bible
+                ? _currentVerse.text
+                : '${_currentVerse.text[0].toUpperCase()}${_currentVerse.text.substring(1)}',
+            style: _textStyle(),
+          ),
         ],
       ),
     );
@@ -321,10 +325,10 @@ class _VerseCardState extends State<VerseCard>
   TextStyle _numberStyle() {
     final textTheme = Theme.of(context).textTheme;
 
-    return textTheme.bodySmall?.copyWith(
+    return textTheme.bodyLarge?.copyWith(
           color: _getColor(),
           fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w800,
         ) ??
         const TextStyle();
   }
@@ -335,7 +339,6 @@ class _VerseCardState extends State<VerseCard>
     return textTheme.bodyLarge?.copyWith(
           color: _getColor(),
           fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
-          fontWeight: FontWeight.w400,
           height: 1.4,
         ) ??
         const TextStyle();

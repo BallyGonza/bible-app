@@ -251,12 +251,24 @@ class NotePageState extends State<NoteScreen> with TickerProviderStateMixin {
                     ),
                     const SizedBox(width: 12.0),
                     Text(
-                      'Eliminar nota',
+                      'Eliminar',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Theme.of(context).colorScheme.error,
                           ),
                     ),
                   ],
+                ),
+              ),
+              const PopupMenuDivider(),
+              PopupMenuItem<String>(
+                value: 'date',
+                enabled: false,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    'Se editó:\n${date.format(DateTime.now())}',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ),
               ),
             ],
@@ -571,7 +583,7 @@ class NotePageState extends State<NoteScreen> with TickerProviderStateMixin {
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        height: 1.0,
         decoration: BoxDecoration(
           color: _currentColor,
           border: Border(
@@ -580,24 +592,6 @@ class NotePageState extends State<NoteScreen> with TickerProviderStateMixin {
               width: 1.0,
             ),
           ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                'Última modificación: ${date.format(DateTime.now())}',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(color: _textColor),
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
         ),
       ),
     );

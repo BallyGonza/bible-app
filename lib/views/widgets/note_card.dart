@@ -21,7 +21,7 @@ class NoteCard extends StatelessWidget {
   static const double _contentSpacing = 8.0; // Reduced spacing
   static const double _textHeight = 1.2;
 
-  static const double _luminanceThreshold = 0.47;
+  static const double _luminanceThreshold = 0.3;
   static const double _stateLayerOpacity =
       0.08; // Material 3 state layer opacity
 

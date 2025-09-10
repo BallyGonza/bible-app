@@ -106,6 +106,13 @@ class NotePageState extends State<NoteScreen> with TickerProviderStateMixin {
   }
 
   void _onColorChanged(Color color) {
+    if (widget.isNewNote) {
+      setState(() {
+        _currentColor = color;
+        _updateColors();
+      });
+      return;
+    }
     context.read<NotesBloc>().add(
           NotesEvent.editNote(
             widget.index,

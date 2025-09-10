@@ -37,27 +37,27 @@ class CustomModalBottomSheet {
                   _buildColorOption(
                       context, Colors.white, onSelect, currentColor),
                   _buildColorOption(
-                      context, Colors.grey.shade100, onSelect, currentColor),
+                      context, Colors.blue.shade200, onSelect, currentColor),
                   _buildColorOption(
-                      context, Colors.yellow.shade100, onSelect, currentColor),
+                      context, Colors.yellow.shade200, onSelect, currentColor),
                   _buildColorOption(
-                      context, Colors.green.shade100, onSelect, currentColor),
+                      context, Colors.green.shade200, onSelect, currentColor),
                   _buildColorOption(
-                      context, Colors.blue.shade100, onSelect, currentColor),
+                      context, Colors.blue.shade200, onSelect, currentColor),
                   _buildColorOption(
-                      context, Colors.purple.shade100, onSelect, currentColor),
+                      context, Colors.purple.shade200, onSelect, currentColor),
                   _buildColorOption(
-                      context, Colors.pink.shade100, onSelect, currentColor),
+                      context, Colors.pink.shade200, onSelect, currentColor),
                   _buildColorOption(
-                      context, Colors.orange.shade100, onSelect, currentColor),
+                      context, Colors.orange.shade200, onSelect, currentColor),
                   _buildColorOption(
-                      context, Colors.teal.shade100, onSelect, currentColor),
+                      context, Colors.teal.shade200, onSelect, currentColor),
                   _buildColorOption(
-                      context, Colors.indigo.shade100, onSelect, currentColor),
+                      context, Colors.indigo.shade200, onSelect, currentColor),
                   _buildColorOption(
-                      context, Colors.red.shade100, onSelect, currentColor),
+                      context, Colors.red.shade200, onSelect, currentColor),
                   _buildColorOption(
-                      context, Colors.brown.shade100, onSelect, currentColor),
+                      context, Colors.brown.shade200, onSelect, currentColor),
                 ],
               ),
               const SizedBox(height: 24.0),

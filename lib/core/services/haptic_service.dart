@@ -1,14 +1,12 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 
-
 /// Service for providing haptic feedback throughout the app
 class HapticService {
-  static final HapticService _instance = HapticService._internal();
-  
   factory HapticService() => _instance;
-  
+
   HapticService._internal();
+  static final HapticService _instance = HapticService._internal();
 
   /// Light impact haptic feedback
   static Future<void> lightImpact() async {

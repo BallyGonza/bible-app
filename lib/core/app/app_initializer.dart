@@ -1,4 +1,4 @@
-import 'package:bible_app/services/services.dart';
+import 'package:bible_app/core/core.dart';
 import 'package:flutter/material.dart';
 
 /// Handles application initialization tasks

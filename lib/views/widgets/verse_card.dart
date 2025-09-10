@@ -39,10 +39,12 @@ class _VerseCardState extends State<VerseCard>
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   bool _hasNote = false;
+  late VerseModel _currentVerse;
 
   @override
   void initState() {
     super.initState();
+    _currentVerse = widget.verse;
     _isFocused = widget.isFocused;
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 200),
@@ -55,6 +57,17 @@ class _VerseCardState extends State<VerseCard>
   }
 
   @override
+  void didUpdateWidget(VerseCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.verse != oldWidget.verse) {
+      setState(() {
+        _currentVerse = widget.verse;
+        _hasNote = widget.verse.note != null;
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _animationController.dispose();
     _isFocused = false;
@@ -62,25 +75,36 @@ class _VerseCardState extends State<VerseCard>
   }
 
   void _onColorChanged(Color color) {
+    // Create a new verse with the updated color
+    final updatedVerse = _currentVerse.copyWith(color: color.value);
+
+    // Update the local state
+    setState(() {
+      _currentVerse = updatedVerse;
+    });
+
+    // Save the change to the BLoC
     context.read<UserBloc>().add(
-          UserEvent.saveVerse(verse: widget.verse.copyWith(color: color.value)),
+          UserEvent.saveVerse(verse: updatedVerse),
         );
-    // No need to set local state anymore - colors are calculated on build
   }
 
   void _onNoteAdded(String note) {
-    context.read<UserBloc>().add(UserEvent.saveVerse(
-        verse: widget.verse.copyWith(note: VerseNoteModel(content: note))));
+    final updatedVerse =
+        _currentVerse.copyWith(note: VerseNoteModel(content: note));
+
     setState(() {
+      _currentVerse = updatedVerse;
       _hasNote = true;
     });
+
+    context.read<UserBloc>().add(
+          UserEvent.saveVerse(verse: updatedVerse),
+        );
   }
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) => Transform.scale(
@@ -93,22 +117,27 @@ class _VerseCardState extends State<VerseCard>
             children: [
               CustomSlidableAction(
                 onPressed: (_) => _showAddToNoteModal(context),
-                backgroundColor: colorScheme.primaryContainer,
-                foregroundColor: colorScheme.onPrimaryContainer,
+                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                foregroundColor:
+                    Theme.of(context).colorScheme.onPrimaryContainer,
                 borderRadius:
                     const BorderRadius.horizontal(left: Radius.circular(12)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FaIcon(FontAwesomeIcons.bookmark,
-                        size: 20, color: colorScheme.onPrimaryContainer),
+                        size: 20,
+                        color:
+                            Theme.of(context).colorScheme.onPrimaryContainer),
                     const SizedBox(height: 4),
                     Text(
                       'Agregar a',
-                      style: textTheme.labelSmall?.copyWith(
-                        color: colorScheme.onPrimaryContainer,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer,
+                            fontWeight: FontWeight.w500,
+                          ),
                     ),
                   ],
                 ),
@@ -123,23 +152,29 @@ class _VerseCardState extends State<VerseCard>
                 onPressed: (_) => CustomModalBottomSheet.colorPicker(
                     context,
                     _onColorChanged,
-                    widget.verse.color != null
-                        ? Color(widget.verse.color!)
+                    _currentVerse.color != null
+                        ? Color(_currentVerse.color!)
                         : Colors.white),
-                backgroundColor: colorScheme.secondaryContainer,
-                foregroundColor: colorScheme.onSecondaryContainer,
+                backgroundColor:
+                    Theme.of(context).colorScheme.secondaryContainer,
+                foregroundColor:
+                    Theme.of(context).colorScheme.onSecondaryContainer,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FaIcon(FontAwesomeIcons.palette,
-                        size: 20, color: colorScheme.onSecondaryContainer),
+                        size: 20,
+                        color:
+                            Theme.of(context).colorScheme.onSecondaryContainer),
                     const SizedBox(height: 4),
                     Text(
                       'Resaltar',
-                      style: textTheme.labelSmall?.copyWith(
-                        color: colorScheme.onSecondaryContainer,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer,
+                            fontWeight: FontWeight.w500,
+                          ),
                     ),
                   ],
                 ),
@@ -149,25 +184,31 @@ class _VerseCardState extends State<VerseCard>
                   context,
                   MaterialPageRoute<NoteVerseScreen>(
                     builder: (context) => NoteVerseScreen(
-                        verse: widget.verse, onClose: _onNoteAdded),
+                        verse: _currentVerse, onClose: _onNoteAdded),
                   ),
                 ),
-                backgroundColor: colorScheme.tertiaryContainer,
-                foregroundColor: colorScheme.onTertiaryContainer,
+                backgroundColor:
+                    Theme.of(context).colorScheme.tertiaryContainer,
+                foregroundColor:
+                    Theme.of(context).colorScheme.onTertiaryContainer,
                 borderRadius:
                     const BorderRadius.horizontal(right: Radius.circular(12)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FaIcon(FontAwesomeIcons.noteSticky,
-                        size: 20, color: colorScheme.onTertiaryContainer),
+                        size: 20,
+                        color:
+                            Theme.of(context).colorScheme.onTertiaryContainer),
                     const SizedBox(height: 4),
                     Text(
                       'Nota',
-                      style: textTheme.labelSmall?.copyWith(
-                        color: colorScheme.onTertiaryContainer,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onTertiaryContainer,
+                            fontWeight: FontWeight.w500,
+                          ),
                     ),
                   ],
                 ),
@@ -181,14 +222,14 @@ class _VerseCardState extends State<VerseCard>
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
               color: _isFocused
-                  ? colorScheme.surfaceContainerHighest
+                  ? Theme.of(context).colorScheme.surfaceContainerHighest
                   : Colors.transparent,
               child: GestureDetector(
                 onLongPress: () {
                   Clipboard.setData(
                     ClipboardData(
                         text:
-                            '"${widget.verse.text}"\n${widget.verse.book} ${widget.verse.chapter}:${widget.verse.number} RVR1960'),
+                            '"${_currentVerse.text}"\n${_currentVerse.book} ${_currentVerse.chapter}:${_currentVerse.number} RVR1960'),
                   );
                   // Show snackbar
                   CustomSnackBar.showSuccess(context,
@@ -196,7 +237,7 @@ class _VerseCardState extends State<VerseCard>
                 },
                 onTap: () {
                   if (widget.onSelect != null) {
-                    widget.onSelect!(widget.verse);
+                    widget.onSelect!(_currentVerse);
                   }
                   if (widget.type == VerseCardType.bible) {
                     setState(() => _isFocused = !_isFocused);
@@ -226,7 +267,7 @@ class _VerseCardState extends State<VerseCard>
                               FaIcon(
                                 FontAwesomeIcons.noteSticky,
                                 size: 14,
-                                color: Color(widget.verse.color ??
+                                color: Color(_currentVerse.color ??
                                         Colors.white.value)
                                     .withOpacity(0.6),
                               ),
@@ -251,13 +292,13 @@ class _VerseCardState extends State<VerseCard>
         children: [
           TextSpan(
               text: widget.type == VerseCardType.bible
-                  ? '${widget.verse.number} '
+                  ? '${_currentVerse.number} '
                   : '',
               style: _numberStyle()),
           TextSpan(
               text: widget.type == VerseCardType.bible
-                  ? widget.verse.text
-                  : '${widget.verse.text[0].toUpperCase()}${widget.verse.text.substring(1)}',
+                  ? _currentVerse.text
+                  : '${_currentVerse.text[0].toUpperCase()}${_currentVerse.text.substring(1)}',
               style: _textStyle()),
         ],
       ),
@@ -268,7 +309,7 @@ class _VerseCardState extends State<VerseCard>
     final textTheme = Theme.of(context).textTheme;
 
     return Text(
-      '${widget.verse.book} ${widget.verse.chapter}:${widget.verse.number}',
+      '${_currentVerse.book} ${_currentVerse.chapter}:${_currentVerse.number}',
       style: textTheme.bodySmall?.copyWith(
         color: _getColor(),
         fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
@@ -303,8 +344,8 @@ class _VerseCardState extends State<VerseCard>
   Color _getColor() {
     final colorScheme = Theme.of(context).colorScheme;
 
-    if (widget.verse.color != null) {
-      return Color(widget.verse.color!);
+    if (_currentVerse.color != null) {
+      return Color(_currentVerse.color!);
     }
 
     // Use Material 3 surface color for better contrast

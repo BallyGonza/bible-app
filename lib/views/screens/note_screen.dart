@@ -400,12 +400,43 @@ class NotePageState extends State<NoteScreen> with TickerProviderStateMixin {
                   builder: (context, state) {
                     // Handle new note case
                     if (widget.isNewNote) {
-                      return const Card(
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Center(
-                            child: Text('No hay versículos agregados'),
-                          ),
+                      return Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 24.0,
+                          horizontal: 16.0,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.bookmark_border_rounded,
+                              size: 48.0,
+                              color: _textColor.withOpacity(0.6),
+                            ),
+                            const SizedBox(height: 16.0),
+                            Text(
+                              'No hay versículos',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    color: _textColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                            const SizedBox(height: 8.0),
+                            Text(
+                              'Agrega versículos para verlos aquí',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color: _textColor.withOpacity(0.8),
+                                  ),
+                            ),
+                          ],
                         ),
                       );
                     }
@@ -423,8 +454,45 @@ class NotePageState extends State<NoteScreen> with TickerProviderStateMixin {
                         return Column(
                           children: [
                             note.verses.isEmpty
-                                ? const Center(
-                                    child: Text('No hay versículos agregados'),
+                                ? Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 24.0,
+                                      horizontal: 16.0,
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.bookmark_border_rounded,
+                                          size: 48.0,
+                                          color: _textColor.withOpacity(0.6),
+                                        ),
+                                        const SizedBox(height: 16.0),
+                                        Text(
+                                          'No hay versículos',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium
+                                              ?.copyWith(
+                                                color: _textColor,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                        ),
+                                        const SizedBox(height: 8.0),
+                                        Text(
+                                          'Agrega versículos para verlos aquí',
+                                          textAlign: TextAlign.center,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium
+                                              ?.copyWith(
+                                                color:
+                                                    _textColor.withOpacity(0.8),
+                                              ),
+                                        ),
+                                      ],
+                                    ),
                                   )
                                 : Column(
                                     crossAxisAlignment:

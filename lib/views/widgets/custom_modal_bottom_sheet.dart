@@ -1,41 +1,112 @@
-import 'package:bible_app/data/data.dart';
+import 'package:bible_app/core/core.dart';
 import 'package:flutter/material.dart';
 
+/// A Material 3 compliant color picker modal bottom sheet
 class CustomModalBottomSheet {
   static void colorPicker(
     BuildContext context,
     void Function(Color) onSelect,
+    Color currentColor,
   ) {
-    showModalBottomSheet<Container>(
-      backgroundColor: appColor,
+    showModalBottomSheet<void>(
       context: context,
       builder: (BuildContext context) {
         return Container(
-          padding: const EdgeInsets.all(8),
-          height: MediaQuery.of(context).size.height * 0.54,
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 5,
+          padding: const EdgeInsets.all(24.0),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(28.0),
             ),
-            itemCount: colors.length,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  onSelect(colors[index]);
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  margin: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: colors[index],
-                    borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Seleccionar color',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+              ),
+              const SizedBox(height: 16.0),
+              Wrap(
+                spacing: 12.0,
+                runSpacing: 12.0,
+                children: [
+                  // Material 3 color palette
+                  _buildColorOption(
+                      context, Colors.white, onSelect, currentColor),
+                  _buildColorOption(
+                      context, Colors.blue.shade200, onSelect, currentColor),
+                  _buildColorOption(
+                      context, Colors.yellow.shade200, onSelect, currentColor),
+                  _buildColorOption(
+                      context, Colors.green.shade200, onSelect, currentColor),
+                  _buildColorOption(
+                      context, Colors.purple.shade200, onSelect, currentColor),
+                  _buildColorOption(context, Colors.lightGreen.shade200,
+                      onSelect, currentColor),
+                  _buildColorOption(
+                      context, Colors.pink.shade200, onSelect, currentColor),
+                  _buildColorOption(
+                      context, Colors.orange.shade200, onSelect, currentColor),
+                  _buildColorOption(
+                      context, Colors.teal.shade200, onSelect, currentColor),
+                  _buildColorOption(
+                      context, Colors.indigo.shade200, onSelect, currentColor),
+                  _buildColorOption(
+                      context, Colors.red.shade200, onSelect, currentColor),
+                  _buildColorOption(
+                      context, Colors.brown.shade200, onSelect, currentColor),
+                ],
+              ),
+              const SizedBox(height: 24.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Cancelar'),
                   ),
-                ),
-              );
-            },
+                ],
+              ),
+            ],
           ),
         );
       },
     );
   }
+}
+
+Widget _buildColorOption(BuildContext context, Color color,
+    void Function(Color) onSelect, Color currentColor) {
+  final isSelected = currentColor == color;
+  return GestureDetector(
+    onTap: () async {
+      await HapticService.selectionClick();
+      onSelect(color);
+      Navigator.of(context).pop();
+    },
+    child: Container(
+      width: 48.0,
+      height: 48.0,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+          width: 2.0,
+        ),
+      ),
+      child: isSelected
+          ? Icon(
+              Icons.check,
+              color:
+                  color.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+              size: 24.0,
+            )
+          : null,
+    ),
+  );
 }

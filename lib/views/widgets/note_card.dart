@@ -1,9 +1,6 @@
-import 'package:bible_app/blocs/blocs.dart';
+import 'package:bible_app/core/core.dart';
 import 'package:bible_app/data/data.dart';
-import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 class NoteCard extends StatelessWidget {
   const NoteCard({
@@ -17,157 +14,164 @@ class NoteCard extends StatelessWidget {
   final int index;
   final VoidCallback onTap;
 
+  // Constants for consistent styling
+  static const double _cardHeight = 140.0;
+  static const double _cardPadding = 16.0; // Reduced for grid items
+  static const double _cardBorderRadius = 12.0; // Slightly smaller for grid
+  static const double _contentSpacing = 8.0; // Reduced spacing
+  static const double _textHeight = 1.2;
+
+  static const double _luminanceThreshold = 0.3;
+  static const double _stateLayerOpacity =
+      0.08; // Material 3 state layer opacity
+
+  // Calculate text color based on background color luminance
+  Color _getTextColor(int backgroundColor) {
+    final color = Color(backgroundColor);
+    final luminance = color.computeLuminance();
+    return luminance > _luminanceThreshold ? Colors.black : Colors.white;
+  }
+
+  // Build title widget if title exists
+  Widget _buildTitle(BuildContext context) {
+    if (note.title.isEmpty) return const SizedBox.shrink();
+
+    return Text(
+      note.title,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            // Smaller title for grid
+            color: _getTextColor(note.color),
+            fontWeight: FontWeight.w600,
+            height: _textHeight,
+          ),
+    );
+  }
+
+  // Build content widget if content exists
+  Widget _buildContent(BuildContext context) {
+    if (note.content.isEmpty) return const SizedBox.shrink();
+
+    return Expanded(
+      child: Text(
+        note.content,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 7, // Allow up to 50 lines to fill available space
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              // Smaller content for grid
+              color: _getTextColor(note.color).withOpacity(0.9),
+            ),
+      ),
+    );
+  }
+
+  // Build author widget if author exists
+  Widget _buildAuthor(BuildContext context) {
+    if (note.author == null || note.author!.isEmpty)
+      return const SizedBox.shrink();
+
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: 'Autor: ',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: _getTextColor(note.color).withOpacity(0.7),
+                  fontSize: 10, // Smaller font for grid
+                ),
+          ),
+          TextSpan(
+            text: note.author,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: _getTextColor(note.color),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 10, // Smaller font for grid
+                ),
+          ),
+        ],
+      ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-// Calculate text color based on background color luminance
-    Color getTextColor(int backgroundColor) {
-      final color = Color(backgroundColor);
-      final luminance = color.computeLuminance();
-      return luminance > 0.47 ? Colors.black : Colors.white;
-    }
+    // Create state layer color for Material 3 interactions
+    final stateLayerColor =
+        _getTextColor(note.color).withOpacity(_stateLayerOpacity);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      child: Slidable(
-        key: ValueKey(index),
-        endActionPane: ActionPane(
-          extentRatio: 0.25,
-          dragDismissible: false,
-          motion: const ScrollMotion(),
-          children: [
-            SlidableAction(
-              borderRadius: BorderRadius.circular(8),
-              onPressed: (_) {
-                showDialog<AlertDialog>(
-                  context: context,
-                  builder: (context) {
-                    return CustomAlertDialog.red(
-                      title: 'Eliminar Nota',
-                      description:
-                          '¿Estás seguro de que deseas eliminar esta nota?',
-                      rightButtonText: 'Eliminar',
-                      onRightButtonPressed: () {
-                        context
-                            .read<NotesBloc>()
-                            .add(NotesEvent.deleteNote(index));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Nota eliminada.',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-              icon: Icons.delete,
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.red,
-            ),
-          ],
+    return InkWell(
+      onTap: () async {
+        await HapticService.selectionClick();
+        onTap();
+      },
+      borderRadius: BorderRadius.circular(_cardBorderRadius),
+      overlayColor: WidgetStateProperty.resolveWith<Color?>(
+        (Set<WidgetState> states) {
+          if (states.contains(WidgetState.pressed)) {
+            return stateLayerColor.withOpacity(0.12); // Pressed state
+          }
+          if (states.contains(WidgetState.hovered)) {
+            return stateLayerColor.withOpacity(0.08); // Hover state
+          }
+          if (states.contains(WidgetState.focused)) {
+            return stateLayerColor.withOpacity(0.12); // Focus state
+          }
+          return null;
+        },
+      ),
+      child: Card(
+        color: Color(note.color),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(_cardBorderRadius),
+          side: BorderSide(
+            color: _getTextColor(note.color).withOpacity(0.12),
+            width: 1.0,
+          ),
         ),
-        child: InkWell(
-          onTap: onTap,
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            height: note.content.length > 100 || note.content.contains('\n')
-                ? 150
-                : note.content.isEmpty || note.title.isEmpty
-                    ? note.content.length > 50 || note.content.contains('\n')
-                        ? 120
-                        : note.content.length > 25 ||
-                                note.content.contains('\n')
-                            ? 110
-                            : 90
-                    : 130,
-            decoration: BoxDecoration(
-              color: Color(note.color),
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.12),
-                  blurRadius: 2,
-                  offset: const Offset(0, 1),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (note.title.isNotEmpty)
-                  Text(
-                    note.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: getTextColor(note.color),
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-                else
-                  const SizedBox.shrink(),
-                if (note.content.isNotEmpty)
-                  const SizedBox(height: 8)
-                else
-                  const SizedBox.shrink(),
-                if (note.content.isNotEmpty)
-                  Text(
-                    note.content,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: getTextColor(note.color),
-                      fontSize: 16,
-                    ),
-                  )
-                else
-                  const SizedBox.shrink(),
-                const Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    if (note.author != null && note.author!.isNotEmpty)
-                      Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'Autor: ',
-                              style: TextStyle(
-                                color: getTextColor(note.color),
-                                fontSize: 14,
+        child: Container(
+          padding: const EdgeInsets.all(_cardPadding),
+          height: _cardHeight,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildTitle(context),
+              if (note.content.isNotEmpty)
+                const SizedBox(height: _contentSpacing),
+              _buildContent(context),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildAuthor(context),
+                        if (note.author != null && note.author!.isNotEmpty)
+                          const SizedBox(
+                              height: 2.0), // Small gap between author and date
+                        Text(
+                          note.date,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(
+                                color:
+                                    _getTextColor(note.color).withOpacity(0.7),
+
+                                fontSize: 10, // Smaller font for grid
                               ),
-                            ),
-                            TextSpan(
-                              text: note.author,
-                              style: TextStyle(
-                                color: getTextColor(note.color),
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
                         ),
-                      )
-                    else
-                      const SizedBox.shrink(),
-                    Text(
-                      note.date,
-                      style: TextStyle(
-                        color: getTextColor(note.color),
-                        fontSize: 14,
-                      ),
+                      ],
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

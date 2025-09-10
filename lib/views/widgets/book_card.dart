@@ -1,4 +1,6 @@
+import 'package:bible_app/core/services/haptic_service.dart';
 import 'package:bible_app/data/data.dart';
+import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
 
 /// Callback type for chapter selection
@@ -23,17 +25,15 @@ class _BookCardState extends State<BookCard>
   // Animation constants
   static const Duration _animationDuration = Duration(milliseconds: 200);
   static const Curve _animationCurve = Curves.easeIn;
-  
-  // Layout constants
-  static const EdgeInsets _cardMargin = EdgeInsets.symmetric(horizontal: 16, vertical: 8);
-  static const EdgeInsets _cardPadding = EdgeInsets.all(8.0);
-  static const EdgeInsets _headerPadding = EdgeInsets.symmetric(horizontal: 16, vertical: 16);
-  static const EdgeInsets _gridPadding = EdgeInsets.symmetric(horizontal: 16, vertical: 16);
+
+  static const EdgeInsets _headerPadding =
+      EdgeInsets.symmetric(horizontal: 16, vertical: 16);
+  static const EdgeInsets _gridPadding =
+      EdgeInsets.symmetric(horizontal: 16, vertical: 16);
   static const double _cardBorderRadius = 12.0;
-  static const double _chapterButtonBorderRadius = 8.0;
-  static const int _gridCrossAxisCount = 5;
+  static const int _gridCrossAxisCount = 7;
   static const double _gridSpacing = 8.0;
-  
+
   late AnimationController _controller;
   late Animation<double> _heightFactor;
   bool _isExpanded = false;
@@ -54,19 +54,25 @@ class _BookCardState extends State<BookCard>
     super.dispose();
   }
 
-  void _handleTap() {
+  Future<void> _handleTap() async {
+    // Provide haptic feedback for expansion/collapse
+    await HapticService.selectionClick();
+    
     setState(() {
       _isExpanded = !_isExpanded;
     });
-    
+
     if (_isExpanded) {
       _controller.forward();
     } else {
       _controller.reverse();
     }
   }
-  
-  void _handleChapterTap(ChapterModel chapter) {
+
+  Future<void> _handleChapterTap(ChapterModel chapter) async {
+    // Provide haptic feedback for chapter selection
+    await HapticService.mediumImpact();
+    
     widget.onChapterSelected(chapter);
     if (_isExpanded) {
       _controller.reverse();
@@ -78,15 +84,9 @@ class _BookCardState extends State<BookCard>
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: _cardMargin,
-      color: Theme.of(context).colorScheme.secondary,
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(_cardBorderRadius),
-      ),
-      child: Padding(
-        padding: _cardPadding,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+      child: Card(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -135,7 +135,10 @@ class _BookCardHeader extends StatelessWidget {
               Expanded(
                 child: Text(
                   bookName,
-                  style: Theme.of(context).textTheme.displayMedium,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                 ),
               ),
               AnimatedRotation(
@@ -143,7 +146,7 @@ class _BookCardHeader extends StatelessWidget {
                 duration: _BookCardState._animationDuration,
                 child: Icon(
                   Icons.keyboard_arrow_down,
-                  color: Theme.of(context).colorScheme.onSecondary,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
@@ -201,23 +204,6 @@ class _ChapterGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Use Wrap for better performance with fewer items
-    if (chapters.length <= 20) {
-      return Padding(
-        padding: _BookCardState._gridPadding,
-        child: Wrap(
-          spacing: _BookCardState._gridSpacing,
-          runSpacing: _BookCardState._gridSpacing,
-          children: chapters.map((chapter) => 
-            _ChapterButton(
-              chapter: chapter,
-              onTap: () => onChapterTap(chapter),
-            ),
-          ).toList(),
-        ),
-      );
-    }
-    
     // Use GridView for many chapters
     return GridView.builder(
       padding: _BookCardState._gridPadding,
@@ -232,8 +218,9 @@ class _ChapterGrid extends StatelessWidget {
       itemBuilder: (context, index) {
         final chapter = chapters[index];
         return _ChapterButton(
+          key: ValueKey(chapter.number), // Use chapter number for key
           chapter: chapter,
-          onTap: () => onChapterTap(chapter),
+          onTap: (chapter) => onChapterTap(chapter),
         );
       },
     );
@@ -243,44 +230,19 @@ class _ChapterGrid extends StatelessWidget {
 /// Individual chapter button widget
 class _ChapterButton extends StatelessWidget {
   const _ChapterButton({
+    super.key, // Add key parameter
     required this.chapter,
     required this.onTap,
   });
 
   final ChapterModel chapter;
-  final VoidCallback onTap;
+  final void Function(ChapterModel) onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: 'Chapter ${chapter.number}',
-      child: SizedBox(
-        width: 48,
-        height: 48,
-        child: Material(
-          color: Theme.of(context).colorScheme.primary,
-          borderRadius: BorderRadius.circular(
-            _BookCardState._chapterButtonBorderRadius,
-          ),
-          child: InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(
-              _BookCardState._chapterButtonBorderRadius,
-            ),
-            child: Center(
-              child: Text(
-                chapter.number.toString(),
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
+    return NumberButton(
+      number: chapter.number,
+      onTap: () => onTap(chapter),
     );
   }
 }
-

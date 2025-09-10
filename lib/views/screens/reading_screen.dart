@@ -1,3 +1,4 @@
+import 'package:bible_app/core/core.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
@@ -5,11 +6,13 @@ import 'package:flutter/services.dart';
 
 class ReadingScreen extends StatefulWidget {
   const ReadingScreen({
+    required this.book,
     required this.chapter,
     this.verse,
     super.key,
   });
 
+  final BookModel book;
   final ChapterModel chapter;
   final VerseModel? verse;
 
@@ -85,11 +88,12 @@ class _ReadingScreenState extends State<ReadingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
           _ReadingAppBar(
+            book: widget.book,
             chapter: widget.chapter,
             hasSelectedVerses: _selectedVerses.isNotEmpty,
             onShare: _handleShare,
@@ -98,6 +102,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
             titleFontSize: _titleFontSize,
           ),
           _VersesList(
+            book: widget.book,
             chapter: widget.chapter,
             verseKeys: _verseKeys,
             onVerseSelect: _handleVerseSelection,
@@ -195,6 +200,7 @@ class _VerseShareService {
 /// App bar for reading screen
 class _ReadingAppBar extends StatelessWidget {
   const _ReadingAppBar({
+    required this.book,
     required this.chapter,
     required this.hasSelectedVerses,
     required this.onShare,
@@ -203,6 +209,7 @@ class _ReadingAppBar extends StatelessWidget {
     required this.titleFontSize,
   });
 
+  final BookModel book;
   final ChapterModel chapter;
   final bool hasSelectedVerses;
   final VoidCallback onShare;
@@ -218,11 +225,11 @@ class _ReadingAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
-    return SliverAppBar(
-      backgroundColor: theme.appBarTheme.backgroundColor,
-      expandedHeight: expandedHeight,
-      pinned: true,
+    return CustomSliverAppBar(
+      backgroundColor: colorScheme.surfaceContainer,
+      title: _chapterTitle,
       actions: [
         if (hasSelectedVerses)
           IconButton(
@@ -231,19 +238,6 @@ class _ReadingAppBar extends StatelessWidget {
             tooltip: 'Share selected verses',
           ),
       ],
-      flexibleSpace: FlexibleSpaceBar(
-        centerTitle: false,
-        background: Container(
-          color: theme.scaffoldBackgroundColor,
-        ),
-        titlePadding: titlePadding,
-        title: Text(
-          _chapterTitle,
-          style: theme.appBarTheme.titleTextStyle?.copyWith(
-            fontSize: titleFontSize,
-          ),
-        ),
-      ),
     );
   }
 }
@@ -254,30 +248,80 @@ class _VersesList extends StatelessWidget {
     required this.chapter,
     required this.verseKeys,
     required this.onVerseSelect,
+    required this.book,
   });
 
   final ChapterModel chapter;
   final List<GlobalKey> verseKeys;
   final void Function(VerseModel) onVerseSelect;
+  final BookModel book;
+
+  bool get _hasNextChapter {
+    final currentIndex =
+        book.chapters.indexWhere((c) => c.number == chapter.number);
+    return currentIndex != -1 && currentIndex < book.chapters.length - 1;
+  }
+
+  void _navigateToNextChapter(BuildContext context) async {
+    await HapticService.selectionClick();
+    if (!_hasNextChapter) return;
+
+    final nextChapterNumber = chapter.number + 1;
+    final nextChapter = book.chapters.firstWhere(
+      (c) => c.number == nextChapterNumber,
+    );
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ReadingScreen(chapter: nextChapter, book: book),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    final theme = Theme.of(context);
 
     return SliverPadding(
-      padding: EdgeInsets.only(bottom: mediaQuery.padding.bottom),
+      padding: EdgeInsets.only(bottom: mediaQuery.padding.bottom + 16),
       sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final verse = chapter.verses[index];
-
-            return VerseCard.onBible(
-              key: verseKeys[index],
-              verse: verse,
-              onSelect: onVerseSelect,
-            );
-          },
-          childCount: chapter.verses.length,
+        delegate: SliverChildListDelegate(
+          [
+            ...List.generate(
+              chapter.verses.length,
+              (index) {
+                final verse = chapter.verses[index];
+                return VerseCard.onBible(
+                  key: verseKeys[index],
+                  verse: verse,
+                  onSelect: onVerseSelect,
+                );
+              },
+            ),
+            // Next Chapter Button
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: ElevatedButton.icon(
+                onPressed: _hasNextChapter
+                    ? () => _navigateToNextChapter(context)
+                    : null,
+                icon: Icon(_hasNextChapter
+                    ? Icons.arrow_forward
+                    : Icons.check_circle_outline),
+                label: Text(_hasNextChapter
+                    ? 'Siguiente Capítulo'
+                    : 'Fin de ${book.name}'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  textStyle: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

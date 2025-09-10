@@ -27,58 +27,41 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: appColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
-            backgroundColor: appColorDarker,
+            backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+            surfaceTintColor: Theme.of(context).colorScheme.surfaceTint,
             expandedHeight: 150,
             pinned: true,
+            elevation: 0,
+            shadowColor: Theme.of(context).colorScheme.shadow.withOpacity(0.1),
             flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      appColorDarker,
-                      appColorDarker.withOpacity(0.8),
-                    ],
+              background: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomSearchBar(
+                    hintText: 'Buscar versículos...',
+                    onChanged: (query) {
+                      context.read<SearchVersesBloc>().add(
+                            SearchVersesEvent.search(widget.user.bible, query),
+                          );
+                    },
+                    controller: _searchController,
+                    focusNode: _searchFocusNode,
                   ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: CustomSearchBar(
-                        hintText: 'Buscar versículos...',
-                        onChanged: (query) {
-                          context.read<SearchVersesBloc>().add(
-                                SearchVersesEvent.search(
-                                    widget.user.bible, query),
-                              );
-                        },
-                        controller: _searchController,
-                        focusNode: _searchFocusNode,
-                      ),
-                    ),
-                    SizedBox(height: MediaQuery.of(context).padding.top),
-                  ],
-                ),
+                ],
               ),
               titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
               centerTitle: false,
-              title: const Text(
+              title: Text(
                 'Buscar',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
               ),
             ),
           ),
@@ -87,35 +70,37 @@ class _SearchScreenState extends State<SearchScreen> {
               return state.maybeWhen(
                 orElse: () => const SliverFillRemaining(
                   child: Center(
-                    child: CircularProgressIndicator(color: Colors.white),
+                    child: CircularProgressIndicator(),
                   ),
                 ),
                 loaded: (verses) {
                   if (_searchController.text.isEmpty) {
-                    return const SliverFillRemaining(
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Escribe el parte del versiculo para buscar. \nO Intenta buscando el versiculo asi: "Salmos 23:6"',
-                              style: TextStyle(color: Colors.white54),
-                            ),
-                          ],
-                        ),
+                    return SliverFillRemaining(
+                      child: EmptyState(
+                        icon: Icons.search,
+                        title: 'Buscar versículos',
+                        subtitle:
+                            'Escribe el parte del versiculo para buscar. \nO Intenta buscando el versiculo asi: "Salmos 23:6"',
                       ),
                     );
                   }
 
                   return verses.isEmpty
-                      ? const SliverFillRemaining(
+                      ? SliverFillRemaining(
                           child: Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
                                   'No se encontraron resultados',
-                                  style: TextStyle(color: Colors.white54),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
+                                      ),
                                 ),
                               ],
                             ),
@@ -142,6 +127,14 @@ class _SearchScreenState extends State<SearchScreen> {
                                         builder: (context) => ReadingScreen(
                                           chapter: chapter,
                                           verse: verse,
+                                          book: widget.user.bible.books
+                                              .where(
+                                                (book) =>
+                                                    book.chapters.contains(
+                                                  chapter,
+                                                ),
+                                              )
+                                              .first,
                                         ),
                                       ),
                                     );

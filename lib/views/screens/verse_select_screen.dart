@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class VerseSelectScreen extends StatelessWidget {
-  const VerseSelectScreen({required this.chapter, super.key});
+  const VerseSelectScreen(
+      {required this.chapter, required this.book, super.key});
 
   final ChapterModel chapter;
+  final BookModel book;
 
   // Layout constants
-  static const double _appBarExpandedHeight = 150.0;
   static const EdgeInsets _titlePadding = EdgeInsets.only(left: 50, bottom: 13);
   static const EdgeInsets _gridPadding = EdgeInsets.all(10.0);
   static const int _gridCrossAxisCount = 5;
@@ -25,7 +26,7 @@ class VerseSelectScreen extends StatelessWidget {
           loaded: (user) {
             return _VerseSelectContent(
               chapter: chapter,
-              appBarExpandedHeight: _appBarExpandedHeight,
+              book: book,
               titlePadding: _titlePadding,
               titleFontSize: _titleFontSize,
               gridPadding: _gridPadding,
@@ -46,7 +47,7 @@ class _LoadingState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: const Center(
         child: CircularProgressIndicator(),
       ),
@@ -62,8 +63,10 @@ class _ErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: colorScheme.surface,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -71,20 +74,20 @@ class _ErrorState extends StatelessWidget {
             Icon(
               Icons.error_outline,
               size: 64,
-              color: Colors.red[400],
+              color: colorScheme.error,
             ),
             const SizedBox(height: 16),
             Text(
               'Something went wrong',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.red[600],
+                    color: colorScheme.error,
                   ),
             ),
             const SizedBox(height: 8),
             Text(
               message,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
+                    color: colorScheme.onSurfaceVariant,
                   ),
               textAlign: TextAlign.center,
             ),
@@ -99,7 +102,7 @@ class _ErrorState extends StatelessWidget {
 class _VerseSelectContent extends StatelessWidget {
   const _VerseSelectContent({
     required this.chapter,
-    required this.appBarExpandedHeight,
+    required this.book,
     required this.titlePadding,
     required this.titleFontSize,
     required this.gridPadding,
@@ -107,7 +110,7 @@ class _VerseSelectContent extends StatelessWidget {
   });
 
   final ChapterModel chapter;
-  final double appBarExpandedHeight;
+  final BookModel book;
   final EdgeInsets titlePadding;
   final double titleFontSize;
   final EdgeInsets gridPadding;
@@ -116,17 +119,17 @@ class _VerseSelectContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
         slivers: [
           _VerseSelectAppBar(
             chapter: chapter,
-            expandedHeight: appBarExpandedHeight,
             titlePadding: titlePadding,
             titleFontSize: titleFontSize,
           ),
           _VerseGrid(
             chapter: chapter,
+            book: book,
             padding: gridPadding,
             crossAxisCount: gridCrossAxisCount,
           ),
@@ -140,14 +143,12 @@ class _VerseSelectContent extends StatelessWidget {
 class _VerseSelectAppBar extends StatelessWidget {
   const _VerseSelectAppBar({
     required this.chapter,
-    required this.expandedHeight,
     required this.titlePadding,
     required this.titleFontSize,
   });
 
   final ChapterModel chapter;
 
-  final double expandedHeight;
   final EdgeInsets titlePadding;
   final double titleFontSize;
 
@@ -160,30 +161,8 @@ class _VerseSelectAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return SliverAppBar(
-      backgroundColor: theme.appBarTheme.backgroundColor,
-      expandedHeight: expandedHeight,
-      pinned: true,
-      flexibleSpace: FlexibleSpaceBar(
-        centerTitle: false,
-        background: Container(
-          color: theme.scaffoldBackgroundColor,
-        ),
-        titlePadding: titlePadding,
-        title: Text(
-          _chapterTitle,
-          style: theme.appBarTheme.titleTextStyle?.copyWith(
-                fontSize: titleFontSize,
-              ) ??
-              TextStyle(
-                fontSize: titleFontSize,
-                color: theme.colorScheme.onPrimary,
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-      ),
+    return CustomSliverAppBar(
+      title: _chapterTitle,
     );
   }
 }
@@ -193,10 +172,12 @@ class _VerseGrid extends StatelessWidget {
   const _VerseGrid({
     required this.chapter,
     required this.padding,
+    required this.book,
     required this.crossAxisCount,
   });
 
   final ChapterModel chapter;
+  final BookModel book;
 
   final EdgeInsets padding;
   final int crossAxisCount;
@@ -219,6 +200,7 @@ class _VerseGrid extends StatelessWidget {
           (context, index) {
             return VerseNumberCard(
               chapter: chapter,
+              book: book,
               verse: chapter.verses[index],
             );
           },

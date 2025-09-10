@@ -1,4 +1,5 @@
 import 'package:bible_app/blocs/blocs.dart';
+import 'package:bible_app/core/core.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
@@ -35,78 +36,59 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
     super.dispose();
   }
 
-  void _saveNote() {
+  void _saveNote() async {
+    await HapticService.selectionClick();
     Navigator.of(context).pop();
     widget.onClose(_contentController.text);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Nota guardada.'),
-        duration: Duration(seconds: 2),
-      ),
-    );
+    CustomSnackBar.showSuccess(context, text: 'Nota guardada');
   }
 
-  void _deleteNote() {
+  void _deleteNote() async {
+    await HapticService.selectionClick();
     widget.verse.note = null;
     context.read<UserBloc>().add(UserEvent.saveVerse(verse: widget.verse));
 
     Navigator.of(context).pop();
+    Navigator.of(context).pop();
+
     widget.onClose('');
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Nota eliminada.'),
-        duration: Duration(seconds: 2),
-      ),
-    );
+    CustomSnackBar.showSuccess(context, text: 'Nota eliminada');
   }
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: _saveNote,
-          backgroundColor: accentColor,
-          child: const FaIcon(FontAwesomeIcons.floppyDisk, color: Colors.black),
+          child: FaIcon(
+            FontAwesomeIcons.floppyDisk,
+          ),
         ),
         body: CustomScrollView(
           slivers: [
-            SliverAppBar(
-              expandedHeight: 150,
-              pinned: true,
-              flexibleSpace: FlexibleSpaceBar(
-                centerTitle: false,
-                titlePadding: const EdgeInsets.only(
-                  left: 50,
-                  bottom: 13,
-                ),
-                background: Container(
-                  color: appColor,
-                ),
-                title: Text(
+            CustomSliverAppBar(
+              title:
                   '${widget.verse.book} ${widget.verse.chapter}:${widget.verse.number}',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
               actions: [
                 IconButton(
-                  onPressed: () => showDialog<void>(
-                    context: context,
-                    builder: (context) => CustomAlertDialog.red(
-                      title: 'Eliminar Nota',
-                      description:
+                  onPressed: () async {
+                    await HapticService.selectionClick();
+                    showDialog<void>(
+                      context: context,
+                      builder: (context) => CustomAlertDialog(
+                        title: 'Eliminar Nota',
+                        content: Text(
                           '¿Estás seguro de que quieres eliminar esta nota?',
-                      rightButtonText: 'Eliminar',
-                      onRightButtonPressed: _deleteNote,
-                    ),
-                  ),
-                  icon: const FaIcon(
-                    FontAwesomeIcons.trashCan,
-                    color: Colors.white,
-                    size: 18,
-                  ),
+                        ),
+                        primaryActionTitle: 'Eliminar',
+                        onPrimaryPressed: (_) => _deleteNote(),
+                      ),
+                    );
+                  },
+                  icon: FaIcon(FontAwesomeIcons.trashCan),
                 ),
               ],
             ),
@@ -120,12 +102,14 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Card(
-                        color: Colors.black.withOpacity(0.1),
+                        color: colorScheme.surfaceContainerHighest,
+                        elevation: 2,
+                        shadowColor: colorScheme.shadow.withOpacity(0.2),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(16),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(20),
                           child: SizedBox(
                             width: double.infinity,
                             child: Column(
@@ -134,11 +118,10 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
                                 Text(
                                   widget.verse.text[0].toUpperCase() +
                                       widget.verse.text.substring(1),
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.normal,
+                                  style: textTheme.bodyLarge?.copyWith(
+                                    color: colorScheme.onSurface,
                                     fontStyle: FontStyle.italic,
+                                    height: 1.5,
                                   ),
                                 ),
                               ],
@@ -152,23 +135,22 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
                       child: SingleChildScrollView(
                         child: TextField(
                           controller: _contentController,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             hintText: 'Agrega una nota...',
                             filled: false,
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
+                            hintStyle: textTheme.bodyLarge?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
                               fontStyle: FontStyle.italic,
                             ),
                             border: InputBorder.none,
                           ),
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.normal,
+                          style: textTheme.bodyLarge?.copyWith(
+                            color: colorScheme.onSurface,
+                            height: 1.5,
                           ),
                           keyboardType: TextInputType.multiline,
                           textAlign: TextAlign.left,
-                          cursorColor: Colors.white,
+                          cursorColor: colorScheme.primary,
                           textCapitalization: TextCapitalization.sentences,
                           maxLines: null,
                         ),

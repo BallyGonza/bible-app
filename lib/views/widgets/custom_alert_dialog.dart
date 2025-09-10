@@ -1,58 +1,60 @@
-import 'package:bible_app/data/data.dart';
 import 'package:flutter/material.dart';
 
 class CustomAlertDialog extends StatelessWidget {
-  const CustomAlertDialog.red({
+  const CustomAlertDialog({
     required this.title,
-    required this.description,
-    required this.rightButtonText,
-    required this.onRightButtonPressed,
+    required this.content,
+    required this.primaryActionTitle,
+    required this.onPrimaryPressed,
     super.key,
-  }) : rightButtonColor = Colors.red;
+  }) : hint = null;
 
-  const CustomAlertDialog.green({
+  const CustomAlertDialog.textField({
     required this.title,
-    required this.description,
-    required this.rightButtonText,
-    required this.onRightButtonPressed,
+    required this.hint,
+    required this.primaryActionTitle,
+    required this.onPrimaryPressed,
     super.key,
-  }) : rightButtonColor = Colors.green;
+  }) : content = null;
 
   final String title;
-  final String description;
-  final String rightButtonText;
-  final Color rightButtonColor;
-  final VoidCallback onRightButtonPressed;
+  final String? hint;
+  final Widget? content;
+  final String primaryActionTitle;
+  final void Function(String) onPrimaryPressed;
 
   @override
   Widget build(BuildContext context) {
+    // Create our own controller
+    final textController = TextEditingController();
+
     return AlertDialog(
-      backgroundColor: appColorDarker,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       title: Text(
         title,
-        style: const TextStyle(color: Colors.white),
+        style: Theme.of(context).textTheme.titleMedium,
       ),
-      content: Text(
-        description,
-        style: const TextStyle(color: Colors.white),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text(
-            'Cancelar',
-            style: TextStyle(color: Colors.white),
+      content: content ??
+          TextField(
+            controller: textController,
+            autofocus: true,
+            decoration: InputDecoration(hintText: hint),
+            maxLines: 2,
           ),
-        ),
+      actions: <Widget>[
         TextButton(
           onPressed: () {
-            onRightButtonPressed();
-            Navigator.pop(context);
+            textController.clear();
+            Navigator.of(context).pop();
           },
-          child:
-              Text(rightButtonText, style: TextStyle(color: rightButtonColor)),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            onPrimaryPressed(textController.text);
+          },
+          child: Text(primaryActionTitle),
         ),
       ],
     );

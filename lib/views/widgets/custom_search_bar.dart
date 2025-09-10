@@ -1,3 +1,4 @@
+import 'package:bible_app/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -19,24 +20,69 @@ class CustomSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SearchBar(
-      onTapOutside: (_) => focusNode?.unfocus(),
-      focusNode: focusNode,
-      autoFocus: autoFocus,
-      padding: const MaterialStatePropertyAll(
-        EdgeInsets.symmetric(horizontal: 16),
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: SearchBar(
+        onTapOutside: (_) => focusNode?.unfocus(),
+        focusNode: focusNode,
+        autoFocus: autoFocus,
+        onTap: () async {
+          await HapticService.selectionClick();
+          focusNode?.requestFocus();
+        },
+        padding: const MaterialStatePropertyAll(
+          EdgeInsets.symmetric(horizontal: 16),
+        ),
+        controller: controller,
+        hintText: hintText,
+        hintStyle: MaterialStateProperty.all(
+          theme.textTheme.bodyLarge?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+          ),
+        ),
+        textStyle: MaterialStateProperty.all(
+          theme.textTheme.bodyLarge?.copyWith(
+            color: colorScheme.onSurface,
+          ),
+        ),
+        backgroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.focused)) {
+            return colorScheme.surfaceContainerHighest;
+          }
+          return colorScheme.surfaceContainer;
+        }),
+        elevation: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.focused)) {
+            return 2;
+          }
+          return 1;
+        }),
+        shadowColor: MaterialStateProperty.all(
+          colorScheme.shadow.withOpacity(0.1),
+        ),
+        surfaceTintColor: MaterialStateProperty.all(
+          colorScheme.surfaceTint,
+        ),
+        side: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.focused)) {
+            return BorderSide(
+              color: colorScheme.primary,
+              width: 2,
+            );
+          }
+          return BorderSide.none;
+        }),
+        leading: FaIcon(
+          FontAwesomeIcons.magnifyingGlass,
+          size: 20,
+          color: colorScheme.onSurfaceVariant,
+        ),
+        trailing: [],
+        onChanged: onChanged,
       ),
-      controller: controller,
-      hintText: hintText,
-      hintStyle: MaterialStateProperty.all(
-        TextStyle(color: Colors.grey[600]),
-      ),
-      leading: FaIcon(
-        FontAwesomeIcons.magnifyingGlass,
-        size: 20,
-        color: Colors.grey[600],
-      ),
-      onChanged: onChanged,
     );
   }
 }

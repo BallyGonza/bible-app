@@ -1,4 +1,5 @@
 import 'package:bible_app/blocs/blocs.dart';
+import 'package:bible_app/core/core.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
@@ -38,12 +39,13 @@ class _VerseCardState extends State<VerseCard>
   late bool _isFocused;
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
-  Color _color = Colors.white;
   bool _hasNote = false;
+  late VerseModel _currentVerse;
 
   @override
   void initState() {
     super.initState();
+    _currentVerse = widget.verse;
     _isFocused = widget.isFocused;
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 200),
@@ -56,6 +58,17 @@ class _VerseCardState extends State<VerseCard>
   }
 
   @override
+  void didUpdateWidget(VerseCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.verse != oldWidget.verse) {
+      setState(() {
+        _currentVerse = widget.verse;
+        _hasNote = widget.verse.note != null;
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _animationController.dispose();
     _isFocused = false;
@@ -63,20 +76,32 @@ class _VerseCardState extends State<VerseCard>
   }
 
   void _onColorChanged(Color color) {
-    context.read<UserBloc>().add(
-          UserEvent.saveVerse(verse: widget.verse.copyWith(color: color.value)),
-        );
+    // Create a new verse with the updated color
+    final updatedVerse = _currentVerse.copyWith(color: color.value);
+
+    // Update the local state
     setState(() {
-      _color = color;
+      _currentVerse = updatedVerse;
     });
+
+    // Save the change to the BLoC
+    context.read<UserBloc>().add(
+          UserEvent.saveVerse(verse: updatedVerse),
+        );
   }
 
   void _onNoteAdded(String note) {
-    context.read<UserBloc>().add(UserEvent.saveVerse(
-        verse: widget.verse.copyWith(note: VerseNoteModel(content: note))));
+    final updatedVerse =
+        _currentVerse.copyWith(note: VerseNoteModel(content: note));
+
     setState(() {
+      _currentVerse = updatedVerse;
       _hasNote = true;
     });
+
+    context.read<UserBloc>().add(
+          UserEvent.saveVerse(verse: updatedVerse),
+        );
   }
 
   @override
@@ -93,22 +118,27 @@ class _VerseCardState extends State<VerseCard>
             children: [
               CustomSlidableAction(
                 onPressed: (_) => _showAddToNoteModal(context),
-                backgroundColor: appColor,
-                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                foregroundColor:
+                    Theme.of(context).colorScheme.onPrimaryContainer,
                 borderRadius:
                     const BorderRadius.horizontal(left: Radius.circular(12)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FaIcon(FontAwesomeIcons.bookmark,
-                        size: 20, color: accentColor),
+                        size: 20,
+                        color:
+                            Theme.of(context).colorScheme.onPrimaryContainer),
                     const SizedBox(height: 4),
                     Text(
                       'Agregar a',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer,
+                            fontWeight: FontWeight.w500,
+                          ),
                     ),
                   ],
                 ),
@@ -120,49 +150,73 @@ class _VerseCardState extends State<VerseCard>
             motion: const ScrollMotion(),
             children: [
               CustomSlidableAction(
-                onPressed: (_) => CustomModalBottomSheet.colorPicker(
-                    context, _onColorChanged),
-                backgroundColor: appColor,
-                foregroundColor: Colors.white,
+                onPressed: (_) async {
+                  await HapticService.selectionClick();
+                  CustomModalBottomSheet.colorPicker(
+                    context,
+                    _onColorChanged,
+                    _currentVerse.color != null
+                        ? Color(_currentVerse.color!)
+                        : Colors.white,
+                  );
+                },
+                backgroundColor:
+                    Theme.of(context).colorScheme.secondaryContainer,
+                foregroundColor:
+                    Theme.of(context).colorScheme.onSecondaryContainer,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    FaIcon(FontAwesomeIcons.palette, size: 20, color: _color),
+                    FaIcon(FontAwesomeIcons.palette,
+                        size: 20,
+                        color:
+                            Theme.of(context).colorScheme.onSecondaryContainer),
                     const SizedBox(height: 4),
                     Text(
                       'Resaltar',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer,
+                            fontWeight: FontWeight.w500,
+                          ),
                     ),
                   ],
                 ),
               ),
               CustomSlidableAction(
-                onPressed: (_) => Navigator.push(
-                  context,
-                  MaterialPageRoute<NoteVerseScreen>(
-                    builder: (context) => NoteVerseScreen(
-                        verse: widget.verse, onClose: _onNoteAdded),
-                  ),
-                ),
-                backgroundColor: appColor,
-                foregroundColor: Colors.white,
+                onPressed: (_) async {
+                  await HapticService.selectionClick();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<NoteVerseScreen>(
+                      builder: (context) => NoteVerseScreen(
+                          verse: _currentVerse, onClose: _onNoteAdded),
+                    ),
+                  );
+                },
+                backgroundColor:
+                    Theme.of(context).colorScheme.tertiaryContainer,
+                foregroundColor:
+                    Theme.of(context).colorScheme.onTertiaryContainer,
                 borderRadius:
                     const BorderRadius.horizontal(right: Radius.circular(12)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FaIcon(FontAwesomeIcons.noteSticky,
-                        size: 20, color: accentColor),
+                        size: 20,
+                        color:
+                            Theme.of(context).colorScheme.onTertiaryContainer),
                     const SizedBox(height: 4),
                     Text(
                       'Nota',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onTertiaryContainer,
+                            fontWeight: FontWeight.w500,
+                          ),
                     ),
                   ],
                 ),
@@ -176,32 +230,23 @@ class _VerseCardState extends State<VerseCard>
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
               color: _isFocused
-                  ? Colors.grey[900]
-                  : widget.type == VerseCardType.bible
-                      ? Colors.transparent
-                      : appColorDarker,
+                  ? Theme.of(context).colorScheme.surfaceContainerHighest
+                  : Colors.transparent,
               child: GestureDetector(
                 onLongPress: () {
                   Clipboard.setData(
                     ClipboardData(
                         text:
-                            "\"${widget.verse.text}\"\n${widget.verse.book} ${widget.verse.chapter}:${widget.verse.number} RVR1960"),
+                            '"${_currentVerse.text}"\n${_currentVerse.book} ${_currentVerse.chapter}:${_currentVerse.number} RVR1960'),
                   );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Versiculo copiado',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  );
+                  // Show snackbar
+                  CustomSnackBar.showSuccess(context,
+                      text: 'Versiculo copiado');
                 },
-                onTap: () {
+                onTap: () async {
+                  await HapticService.selectionClick();
                   if (widget.onSelect != null) {
-                    widget.onSelect!(widget.verse);
+                    widget.onSelect!(_currentVerse);
                   }
                   if (widget.type == VerseCardType.bible) {
                     setState(() => _isFocused = !_isFocused);
@@ -231,7 +276,7 @@ class _VerseCardState extends State<VerseCard>
                               FaIcon(
                                 FontAwesomeIcons.noteSticky,
                                 size: 14,
-                                color: Color(widget.verse.color ??
+                                color: Color(_currentVerse.color ??
                                         Colors.white.value)
                                     .withOpacity(0.6),
                               ),
@@ -251,195 +296,238 @@ class _VerseCardState extends State<VerseCard>
   }
 
   Widget _buildVerseText() {
-    return Text.rich(
-      TextSpan(
+    return RichText(
+      text: TextSpan(
         children: [
+          WidgetSpan(
+            alignment: PlaceholderAlignment.middle,
+            child: VerseNumber(
+              number: _currentVerse.number,
+              style: _numberStyle(),
+              visible: widget.type == VerseCardType.bible,
+            ),
+          ),
           TextSpan(
-              text: widget.type == VerseCardType.bible
-                  ? '${widget.verse.number} '
-                  : '',
-              style: _numberStyle()),
-          TextSpan(
-              text: widget.type == VerseCardType.bible
-                  ? widget.verse.text
-                  : '${widget.verse.text[0].toUpperCase()}${widget.verse.text.substring(1)}',
-              style: _textStyle()),
+            text: widget.type == VerseCardType.bible
+                ? _currentVerse.text
+                : '${_currentVerse.text[0].toUpperCase()}${_currentVerse.text.substring(1)}',
+            style: _textStyle(),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildChapterAndNumber() {
+    final textTheme = Theme.of(context).textTheme;
+
     return Text(
-      '${widget.verse.book} ${widget.verse.chapter}:${widget.verse.number}',
-      style: TextStyle(
-        fontSize: 14,
+      '${_currentVerse.book} ${_currentVerse.chapter}:${_currentVerse.number}',
+      style: textTheme.bodySmall?.copyWith(
         color: _getColor(),
         fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
+        fontWeight: FontWeight.w500,
       ),
     );
   }
 
   TextStyle _numberStyle() {
-    return TextStyle(
-      fontSize: 14,
-      color: _getColor(),
-      fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
-    );
+    final textTheme = Theme.of(context).textTheme;
+
+    return textTheme.bodyLarge?.copyWith(
+          color: _getColor(),
+          fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
+          fontWeight: FontWeight.w800,
+        ) ??
+        const TextStyle();
   }
 
   TextStyle _textStyle() {
-    return TextStyle(
-      fontSize: 20,
-      color: _getColor(),
-      fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
-    );
+    final textTheme = Theme.of(context).textTheme;
+
+    return textTheme.bodyLarge?.copyWith(
+          color: _getColor(),
+          fontStyle: _isFocused ? FontStyle.italic : FontStyle.normal,
+          height: 1.4,
+        ) ??
+        const TextStyle();
   }
 
   Color _getColor() {
-    return widget.verse.color != null ? Color(widget.verse.color!) : _color;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    if (_currentVerse.color != null) {
+      return Color(_currentVerse.color!);
+    }
+
+    // Use Material 3 surface color for better contrast
+    return _isFocused ? colorScheme.primary : colorScheme.onSurface;
   }
 
   void _showAddToNoteModal(BuildContext context) {
-    showModalBottomSheet(
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    showModalBottomSheet<void>(
       context: context,
-      builder: (context) => DraggableScrollableSheet(
-        expand: false,
-        builder: (context, scrollController) => Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: appColor,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 10,
-                offset: const Offset(0, -5),
-              ),
-            ],
-          ),
+      isScrollControlled: true,
+      showDragHandle: true, // Material 3 bottom sheet handle
+      backgroundColor: colorScheme.surfaceContainerLow,
+      builder: (context) => Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.8,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: 24, vertical: 16), // Material 3 spacing
           child: BlocBuilder<NotesBloc, NotesState>(
             builder: (context, state) {
               if (state is NotesLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return SizedBox(
+                  height: 200,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: colorScheme.primary,
+                    ),
+                  ),
+                );
               } else if (state is NotesLoaded) {
                 final notes = state.notes;
                 return Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Header with Material 3 styling
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Agregar a:',
-                          style:
-                              Theme.of(context).textTheme.titleLarge!.copyWith(
-                                    color: Colors.white,
-                                  ),
+                          'Agregar a nota',
+                          style: textTheme.headlineSmall?.copyWith(
+                            color: colorScheme.onSurface,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                         IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const FaIcon(
-                            FontAwesomeIcons.xmark,
-                            color: Colors.white,
+                          onPressed: () => Navigator.of(context).pop(),
+                          icon: Icon(
+                            Icons.close,
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                          style: IconButton.styleFrom(
+                            backgroundColor:
+                                colorScheme.surfaceContainerHighest,
                           ),
                         ),
                       ],
                     ),
+                    const SizedBox(height: 16), // Material 3 spacing
                     if (notes.isEmpty)
-                      Expanded(
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              FaIcon(
-                                FontAwesomeIcons.solidStickyNote,
-                                size: 40,
-                                color: Colors.white.withOpacity(0.7),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 32),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.note_alt_outlined,
+                              size: 48,
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'No tienes notas guardadas',
+                              textAlign: TextAlign.center,
+                              style: textTheme.bodyLarge?.copyWith(
+                                color: colorScheme.onSurface,
                               ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'No tienes predicas / notas guardadas',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge!
-                                    .copyWith(
-                                      color: Colors.white,
-                                    ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       )
                     else
-                      Expanded(
-                        child: ListView.builder(
-                          controller: scrollController,
-                          physics: const BouncingScrollPhysics(),
+                      Flexible(
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          physics: const ClampingScrollPhysics(),
                           itemCount: notes.length,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 4), // Material 3 spacing
                           itemBuilder: (context, index) {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.pop(context);
+                            final note = notes[index];
+                            final isSelected =
+                                note.verses.contains(widget.verse);
 
-                                if (!notes[index]
-                                    .verses
-                                    .contains(widget.verse)) {
-                                  context.read<NotesBloc>().add(
-                                        NotesEvent.addVerse(
-                                          index,
-                                          widget.verse,
-                                        ),
-                                      );
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Versiculo agregado a la nota',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
+                            return Card(
+                              elevation: 0,
+                              color: Color(note.color),
+                              margin: EdgeInsets.zero,
+                              child: InkWell(
+                                onTap: () async {
+                                  await HapticService.selectionClick();
+                                  Navigator.of(context).pop();
+
+                                  if (!isSelected) {
+                                    context.read<NotesBloc>().add(
+                                          NotesEvent.addVerse(
+                                            index,
+                                            widget.verse,
+                                          ),
+                                        );
+                                    CustomSnackBar.showSuccess(
+                                      context,
+                                      text: 'Versículo agregado a la nota',
+                                    );
+                                  } else {
+                                    CustomSnackBar.showError(
+                                      context,
+                                      text: 'El versículo ya está en la nota',
+                                    );
+                                  }
+                                },
+                                borderRadius: BorderRadius.circular(12),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(
+                                      16), // Material 3 spacing
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              note.title,
+                                              style: textTheme.titleMedium
+                                                  ?.copyWith(
+                                                color: _calculateNoteTextColor(
+                                                    Color(note.color)),
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            if (note.author != null &&
+                                                note.author!.isNotEmpty) ...[
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                'Por ${note.author}',
+                                                style: textTheme.bodySmall
+                                                    ?.copyWith(
+                                                  color:
+                                                      _calculateNoteTextColor(
+                                                              Color(note.color))
+                                                          .withOpacity(0.7),
+                                                ),
+                                              ),
+                                            ],
+                                          ],
                                         ),
                                       ),
-                                    ),
-                                  );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'El versiculo ya se encuentra en la nota',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
+                                      if (isSelected) ...[
+                                        const SizedBox(width: 12),
+                                        Icon(
+                                          Icons.check_circle_rounded,
+                                          color: colorScheme.primary,
+                                          size: 24,
                                         ),
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                              child: Card(
-                                color: Color(notes[index].color),
-                                child: ListTile(
-                                  title: Text(
-                                    notes[index].title,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleLarge!
-                                        .copyWith(
-                                          color: notes[index].color ==
-                                                  Colors.white.value
-                                              ? Colors.black
-                                              : Colors.white,
-                                        ),
-                                  ),
-                                  trailing: Icon(
-                                    notes[index].verses.contains(widget.verse)
-                                        ? Icons.check
-                                        : null,
-                                    color: Colors.green,
+                                      ],
+                                    ],
                                   ),
                                 ),
                               ),
@@ -450,12 +538,39 @@ class _VerseCardState extends State<VerseCard>
                   ],
                 );
               } else {
-                return const Center(child: Text('Error loading notes'));
+                return SizedBox(
+                  height: 200,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          color: colorScheme.error,
+                          size: 48,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Error al cargar notas',
+                          style: textTheme.bodyLarge?.copyWith(
+                            color: colorScheme.error,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               }
             },
           ),
         ),
       ),
     );
+  }
+
+  /// Calculate appropriate text color based on note card background color
+  Color _calculateNoteTextColor(Color backgroundColor) {
+    final luminance = backgroundColor.computeLuminance();
+    return luminance > 0.5 ? Colors.black87 : Colors.white;
   }
 }

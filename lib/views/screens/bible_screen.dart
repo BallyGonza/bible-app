@@ -1,4 +1,5 @@
 import 'package:bible_app/blocs/blocs.dart';
+import 'package:bible_app/core/services/haptic_service.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,12 @@ class _BibleScreenState extends State<BibleScreen> {
         );
   }
 
-  void _onSearchChanged(String value) {
+  Future<void> _onSearchChanged(String value) async {
+    // Only trigger haptic feedback when starting a new search (not on every keystroke)
+    if (value.isNotEmpty && value.length <= 3) {
+      await HapticService.selectionClick();
+    }
+    
     context.read<SearchBarBookBloc>().add(
           SearchBarBookEvent.search(
             widget.user.bible,
@@ -59,20 +65,22 @@ class _BibleAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      backgroundColor: appColorDarker,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+      surfaceTintColor: Theme.of(context).colorScheme.surfaceTint,
       expandedHeight: _BibleScreenState._appBarExpandedHeight,
       pinned: true,
+      elevation: 0,
+      shadowColor: Theme.of(context).colorScheme.shadow.withOpacity(0.1),
       flexibleSpace: FlexibleSpaceBar(
         background: _AppBarBackground(onSearchChanged: onSearchChanged),
         titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
         centerTitle: false,
-        title: const Text(
+        title: Text(
           'Biblia',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
         ),
       ),
     );
@@ -117,34 +125,11 @@ class _BibleSearchBarState extends State<_BibleSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            appColorDarker,
-            appColorDarker.withOpacity(0.8),
-          ],
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: CustomSearchBar(
-              hintText: 'Buscar libros...',
-              onChanged: widget.onChanged,
-              controller: _controller,
-              focusNode: _focusNode,
-            ),
-          ),
-          SizedBox(height: MediaQuery.of(context).padding.top),
-        ],
-      ),
+    return CustomSearchBar(
+      hintText: 'Buscar libros...',
+      onChanged: widget.onChanged,
+      controller: _controller,
+      focusNode: _focusNode,
     );
   }
 }
@@ -201,8 +186,10 @@ class _LoadedState extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute<VerseSelectScreen>(
-                builder: (context) =>
-                    VerseSelectScreen(chapter: selectedChapter),
+                builder: (context) => VerseSelectScreen(
+                  chapter: selectedChapter,
+                  book: book,
+                ),
               ),
             );
           },

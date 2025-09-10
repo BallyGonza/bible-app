@@ -1,14 +1,17 @@
+import 'package:bible_app/core/core.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
 
 class VerseNumberCard extends StatefulWidget {
   const VerseNumberCard({
+    required this.book,
     required this.chapter,
     required this.verse,
     super.key,
   });
 
+  final BookModel book;
   final ChapterModel chapter;
   final VerseModel verse;
 
@@ -18,28 +21,30 @@ class VerseNumberCard extends StatefulWidget {
 
 class _VerseNumberCardState extends State<VerseNumberCard>
     with SingleTickerProviderStateMixin {
-  late int verseColor;
-  late int verseTextColor;
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+  late Animation<double> _elevationAnimation;
 
   @override
   void initState() {
     super.initState();
-    verseColor = widget.verse.color ?? appColorDarker.value;
-    verseTextColor = Color(verseColor).computeLuminance() > 0.5
-        ? Colors.black.value
-        : Colors.white.value;
-
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 150),
       vsync: this,
     );
 
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.92).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Curves.easeInOut,
+        curve: Curves.easeOut,
+        reverseCurve: Curves.easeIn,
+      ),
+    );
+
+    _elevationAnimation = Tween<double>(begin: 0.0, end: 8.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOut,
       ),
     );
   }
@@ -50,15 +55,37 @@ class _VerseNumberCardState extends State<VerseNumberCard>
     super.dispose();
   }
 
+  // Calculate colors on every build to ensure reactivity
+  (Color backgroundColor, Color textColor) _calculateColors(
+      BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    final backgroundColor = widget.verse.color != null
+        ? Color(widget.verse.color!)
+        : colorScheme.surfaceContainer;
+
+    // Calculate proper contrast color based on background luminance
+    final luminance = backgroundColor.computeLuminance();
+    final textColor = luminance > 0.5 ? Colors.black87 : Colors.white;
+
+    return (backgroundColor, textColor);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final (backgroundColor, textColor) = _calculateColors(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        await HapticService.selectionClick();
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => ReadingScreen(
               chapter: widget.chapter,
               verse: widget.verse,
+              book: widget.book,
             ),
           ),
         );
@@ -71,29 +98,28 @@ class _VerseNumberCardState extends State<VerseNumberCard>
         builder: (context, child) {
           return Transform.scale(
             scale: _scaleAnimation.value,
-            child: child,
+            child: Material(
+              color: backgroundColor,
+              elevation: _elevationAnimation.value,
+              borderRadius: BorderRadius.circular(16),
+              shadowColor: colorScheme.shadow.withOpacity(0.3),
+              child: Container(
+                width: 56,
+                height: 56,
+                alignment: Alignment.center,
+                child: Text(
+                  widget.verse.number.toString(),
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: textColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
           );
         },
-        child: Container(
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Color(verseColor == Colors.white.value
-                ? appColorDarker.value
-                : verseColor),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Center(
-            child: Text(
-              widget.verse.number.toString(),
-              style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                    color: Color(verseColor == Colors.white.value
-                        ? Colors.white.value
-                        : verseTextColor),
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ),
-        ),
       ),
     );
   }

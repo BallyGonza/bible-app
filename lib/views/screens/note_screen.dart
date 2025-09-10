@@ -98,9 +98,9 @@ class NotePageState extends State<NoteScreen> with TickerProviderStateMixin {
 
   void _updateColors() {
     final luminance = _currentColor.computeLuminance();
-    _iconColor = luminance > 0.5 ? Colors.black87 : Colors.white;
-    _textColor = luminance > 0.5 ? Colors.black87 : Colors.white;
-    _systemOverlayStyle = luminance > 0.5
+    _iconColor = luminance > 0.3 ? Colors.black87 : Colors.white;
+    _textColor = luminance > 0.3 ? Colors.black87 : Colors.white;
+    _systemOverlayStyle = luminance > 0.3
         ? SystemUiOverlayStyle.dark
         : SystemUiOverlayStyle.light;
   }
@@ -389,8 +389,8 @@ class NotePageState extends State<NoteScreen> with TickerProviderStateMixin {
 
                 Text(
                   'Versículos',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: _textColor,
                         fontWeight: FontWeight.w600,
                       ),
                 ),
@@ -398,162 +398,151 @@ class NotePageState extends State<NoteScreen> with TickerProviderStateMixin {
 
                 BlocBuilder<NotesBloc, NotesState>(
                   builder: (context, state) {
+                    // Handle new note case
+                    if (widget.isNewNote) {
+                      return const Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Center(
+                            child: Text('No hay versículos agregados'),
+                          ),
+                        ),
+                      );
+                    }
+
                     return state.maybeWhen(
                       orElse: () => const Center(
                         child: CircularProgressIndicator(),
                       ),
                       loaded: (notes) {
-                        final note = notes
-                            .where((note) => note.id == widget.note!.id)
-                            .first;
+                        // Find the note by ID, or use the current widget.note if not found
+                        final note = notes.firstWhere(
+                          (n) => n.id == widget.note?.id,
+                          orElse: () => widget.note!,
+                        );
                         return Column(
                           children: [
-                            Card(
-                              elevation: 1.0,
-                              shadowColor: Theme.of(context)
-                                  .colorScheme
-                                  .shadow
-                                  .withOpacity(0.05),
-                              surfaceTintColor:
-                                  Theme.of(context).colorScheme.surfaceTint,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16.0),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: note.verses.isEmpty
-                                    ? const Center(
-                                        child:
-                                            Text('No hay versículos agregados'),
-                                      )
-                                    : Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: note.verses.map((verse) {
-                                          return Slidable(
-                                            endActionPane: ActionPane(
-                                              extentRatio: 0.25,
-                                              motion: const ScrollMotion(),
-                                              children: [
-                                                CustomSlidableAction(
-                                                  onPressed: (context) {
-                                                    note.verses.remove(verse);
-                                                    context
-                                                        .read<NotesBloc>()
-                                                        .add(
-                                                          NotesEvent.editNote(
-                                                            widget.index,
-                                                            note.copyWith(
-                                                              verses:
-                                                                  note.verses,
-                                                            ),
-                                                          ),
-                                                        );
+                            note.verses.isEmpty
+                                ? const Center(
+                                    child: Text('No hay versículos agregados'),
+                                  )
+                                : Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: note.verses.map((verse) {
+                                      return Slidable(
+                                        endActionPane: ActionPane(
+                                          extentRatio: 0.25,
+                                          motion: const ScrollMotion(),
+                                          children: [
+                                            CustomSlidableAction(
+                                              onPressed: (context) {
+                                                note.verses.remove(verse);
+                                                context.read<NotesBloc>().add(
+                                                      NotesEvent.editNote(
+                                                        widget.index,
+                                                        note.copyWith(
+                                                          verses: note.verses,
+                                                        ),
+                                                      ),
+                                                    );
 
-                                                    CustomSnackBar.showSuccess(
-                                                        context,
-                                                        text:
-                                                            'Versículo eliminado');
-                                                  },
-                                                  backgroundColor:
-                                                      Theme.of(context)
+                                                CustomSnackBar.showSuccess(
+                                                    context,
+                                                    text:
+                                                        'Versículo eliminado');
+                                              },
+                                              backgroundColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .error,
+                                              foregroundColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .onError,
+                                              borderRadius:
+                                                  const BorderRadius.horizontal(
+                                                      right:
+                                                          Radius.circular(12)),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  FaIcon(
+                                                      FontAwesomeIcons.trashCan,
+                                                      size: 20,
+                                                      color: Theme.of(context)
                                                           .colorScheme
-                                                          .error,
-                                                  foregroundColor:
-                                                      Theme.of(context)
-                                                          .colorScheme
-                                                          .onError,
-                                                  borderRadius:
-                                                      const BorderRadius
-                                                          .horizontal(
-                                                          right:
-                                                              Radius.circular(
-                                                                  12)),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      FaIcon(
-                                                          FontAwesomeIcons
-                                                              .trashCan,
-                                                          size: 20,
+                                                          .onError),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    'Eliminar',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .labelSmall
+                                                        ?.copyWith(
                                                           color:
                                                               Theme.of(context)
-                                                                  .colorScheme
-                                                                  .onError),
-                                                      const SizedBox(height: 4),
-                                                      Text(
-                                                        'Eliminar',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .labelSmall
-                                                            ?.copyWith(
-                                                              color: Theme.of(
-                                                                      context)
                                                                   .colorScheme
                                                                   .onError,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                            ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-                                                  bottom: BorderSide(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .outline
-                                                        .withOpacity(0.1),
-                                                    width: 1.0,
-                                                  ),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    '${verse.book} ${verse.chapter}:${verse.number}',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .labelMedium
-                                                        ?.copyWith(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .primary,
                                                           fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
-                                                  ),
-                                                  const SizedBox(height: 4.0),
-                                                  Text(
-                                                    verse.text,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyMedium
-                                                        ?.copyWith(
-                                                          color: _textColor,
-                                                          height: 1.4,
+                                                              FontWeight.w500,
                                                         ),
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                          );
-                                        }).toList(),
-                                      ),
-                              ),
-                            ),
+                                          ],
+                                        ),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(16.0),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .surface,
+                                            border: Border(
+                                              bottom: BorderSide(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .outline
+                                                    .withOpacity(0.1),
+                                                width: 1.0,
+                                              ),
+                                            ),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '${verse.book} ${verse.chapter}:${verse.number}',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .labelMedium
+                                                    ?.copyWith(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .primary,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                              ),
+                                              const SizedBox(height: 4.0),
+                                              Text(
+                                                verse.text,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium
+                                                    ?.copyWith(
+                                                      height: 1.4,
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
                           ],
                         );
                       },

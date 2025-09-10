@@ -43,9 +43,9 @@ class CustomModalBottomSheet {
                   _buildColorOption(
                       context, Colors.green.shade200, onSelect, currentColor),
                   _buildColorOption(
-                      context, Colors.blue.shade200, onSelect, currentColor),
-                  _buildColorOption(
                       context, Colors.purple.shade200, onSelect, currentColor),
+                  _buildColorOption(context, Colors.lightGreen.shade200,
+                      onSelect, currentColor),
                   _buildColorOption(
                       context, Colors.pink.shade200, onSelect, currentColor),
                   _buildColorOption(

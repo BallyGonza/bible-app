@@ -197,23 +197,6 @@ class _ChapterGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Use Wrap for better performance with fewer items
-    if (chapters.length <= 20) {
-      return Wrap(
-        spacing: _BookCardState._gridSpacing,
-        runSpacing: _BookCardState._gridSpacing,
-        children: chapters
-            .map(
-              (chapter) => _ChapterButton(
-                key: ValueKey(chapter.number), // Use chapter number for key
-                chapter: chapter,
-                onTap: (chapter) => onChapterTap(chapter),
-              ),
-            )
-            .toList(),
-      );
-    }
-
     // Use GridView for many chapters
     return GridView.builder(
       padding: _BookCardState._gridPadding,

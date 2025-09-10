@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class VerseSelectScreen extends StatelessWidget {
-  const VerseSelectScreen({required this.chapter, super.key});
+  const VerseSelectScreen(
+      {required this.chapter, required this.book, super.key});
 
   final ChapterModel chapter;
+  final BookModel book;
 
   // Layout constants
   static const EdgeInsets _titlePadding = EdgeInsets.only(left: 50, bottom: 13);
@@ -24,6 +26,7 @@ class VerseSelectScreen extends StatelessWidget {
           loaded: (user) {
             return _VerseSelectContent(
               chapter: chapter,
+              book: book,
               titlePadding: _titlePadding,
               titleFontSize: _titleFontSize,
               gridPadding: _gridPadding,
@@ -99,6 +102,7 @@ class _ErrorState extends StatelessWidget {
 class _VerseSelectContent extends StatelessWidget {
   const _VerseSelectContent({
     required this.chapter,
+    required this.book,
     required this.titlePadding,
     required this.titleFontSize,
     required this.gridPadding,
@@ -106,6 +110,7 @@ class _VerseSelectContent extends StatelessWidget {
   });
 
   final ChapterModel chapter;
+  final BookModel book;
   final EdgeInsets titlePadding;
   final double titleFontSize;
   final EdgeInsets gridPadding;
@@ -124,6 +129,7 @@ class _VerseSelectContent extends StatelessWidget {
           ),
           _VerseGrid(
             chapter: chapter,
+            book: book,
             padding: gridPadding,
             crossAxisCount: gridCrossAxisCount,
           ),
@@ -166,10 +172,12 @@ class _VerseGrid extends StatelessWidget {
   const _VerseGrid({
     required this.chapter,
     required this.padding,
+    required this.book,
     required this.crossAxisCount,
   });
 
   final ChapterModel chapter;
+  final BookModel book;
 
   final EdgeInsets padding;
   final int crossAxisCount;
@@ -192,6 +200,7 @@ class _VerseGrid extends StatelessWidget {
           (context, index) {
             return VerseNumberCard(
               chapter: chapter,
+              book: book,
               verse: chapter.verses[index],
             );
           },

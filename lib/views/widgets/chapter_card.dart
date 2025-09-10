@@ -31,6 +31,7 @@ class ChapterCard extends StatelessWidget {
             MaterialPageRoute<ReadingScreen>(
               builder: (context) => ReadingScreen(
                 chapter: chapter,
+                book: book,
               ),
             ),
           );

@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 
 class VerseNumberCard extends StatefulWidget {
   const VerseNumberCard({
+    required this.book,
     required this.chapter,
     required this.verse,
     super.key,
   });
 
+  final BookModel book;
   final ChapterModel chapter;
   final VerseModel verse;
 
@@ -81,6 +83,7 @@ class _VerseNumberCardState extends State<VerseNumberCard>
             builder: (context) => ReadingScreen(
               chapter: widget.chapter,
               verse: widget.verse,
+              book: widget.book,
             ),
           ),
         );

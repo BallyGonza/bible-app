@@ -127,6 +127,14 @@ class _SearchScreenState extends State<SearchScreen> {
                                         builder: (context) => ReadingScreen(
                                           chapter: chapter,
                                           verse: verse,
+                                          book: widget.user.bible.books
+                                              .where(
+                                                (book) =>
+                                                    book.chapters.contains(
+                                                  chapter,
+                                                ),
+                                              )
+                                              .first,
                                         ),
                                       ),
                                     );

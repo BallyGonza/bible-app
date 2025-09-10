@@ -49,7 +49,6 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
         label: const Text('Nueva nota'),
         icon: const Icon(Icons.add),
         tooltip: 'Crear nueva nota',
-        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
       ),
       body: CustomScrollView(
         slivers: [

@@ -37,8 +37,6 @@ class CustomBottomNavBar extends StatelessWidget {
       backgroundColor: colorScheme.surface,
       elevation: 0,
       shadowColor: colorScheme.shadow.withOpacity(0.1),
-      surfaceTintColor: colorScheme.surfaceTint,
-      indicatorColor: colorScheme.secondaryContainer,
       destinations: navigationItems.asMap().entries.map((entry) {
         final index = entry.key;
         final item = entry.value;
@@ -49,7 +47,7 @@ class CustomBottomNavBar extends StatelessWidget {
             item.icon,
             size: 20,
             color: isSelected
-                ? colorScheme.onSecondaryContainer
+                ? colorScheme.onSurface
                 : colorScheme.onSurfaceVariant,
           ),
           label: item.label,

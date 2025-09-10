@@ -571,10 +571,6 @@ class NotePageState extends State<NoteScreen> with TickerProviderStateMixin {
               scale: _fabScaleAnimation,
               child: FloatingActionButton.extended(
                 onPressed: _saveNote,
-                backgroundColor:
-                    Theme.of(context).colorScheme.secondaryContainer,
-                foregroundColor:
-                    Theme.of(context).colorScheme.onSecondaryContainer,
                 elevation: 6.0,
                 icon: const Icon(Icons.save),
                 label: Text(widget.isNewNote ? 'Guardar' : 'Actualizar'),

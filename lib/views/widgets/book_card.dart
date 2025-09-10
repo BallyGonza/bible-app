@@ -1,3 +1,4 @@
+import 'package:bible_app/core/services/haptic_service.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,10 @@ class _BookCardState extends State<BookCard>
     super.dispose();
   }
 
-  void _handleTap() {
+  Future<void> _handleTap() async {
+    // Provide haptic feedback for expansion/collapse
+    await HapticService.selectionClick();
+    
     setState(() {
       _isExpanded = !_isExpanded;
     });
@@ -65,7 +69,10 @@ class _BookCardState extends State<BookCard>
     }
   }
 
-  void _handleChapterTap(ChapterModel chapter) {
+  Future<void> _handleChapterTap(ChapterModel chapter) async {
+    // Provide haptic feedback for chapter selection
+    await HapticService.mediumImpact();
+    
     widget.onChapterSelected(chapter);
     if (_isExpanded) {
       _controller.reverse();

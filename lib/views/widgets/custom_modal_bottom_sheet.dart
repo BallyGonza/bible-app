@@ -1,3 +1,4 @@
+import 'package:bible_app/core/core.dart';
 import 'package:flutter/material.dart';
 
 /// A Material 3 compliant color picker modal bottom sheet
@@ -82,7 +83,8 @@ Widget _buildColorOption(BuildContext context, Color color,
     void Function(Color) onSelect, Color currentColor) {
   final isSelected = currentColor == color;
   return GestureDetector(
-    onTap: () {
+    onTap: () async {
+      await HapticService.selectionClick();
       onSelect(color);
       Navigator.of(context).pop();
     },

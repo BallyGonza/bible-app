@@ -1,4 +1,5 @@
 import 'package:bible_app/blocs/blocs.dart';
+import 'package:bible_app/core/services/haptic_service.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,12 @@ class _BibleScreenState extends State<BibleScreen> {
         );
   }
 
-  void _onSearchChanged(String value) {
+  Future<void> _onSearchChanged(String value) async {
+    // Only trigger haptic feedback when starting a new search (not on every keystroke)
+    if (value.isNotEmpty && value.length <= 3) {
+      await HapticService.selectionClick();
+    }
+    
     context.read<SearchBarBookBloc>().add(
           SearchBarBookEvent.search(
             widget.user.bible,

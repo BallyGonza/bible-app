@@ -1,4 +1,5 @@
 import 'package:bible_app/blocs/blocs.dart';
+import 'package:bible_app/core/core.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
@@ -35,13 +36,15 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
     super.dispose();
   }
 
-  void _saveNote() {
+  void _saveNote() async {
+    await HapticService.selectionClick();
     Navigator.of(context).pop();
     widget.onClose(_contentController.text);
     CustomSnackBar.showSuccess(context, text: 'Nota guardada');
   }
 
-  void _deleteNote() {
+  void _deleteNote() async {
+    await HapticService.selectionClick();
     widget.verse.note = null;
     context.read<UserBloc>().add(UserEvent.saveVerse(verse: widget.verse));
 
@@ -71,17 +74,20 @@ class _NoteVerseScreenState extends State<NoteVerseScreen> {
                   '${widget.verse.book} ${widget.verse.chapter}:${widget.verse.number}',
               actions: [
                 IconButton(
-                  onPressed: () => showDialog<void>(
-                    context: context,
-                    builder: (context) => CustomAlertDialog(
-                      title: 'Eliminar Nota',
-                      content: Text(
-                        '¿Estás seguro de que quieres eliminar esta nota?',
+                  onPressed: () async {
+                    await HapticService.selectionClick();
+                    showDialog<void>(
+                      context: context,
+                      builder: (context) => CustomAlertDialog(
+                        title: 'Eliminar Nota',
+                        content: Text(
+                          '¿Estás seguro de que quieres eliminar esta nota?',
+                        ),
+                        primaryActionTitle: 'Eliminar',
+                        onPrimaryPressed: (_) => _deleteNote(),
                       ),
-                      primaryActionTitle: 'Eliminar',
-                      onPrimaryPressed: (_) => _deleteNote(),
-                    ),
-                  ),
+                    );
+                  },
                   icon: FaIcon(FontAwesomeIcons.trashCan),
                 ),
               ],

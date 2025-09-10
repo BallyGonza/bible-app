@@ -1,3 +1,4 @@
+import 'package:bible_app/core/core.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
@@ -261,7 +262,8 @@ class _VersesList extends StatelessWidget {
     return currentIndex != -1 && currentIndex < book.chapters.length - 1;
   }
 
-  void _navigateToNextChapter(BuildContext context) {
+  void _navigateToNextChapter(BuildContext context) async {
+    await HapticService.selectionClick();
     if (!_hasNextChapter) return;
 
     final nextChapterNumber = chapter.number + 1;
@@ -308,8 +310,9 @@ class _VersesList extends StatelessWidget {
                 icon: Icon(_hasNextChapter
                     ? Icons.arrow_forward
                     : Icons.check_circle_outline),
-                label: Text(
-                    _hasNextChapter ? 'Next Chapter' : 'Fin de ${book.name}'),
+                label: Text(_hasNextChapter
+                    ? 'Siguiente Capítulo'
+                    : 'Fin de ${book.name}'),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   textStyle: theme.textTheme.titleMedium?.copyWith(

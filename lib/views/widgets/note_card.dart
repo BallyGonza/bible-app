@@ -1,3 +1,4 @@
+import 'package:bible_app/core/core.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:flutter/material.dart';
 
@@ -102,7 +103,10 @@ class NoteCard extends StatelessWidget {
         _getTextColor(note.color).withOpacity(_stateLayerOpacity);
 
     return InkWell(
-      onTap: onTap,
+      onTap: () async {
+        await HapticService.selectionClick();
+        onTap();
+      },
       borderRadius: BorderRadius.circular(_cardBorderRadius),
       overlayColor: WidgetStateProperty.resolveWith<Color?>(
         (Set<WidgetState> states) {

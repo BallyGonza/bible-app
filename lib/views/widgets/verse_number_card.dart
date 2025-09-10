@@ -1,3 +1,4 @@
+import 'package:bible_app/core/core.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +78,8 @@ class _VerseNumberCardState extends State<VerseNumberCard>
     final colorScheme = theme.colorScheme;
 
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        await HapticService.selectionClick();
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => ReadingScreen(

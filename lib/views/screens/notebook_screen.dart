@@ -1,4 +1,5 @@
 import 'package:bible_app/blocs/blocs.dart';
+import 'package:bible_app/core/core.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,7 +40,8 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
+        onPressed: () async {
+          await HapticService.selectionClick();
           Navigator.of(context).push(
             MaterialPageRoute<NoteScreen>(
               builder: (_) => const NoteScreen.add(),

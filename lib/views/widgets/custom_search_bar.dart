@@ -1,3 +1,4 @@
+import 'package:bible_app/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -28,6 +29,10 @@ class CustomSearchBar extends StatelessWidget {
         onTapOutside: (_) => focusNode?.unfocus(),
         focusNode: focusNode,
         autoFocus: autoFocus,
+        onTap: () async {
+          await HapticService.selectionClick();
+          focusNode?.requestFocus();
+        },
         padding: const MaterialStatePropertyAll(
           EdgeInsets.symmetric(horizontal: 16),
         ),

@@ -1,4 +1,5 @@
 import 'package:bible_app/blocs/blocs.dart';
+import 'package:bible_app/core/core.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
@@ -149,12 +150,16 @@ class _VerseCardState extends State<VerseCard>
             motion: const ScrollMotion(),
             children: [
               CustomSlidableAction(
-                onPressed: (_) => CustomModalBottomSheet.colorPicker(
+                onPressed: (_) async {
+                  await HapticService.selectionClick();
+                  CustomModalBottomSheet.colorPicker(
                     context,
                     _onColorChanged,
                     _currentVerse.color != null
                         ? Color(_currentVerse.color!)
-                        : Colors.white),
+                        : Colors.white,
+                  );
+                },
                 backgroundColor:
                     Theme.of(context).colorScheme.secondaryContainer,
                 foregroundColor:
@@ -180,13 +185,16 @@ class _VerseCardState extends State<VerseCard>
                 ),
               ),
               CustomSlidableAction(
-                onPressed: (_) => Navigator.push(
-                  context,
-                  MaterialPageRoute<NoteVerseScreen>(
-                    builder: (context) => NoteVerseScreen(
-                        verse: _currentVerse, onClose: _onNoteAdded),
-                  ),
-                ),
+                onPressed: (_) async {
+                  await HapticService.selectionClick();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<NoteVerseScreen>(
+                      builder: (context) => NoteVerseScreen(
+                          verse: _currentVerse, onClose: _onNoteAdded),
+                    ),
+                  );
+                },
                 backgroundColor:
                     Theme.of(context).colorScheme.tertiaryContainer,
                 foregroundColor:
@@ -235,7 +243,8 @@ class _VerseCardState extends State<VerseCard>
                   CustomSnackBar.showSuccess(context,
                       text: 'Versiculo copiado');
                 },
-                onTap: () {
+                onTap: () async {
+                  await HapticService.selectionClick();
                   if (widget.onSelect != null) {
                     widget.onSelect!(_currentVerse);
                   }
@@ -451,7 +460,8 @@ class _VerseCardState extends State<VerseCard>
                               color: Color(note.color),
                               margin: EdgeInsets.zero,
                               child: InkWell(
-                                onTap: () {
+                                onTap: () async {
+                                  await HapticService.selectionClick();
                                   Navigator.of(context).pop();
 
                                   if (!isSelected) {

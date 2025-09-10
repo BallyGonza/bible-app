@@ -118,7 +118,8 @@ class NotePageState extends State<NoteScreen> with TickerProviderStateMixin {
     });
   }
 
-  void _deleteNote() {
+  void _deleteNote() async {
+    await HapticService.selectionClick();
     if (widget.isNewNote) {
       // If it's a new note, just go back
       Navigator.of(context).pop();
@@ -133,7 +134,8 @@ class NotePageState extends State<NoteScreen> with TickerProviderStateMixin {
           content: const Text(
             '¿Estás seguro de que quieres eliminar esta nota? Esta acción no se puede deshacer.',
           ),
-          onPrimaryPressed: (_) {
+          onPrimaryPressed: (_) async {
+            await HapticService.selectionClick();
             context.read<NotesBloc>().add(
                   NotesEvent.deleteNote(widget.index),
                 );
@@ -151,7 +153,8 @@ class NotePageState extends State<NoteScreen> with TickerProviderStateMixin {
     );
   }
 
-  void _saveNote() {
+  void _saveNote() async {
+    await HapticService.selectionClick();
     final note = NoteModel(
       id: widget.isNewNote
           ? DateTime.now().millisecondsSinceEpoch
@@ -175,7 +178,8 @@ class NotePageState extends State<NoteScreen> with TickerProviderStateMixin {
     Navigator.of(context).pop();
   }
 
-  void _showColorPicker() {
+  void _showColorPicker() async {
+    await HapticService.selectionClick();
     CustomModalBottomSheet.colorPicker(context, _onColorChanged, _currentColor);
   }
 
@@ -199,7 +203,8 @@ class NotePageState extends State<NoteScreen> with TickerProviderStateMixin {
         ),
         actions: [
           IconButton(
-            onPressed: () {
+            onPressed: () async {
+              await HapticService.selectionClick();
               setState(() {
                 _isEditing = !_isEditing;
               });
@@ -214,7 +219,8 @@ class NotePageState extends State<NoteScreen> with TickerProviderStateMixin {
             ),
           ),
           PopupMenuButton<String>(
-            onSelected: (String value) {
+            onSelected: (String value) async {
+              await HapticService.selectionClick();
               switch (value) {
                 case 'color':
                   _showColorPicker();

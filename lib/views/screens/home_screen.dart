@@ -1,3 +1,4 @@
+import 'package:bible_app/core/core.dart';
 import 'package:bible_app/data/data.dart';
 import 'package:bible_app/views/views.dart';
 import 'package:flutter/material.dart';
@@ -90,7 +91,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     setState(() => _selectedIndex = index);
   }
 
-  void _onDestinationSelected(int index) {
+  void _onDestinationSelected(int index) async {
+    await HapticService.selectionClick();
     if (_selectedIndex == index) return;
     _pageController.animateToPage(
       index,
